@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title:
         "CGAP — Convergent Graduate Academy Program | Launch Your Data Career",
     description:
-        "Join CGAP, a 6-month paid training program bridging academia and industry in Data Analytics. Mentored by seasoned consultants. 12+ successful cohorts.",
+        "Join CGAP, a 6-month paid training program bridging academia and industry in Data Analytics. Mentored by seasoned consultants. 28+ successful cohorts.",
 };
 
 const curriculum = [
@@ -95,7 +95,66 @@ const eligibility = [
     "Based in Pakistan (Islamabad/Rawalpindi preferred)",
 ];
 
-export default function CGAPPage() {
+import { createClient } from "@/lib/supabase/server";
+
+const fallbackAlumni = [
+    {
+        name: "Sarah Ahmed",
+        cohort: "Cohort 10",
+        role: "BI Consultant",
+        company: "CBT",
+        quote:
+            "CGAP gave me the practical skills and confidence that university alone couldn't. Within 3 months of graduating, I was leading dashboards for a major FMCG client.",
+    },
+    {
+        name: "Ali Hassan",
+        cohort: "Cohort 11",
+        role: "Data Engineer",
+        company: "CBT",
+        quote:
+            "The hands-on approach is what sets CGAP apart. You're working with real data and real clients from week one. No toy datasets.",
+    },
+    {
+        name: "Fatima Malik",
+        cohort: "Cohort 9",
+        role: "Analytics Consultant",
+        company: "Tech Solutions Ltd",
+        quote:
+            "The mentors at CGAP are genuinely invested in your growth. I learned more in 6 months than I did in 4 years of university.",
+    },
+];
+
+export default async function CGAPPage() {
+    const supabase = await createClient();
+
+    // Fetch clients for the strip
+    const { data: clientsData } = await supabase
+        .from("clients")
+        .select("name")
+        .eq("is_featured", true)
+        .order("display_order", { ascending: true });
+
+    const clientNames = clientsData?.map((c) => c.name);
+
+    // Fetch alumni
+    const { data: dbAlumni } = await supabase
+        .from("cgap_alumni")
+        .select("*")
+        .order("display_order", { ascending: true });
+
+    const displayAlumni = dbAlumni?.length ? dbAlumni : fallbackAlumni;
+
+    // Fetch latest open cohort
+    const { data: openCohorts } = await supabase
+        .from("cgap_cohorts")
+        .select("*")
+        .eq("status", "open")
+        .order("cohort_number", { ascending: false })
+        .limit(1);
+
+    const activeCohort = openCohorts?.[0];
+    const applicationUrl = activeCohort?.application_url || "https://cbt-recruitment-portal.vercel.app/";
+
     return (
         <>
             {/* Hero */}
@@ -120,7 +179,7 @@ export default function CGAPPage() {
                             </p>
                             <div className="mt-8 flex flex-wrap gap-4">
                                 <a
-                                    href="https://cbt-recruitment-portal.vercel.app/"
+                                    href={applicationUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-primary"
@@ -143,7 +202,7 @@ export default function CGAPPage() {
                             <div className="absolute -bottom-6 -left-6 grid grid-cols-2 gap-4">
                                 {[
                                     { number: "6", label: "Month Program" },
-                                    { number: "12+", label: "Cohorts Run" },
+                                    { number: "28+", label: "Cohorts Run" },
                                 ].map((stat) => (
                                     <div
                                         key={stat.label}
@@ -293,7 +352,7 @@ export default function CGAPPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {alumni.map((alum) => (
+                        {displayAlumni.map((alum: any) => (
                             <div
                                 key={alum.name}
                                 className="bg-light-grey rounded-xl p-6 border border-border/50 card-hover"
@@ -327,7 +386,7 @@ export default function CGAPPage() {
                             CGAP graduates work directly with industry-leading clients
                         </p>
                     </div>
-                    <ClientLogoGrid featured />
+                    <ClientLogoGrid featured clientNames={clientNames} />
                     <div className="text-center mt-8">
                         <Link
                             href="/customers"
@@ -352,7 +411,7 @@ export default function CGAPPage() {
                         recruitment portal.
                     </p>
                     <a
-                        href="https://cbt-recruitment-portal.vercel.app/"
+                        href={applicationUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-white text-green-primary font-semibold px-6 py-3 rounded-md hover:bg-light-grey transition-colors duration-150"

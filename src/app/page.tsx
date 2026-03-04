@@ -16,14 +16,27 @@ export default async function HomePage() {
 
   const clientNames = clientsData?.map(c => c.name);
 
+  // Fetch cohort count
+  const { count: cohortCount } = await supabase
+    .from("cgap_cohorts")
+    .select("*", { count: "exact", head: true });
+
+  const displayCohortCount = cohortCount || 28;
+
+  const stats = [
+    { value: 30, suffix: "+", label: "Consultants" },
+    { value: displayCohortCount, suffix: "+", label: "CGAP Cohorts" },
+    { value: 50, suffix: "+", label: "Clients Served" },
+  ];
+
   return (
     <>
       <Hero />
       <PersonaCards />
       <ServicesGrid />
       <ClientLogoStrip clientNames={clientNames} />
-      <StatsBar />
-      <CGAPTeaser />
+      <StatsBar stats={stats} />
+      <CGAPTeaser cohortCount={displayCohortCount} />
     </>
   );
 }

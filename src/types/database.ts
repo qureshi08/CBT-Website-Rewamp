@@ -203,6 +203,72 @@ export interface Database {
                 }
                 Relationships: []
             }
+            cgap_cohorts: {
+                Row: {
+                    id: string
+                    created_at: string
+                    cohort_number: number
+                    start_date: string | null
+                    status: "open" | "closed" | "in-progress"
+                    application_url: string | null
+                    is_featured: boolean
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    cohort_number: number
+                    start_date?: string | null
+                    status?: "open" | "closed" | "in-progress"
+                    application_url?: string | null
+                    is_featured?: boolean
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    cohort_number?: number
+                    start_date?: string | null
+                    status?: "open" | "closed" | "in-progress"
+                    application_url?: string | null
+                    is_featured?: boolean
+                }
+                Relationships: []
+            }
+            cgap_alumni: {
+                Row: {
+                    id: string
+                    created_at: string
+                    name: string
+                    role: string | null
+                    company: string | null
+                    cohort: string | null
+                    quote: string | null
+                    avatar_url: string | null
+                    display_order: number
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    name: string
+                    role?: string | null
+                    company?: string | null
+                    cohort?: string | null
+                    quote?: string | null
+                    avatar_url?: string | null
+                    display_order?: number
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    name?: string
+                    role?: string | null
+                    company?: string | null
+                    cohort?: string | null
+                    quote?: string | null
+                    avatar_url?: string | null
+                    display_order?: number
+                }
+                Relationships: []
+            }
         }
         Views: {
             [_ in never]: never

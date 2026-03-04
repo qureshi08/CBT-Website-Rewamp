@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { GraduationCap, ArrowRight, Sparkles } from "lucide-react";
 
-export default function CGAPTeaser() {
+interface CGAPTeaserProps {
+    cohortCount?: number;
+}
+
+export default function CGAPTeaser({ cohortCount = 28 }: CGAPTeaserProps) {
     return (
         <section className="bg-light-grey">
             <div className="container-main section-padding">
@@ -37,7 +41,7 @@ export default function CGAPTeaser() {
                         <div className="flex justify-center">
                             <div className="grid grid-cols-2 gap-4 max-w-xs">
                                 {[
-                                    { number: "12+", label: "Cohorts Completed" },
+                                    { number: `${cohortCount}+`, label: "Cohorts Completed" },
                                     { number: "6", label: "Month Program" },
                                     { number: "100%", label: "Paid Stipend" },
                                     { number: "∞", label: "Career Potential" },

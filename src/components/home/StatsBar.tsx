@@ -2,9 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const stats = [
+interface StatItem {
+    value: number;
+    suffix: string;
+    label: string;
+}
+
+interface StatsBarProps {
+    stats?: StatItem[];
+}
+
+const defaultStats: StatItem[] = [
     { value: 30, suffix: "+", label: "Consultants" },
-    { value: 12, suffix: "+", label: "CGAP Cohorts" },
+    { value: 28, suffix: "+", label: "CGAP Cohorts" },
     { value: 50, suffix: "+", label: "Clients Served" },
 ];
 
@@ -47,7 +57,7 @@ function AnimatedCounter({
     );
 }
 
-export default function StatsBar() {
+export default function StatsBar({ stats = defaultStats }: StatsBarProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
 
