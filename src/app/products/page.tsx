@@ -16,7 +16,7 @@ const fallbackProducts = [
         name: "CBT Variance Visual",
         slug: "cbt-variance-visual",
         category: "Power BI Visual",
-        description:
+        short_description:
             "A Power BI custom visual for displaying variance analysis with conditional formatting. Compare actuals against targets with intuitive color-coded indicators, drill-down capabilities, and flexible layout options.",
         features: [
             "Conditional colour formatting",
@@ -25,12 +25,13 @@ const fallbackProducts = [
             "PDF export ready",
             "Mobile responsive design",
         ],
+        appsource_url: "#",
     },
     {
         name: "CBT KPI Scorecard",
         slug: "cbt-kpi-scorecard",
         category: "Power BI Visual",
-        description:
+        short_description:
             "A Power BI custom visual for executive KPI dashboards with traffic light indicators. Monitor key metrics at a glance with customisable thresholds, trend arrows, and sparklines.",
         features: [
             "Traffic light indicators",
@@ -39,6 +40,7 @@ const fallbackProducts = [
             "Grouping and categories",
             "Theme-aware styling",
         ],
+        appsource_url: "#",
     },
 ];
 
@@ -102,7 +104,7 @@ export default async function ProductsPage() {
                                         {product.name}
                                     </h3>
                                     <p className="text-mid-grey leading-relaxed mb-5">
-                                        {product.description}
+                                        {product.short_description}
                                     </p>
 
                                     {/* Features */}
@@ -121,7 +123,8 @@ export default async function ProductsPage() {
 
                                     <div className="flex flex-wrap gap-3">
                                         <a
-                                            href="#"
+                                            href={product.appsource_url || "#"}
+                                            target={product.appsource_url ? "_blank" : "_self"}
                                             className="btn-primary text-sm py-2.5 px-5"
                                         >
                                             View on AppSource

@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         if (process.env.RESEND_API_KEY) {
             await resend.emails.send({
                 from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-                to: process.env.EMAIL_TO || "muammad.anas.quershi@convergentbt.com",
+                to: process.env.EMAIL_TO || "muhammadanasq@gmail.com",
                 subject: `New Contact Submission: ${subject}`,
                 html: `
                     <div style="font-family: sans-serif; color: #333;">
