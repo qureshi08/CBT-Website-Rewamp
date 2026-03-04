@@ -18,7 +18,11 @@ const clients = [
     "Cumbria Chamber of Commerce",
 ];
 
-export default function ClientLogoStrip() {
+interface ClientLogoProps {
+    clientNames?: string[];
+}
+
+export default function ClientLogoStrip({ clientNames = clients }: ClientLogoProps) {
     return (
         <section className="bg-dark-section">
             <div className="container-main section-padding">
@@ -32,7 +36,7 @@ export default function ClientLogoStrip() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                    {clients.map((client) => (
+                    {clientNames.map((client) => (
                         <div
                             key={client}
                             className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-5 flex items-center justify-center min-h-[80px] hover:bg-white/[0.08] hover:border-white/[0.12] transition-all duration-200 group"
@@ -48,8 +52,14 @@ export default function ClientLogoStrip() {
     );
 }
 
-export function ClientLogoGrid({ featured = false }: { featured?: boolean }) {
-    const displayClients = featured ? clients.slice(0, 8) : clients;
+export function ClientLogoGrid({
+    featured = false,
+    clientNames = clients
+}: {
+    featured?: boolean;
+    clientNames?: string[];
+}) {
+    const displayClients = featured ? clientNames.slice(0, 8) : clientNames;
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(request: NextRequest) {
     try {
@@ -34,16 +35,29 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // TODO: Phase 2 — Insert into Supabase partner_enquiries table
-        // const { data, error } = await supabaseAdmin
-        //   .from("partner_enquiries")
-        //   .insert({
-        //     company,
-        //     contact_name: contactName,
-        //     email,
-        //     partnership_type: partnershipType,
-        //     message,
-        //   });
+        // Phase 2 — Insert into Supabase partner_enquiries table
+        const { error: dbError } = await supabaseAdmin
+            .from("partner_enquiries")
+            .insert([
+                {
+                    company,
+                    contact_name: contactName,
+                    email,
+                    partnership_type: partnershipType as
+                        | "technology"
+                        | "delivery"
+                        | "referral",
+                    message,
+                },
+            ]);
+
+        if (dbError) {
+            console.error("Supabase Error:", dbError);
+            return NextResponse.json(
+                { error: "Failed to save partner enquiry." },
+                { status: 500 }
+            );
+        }
 
         // TODO: Phase 2 — Send notification email via Resend
         // await resend.emails.send({

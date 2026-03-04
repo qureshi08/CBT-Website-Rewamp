@@ -19,6 +19,8 @@ export const metadata: Metadata = {
         "See who trusts CBT for data analytics, business intelligence, and technology consulting. Clients include Pepsi, Microsoft, Coca-Cola, KPMG, and more.",
 };
 
+import { createClient } from "@/lib/supabase/server";
+
 const services = [
     {
         icon: BarChart3,
@@ -58,7 +60,7 @@ const services = [
     },
 ];
 
-const caseStudies = [
+const fallbackCaseStudies = [
     {
         title: "Enterprise Data Warehouse for Leading FMCG Company",
         tags: ["Enterprise DWH", "FMCG"],
@@ -79,7 +81,28 @@ const caseStudies = [
     },
 ];
 
-export default function CustomersPage() {
+export default async function CustomersPage() {
+    const supabase = await createClient();
+
+    // Fetch clients
+    const { data: clientsData } = await supabase
+        .from("clients")
+        .select("name")
+        .order("display_order", { ascending: true });
+
+    const clientNames = clientsData?.map((c) => c.name);
+
+    // Fetch case studies
+    const { data: dbCaseStudies } = await supabase
+        .from("case_studies")
+        .select("title, summary, tags")
+        .eq("published", true)
+        .order("created_at", { ascending: false });
+
+    const displayCaseStudies = dbCaseStudies?.length
+        ? dbCaseStudies
+        : fallbackCaseStudies;
+
     return (
         <>
             {/* Hero */}
@@ -118,7 +141,7 @@ export default function CustomersPage() {
                             Working with global brands across multiple sectors
                         </p>
                     </div>
-                    <ClientLogoGrid />
+                    <ClientLogoGrid clientNames={clientNames} />
                 </div>
             </section>
 
@@ -178,7 +201,7 @@ export default function CustomersPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {caseStudies.map((study) => (
+                        {displayCaseStudies.map((study: any) => (
                             <div
                                 key={study.title}
                                 className="bg-white rounded-xl p-6 border border-border/50 card-hover group"
@@ -187,7 +210,7 @@ export default function CustomersPage() {
                                     <FileText size={18} className="text-green-primary" />
                                 </div>
                                 <div className="flex flex-wrap gap-2 mb-3">
-                                    {study.tags.map((tag) => (
+                                    {study.tags?.map((tag: string) => (
                                         <span
                                             key={tag}
                                             className="text-xs font-medium text-green-primary bg-tag-bg px-2.5 py-1 rounded-full"
@@ -232,3 +255,4 @@ export default function CustomersPage() {
         </>
     );
 }
+

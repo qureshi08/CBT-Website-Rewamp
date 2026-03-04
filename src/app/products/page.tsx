@@ -9,7 +9,9 @@ export const metadata: Metadata = {
         "Discover CBT's Power BI custom visuals and analytics tools built by data professionals for data professionals.",
 };
 
-const products = [
+import { createClient } from "@/lib/supabase/server";
+
+const fallbackProducts = [
     {
         name: "CBT Variance Visual",
         slug: "cbt-variance-visual",
@@ -40,7 +42,16 @@ const products = [
     },
 ];
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+    const supabase = await createClient();
+
+    const { data: dbProducts } = await supabase
+        .from("products")
+        .select("*")
+        .order("display_order", { ascending: true });
+
+    const displayProducts = dbProducts?.length ? dbProducts : fallbackProducts;
+
     return (
         <>
             {/* Hero */}
@@ -68,7 +79,7 @@ export default function ProductsPage() {
             <section className="bg-light-grey">
                 <div className="container-main section-padding">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {products.map((product) => (
+                        {displayProducts.map((product: any) => (
                             <div
                                 key={product.slug}
                                 className="bg-white rounded-2xl border border-border/50 overflow-hidden card-hover group"
@@ -96,7 +107,7 @@ export default function ProductsPage() {
 
                                     {/* Features */}
                                     <div className="space-y-2 mb-6">
-                                        {product.features.map((feature) => (
+                                        {product.features?.map((feature: string) => (
                                             <div key={feature} className="flex items-center gap-2">
                                                 <Star
                                                     size={14}

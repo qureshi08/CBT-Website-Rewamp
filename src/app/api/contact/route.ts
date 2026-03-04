@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(request: NextRequest) {
     try {
@@ -22,10 +23,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // TODO: Phase 2 — Insert into Supabase contact_submissions table
-        // const { data, error } = await supabaseAdmin
-        //   .from("contact_submissions")
-        //   .insert({ name, email, company, subject, message });
+        // Phase 2 — Insert into Supabase contact_submissions table
+        const { error: dbError } = await supabaseAdmin
+            .from("contact_submissions")
+            .insert([{ name, email, company, subject, message }]);
+
+        if (dbError) {
+            console.error("Supabase Error:", dbError);
+            return NextResponse.json(
+                { error: "Failed to save submission." },
+                { status: 500 }
+            );
+        }
 
         // TODO: Phase 2 — Send confirmation email via Resend
         // await resend.emails.send({
