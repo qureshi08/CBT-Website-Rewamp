@@ -134,26 +134,30 @@ export default function CGAPPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            {[
-                                { number: "6", label: "Month Program", sub: "Full-time, intensive" },
-                                { number: "12+", label: "Cohorts Run", sub: "Since inception" },
-                                { number: "100%", label: "Paid Stipend", sub: "From day one" },
-                                { number: "90%+", label: "Placement Rate", sub: "Post-graduation" },
-                            ].map((stat) => (
-                                <div
-                                    key={stat.label}
-                                    className="bg-tag-bg rounded-xl p-5 text-center"
-                                >
-                                    <div className="text-2xl font-bold text-green-primary">
-                                        {stat.number}
+                        <div className="relative h-[300px] md:h-[400px]">
+                            <img
+                                src="/images/cgap.png"
+                                alt="CGAP Learning Illustration"
+                                className="w-full h-full object-contain drop-shadow-xl"
+                            />
+                            <div className="absolute -bottom-6 -left-6 grid grid-cols-2 gap-4">
+                                {[
+                                    { number: "6", label: "Month Program" },
+                                    { number: "12+", label: "Cohorts Run" },
+                                ].map((stat) => (
+                                    <div
+                                        key={stat.label}
+                                        className="bg-white shadow-lg rounded-xl p-4 text-center border border-border/50"
+                                    >
+                                        <div className="text-xl font-bold text-green-primary">
+                                            {stat.number}
+                                        </div>
+                                        <div className="text-xs font-semibold text-charcoal mt-1">
+                                            {stat.label}
+                                        </div>
                                     </div>
-                                    <div className="text-sm font-semibold text-charcoal mt-1">
-                                        {stat.label}
-                                    </div>
-                                    <div className="text-xs text-mid-grey mt-0.5">{stat.sub}</div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

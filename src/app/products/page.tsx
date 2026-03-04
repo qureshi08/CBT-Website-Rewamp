@@ -74,18 +74,14 @@ export default function ProductsPage() {
                                 className="bg-white rounded-2xl border border-border/50 overflow-hidden card-hover group"
                             >
                                 {/* Product Screenshot Placeholder */}
-                                <div className="aspect-video bg-gradient-to-br from-tag-bg to-green-primary/10 flex items-center justify-center relative">
-                                    <div className="text-center">
-                                        <BarChart3
-                                            size={48}
-                                            className="text-green-primary/40 mx-auto mb-3"
-                                        />
-                                        <span className="text-sm text-mid-grey font-medium">
-                                            Product Preview
-                                        </span>
-                                    </div>
+                                <div className="aspect-video bg-white flex items-center justify-center relative border-b border-border/50 overflow-hidden">
+                                    <img
+                                        src="/images/product_preview.png"
+                                        alt={product.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
                                     {/* Category badge */}
-                                    <span className="absolute top-4 left-4 text-xs font-semibold text-green-primary bg-white px-3 py-1.5 rounded-full shadow-sm">
+                                    <span className="absolute top-4 left-4 text-xs font-semibold text-green-primary bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
                                         {product.category}
                                     </span>
                                 </div>

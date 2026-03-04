@@ -36,30 +36,12 @@ export default function Hero() {
 
                     {/* Illustration / Visual */}
                     <div className="hidden lg:flex justify-center">
-                        <div className="relative w-full max-w-md aspect-square">
-                            {/* Abstract data visualization illustration */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-tag-bg to-green-primary/10 rounded-3xl flex items-center justify-center">
-                                <div className="grid grid-cols-3 gap-4 p-8">
-                                    {[...Array(9)].map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className="w-16 h-16 rounded-xl transition-all duration-300 hover:scale-110"
-                                            style={{
-                                                background:
-                                                    i % 3 === 0
-                                                        ? "linear-gradient(135deg, #2D7D46, #4CAF72)"
-                                                        : i % 2 === 0
-                                                            ? "#e8f5ec"
-                                                            : "rgba(45, 125, 70, 0.1)",
-                                                animationDelay: `${i * 100}ms`,
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                            {/* Floating elements */}
-                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-green-primary/10 rounded-2xl blur-xl" />
-                            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-green-light/10 rounded-full blur-xl" />
+                        <div className="relative w-full max-w-lg aspect-square">
+                            <img
+                                src="/images/hero.png"
+                                alt="CBT Data Consultancy Illustration"
+                                className="w-full h-full object-contain drop-shadow-2xl"
+                            />
                         </div>
                     </div>
                 </div>
