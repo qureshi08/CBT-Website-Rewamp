@@ -48,10 +48,10 @@ export default function ContactPage() {
                                             Email
                                         </h3>
                                         <a
-                                            href="mailto:admin@convergentbt.com"
+                                            href="mailto:muammad.anas.quershi@convergentbt.com"
                                             className="text-sm text-mid-grey hover:text-green-primary transition-colors"
                                         >
-                                            admin@convergentbt.com
+                                            muammad.anas.quershi@convergentbt.com
                                         </a>
                                     </div>
                                 </div>

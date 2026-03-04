@@ -80,11 +80,11 @@ export default function Footer() {
                             Get in Touch
                         </h4>
                         <a
-                            href="mailto:admin@convergentbt.com"
+                            href="mailto:muammad.anas.quershi@convergentbt.com"
                             className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-green-light transition-colors duration-150 mb-4"
                         >
                             <Mail size={16} />
-                            admin@convergentbt.com
+                            muammad.anas.quershi@convergentbt.com
                         </a>
                         <div className="mt-4">
                             <Link

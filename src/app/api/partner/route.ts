@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { resend } from "@/lib/resend";
 
 export async function POST(request: NextRequest) {
     try {
@@ -59,13 +60,27 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // TODO: Phase 2 — Send notification email via Resend
-        // await resend.emails.send({
-        //   from: process.env.EMAIL_FROM,
-        //   to: process.env.EMAIL_TO,
-        //   subject: `New Partner Registration: ${company}`,
-        //   html: `...`
-        // });
+        // Send notification email via Resend
+        if (process.env.RESEND_API_KEY) {
+            await resend.emails.send({
+                from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+                to: process.env.EMAIL_TO || "muammad.anas.quershi@convergentbt.com",
+                subject: `New Partner Registration: ${company}`,
+                html: `
+                    <div style="font-family: sans-serif; color: #333;">
+                        <h2 style="color: #2D7D46;">New Partner Registration</h2>
+                        <p><strong>Company:</strong> ${company}</p>
+                        <p><strong>Contact Name:</strong> ${contactName}</p>
+                        <p><strong>Email:</strong> ${email}</p>
+                        <p><strong>Partnership Type:</strong> ${partnershipType}</p>
+                        <div style="margin-top: 20px; padding: 15px; background: #F2F2F2; border-left: 4px solid #2D7D46;">
+                            <p style="margin: 0;"><strong>Message/Interest:</strong></p>
+                            <p style="white-space: pre-wrap;">${message || "No message provided"}</p>
+                        </div>
+                    </div>
+                `,
+            });
+        }
 
         console.log("Partner registration:", {
             company,
