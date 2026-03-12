@@ -66,6 +66,26 @@ const valueProps = [
     },
 ];
 
+const testimonials = [
+    {
+        quote: "WeCrunch has been an excellent partner. Their data expertise and delivery speed is unmatched.",
+        author: "Alex Rivera",
+        company: "WeCrunch",
+    },
+    {
+        quote: "The CGAP graduates they placed on our project exceeded all expectations from day one.",
+        author: "Sarah Jenkins",
+        company: "DataStream Solutions",
+    },
+    {
+        quote: "CBT's analytics approach helped us scale our BI infrastructure faster than we thought possible.",
+        author: "Michael Chen",
+        company: "Nexus Analytics",
+    },
+];
+
+const techPartners = ["WeCrunch", "Microsoft", "Databricks", "Fivetran", "Snowflake"];
+
 export default async function PartnersPage() {
     const supabase = await createClient();
     const { data: clientsData } = await supabase
@@ -79,54 +99,52 @@ export default async function PartnersPage() {
     return (
         <>
             {/* Hero */}
-            <section className="bg-white pt-[72px]">
-                <div className="container-main py-20 md:py-28">
+            <section className="bg-persona-partner text-white pt-[72px]">
+                <div className="container-main py-20 md:py-32">
                     <div className="max-w-3xl">
-                        <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
-                            Partners
+                        <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/70 mb-4 bg-white/10 px-3 py-1 rounded">
+                            Partner Ecosystem
                         </span>
-                        <h1 className="text-4xl md:text-5xl font-bold text-charcoal leading-tight">
-                            Deliver More, <span className="italic-accent">Together</span>
+                        <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                            Deliver more, <span className="opacity-70 italic font-serif">together</span>
                         </h1>
-                        <p className="mt-6 text-lg text-mid-grey leading-relaxed max-w-2xl">
-                            Join a growing ecosystem of technology and delivery partners. Combine
-                            your strengths with our data expertise to deliver more value to
-                            shared clients.
+                        <p className="mt-6 text-xl text-white/80 leading-relaxed max-w-2xl">
+                            Technology. Delivery. Referral. Three ways to partner with CBT and unlock new opportunities for your clients.
                         </p>
+                        <div className="mt-10">
+                            <a href="#partner-form" className="inline-flex items-center gap-2 bg-white text-persona-partner font-bold px-8 py-4 rounded-lg hover:bg-white/90 transition-all shadow-xl shadow-black/10">
+                                Arrange a Call
+                                <ArrowRight size={20} />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Partnership Models */}
-            <section className="bg-light-grey">
+            <section className="bg-white">
                 <div className="container-main section-padding">
-                    <div className="text-center mb-12">
-                        <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
-                            Models
-                        </span>
-                        <h2 className="text-2xl md:text-3xl font-bold text-charcoal">
-                            Partnership Models
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal">
+                            Partnership Model
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {partnershipTypes.map((type) => {
                             const Icon = type.icon;
                             return (
                                 <div
                                     key={type.title}
-                                    className="bg-white rounded-xl p-6 border border-border/50 card-hover group"
+                                    className="bg-tag-bg-purple rounded-2xl p-8 border border-persona-partner/10 group hover:border-persona-partner/30 transition-all text-center"
                                 >
-                                    <div className="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center mb-4 group-hover:bg-green-primary transition-colors duration-200">
-                                        <Icon
-                                            size={22}
-                                            className="text-green-primary group-hover:text-white transition-colors duration-200"
-                                        />
+                                    <div className="w-16 h-16 rounded-2xl bg-white text-persona-partner flex items-center justify-center mb-6 mx-auto shadow-sm group-hover:scale-110 transition-transform">
+                                        <Icon size={28} />
                                     </div>
-                                    <h3 className="text-lg font-bold text-charcoal mb-2">
+                                    <h3 className="text-xl font-bold text-charcoal mb-4">
                                         {type.title}
                                     </h3>
-                                    <p className="text-sm text-mid-grey leading-relaxed">
+                                    <p className="text-mid-grey leading-relaxed">
                                         {type.description}
                                     </p>
                                 </div>
@@ -137,23 +155,23 @@ export default async function PartnersPage() {
             </section>
 
             {/* Why Partner */}
-            <section className="bg-white">
+            <section className="bg-light-grey">
                 <div className="container-main section-padding">
-                    <div className="text-center mb-12">
-                        <h2 className="text-2xl md:text-3xl font-bold text-charcoal">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal">
                             Why Partner with CBT?
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {valueProps.map((prop) => {
                             const Icon = prop.icon;
                             return (
-                                <div key={prop.title} className="text-center">
-                                    <div className="w-14 h-14 rounded-2xl bg-tag-bg flex items-center justify-center mx-auto mb-4">
-                                        <Icon size={24} className="text-green-primary" />
+                                <div key={prop.title} className="bg-white p-6 rounded-xl border border-border/40 shadow-sm text-center">
+                                    <div className="text-persona-partner mb-4 flex justify-center">
+                                        <Icon size={32} />
                                     </div>
-                                    <h3 className="font-bold text-charcoal mb-2">{prop.title}</h3>
+                                    <h3 className="font-bold text-charcoal mb-3">{prop.title}</h3>
                                     <p className="text-sm text-mid-grey leading-relaxed">
                                         {prop.description}
                                     </p>
@@ -164,47 +182,73 @@ export default async function PartnersPage() {
                 </div>
             </section>
 
+            {/* Tech Partners Logos */}
+            <section className="bg-white border-y border-border/40 py-16">
+                <div className="container-main">
+                    <div className="text-center mb-10">
+                        <h3 className="text-sm font-bold text-mid-grey uppercase tracking-widest">Our Technology Partners</h3>
+                    </div>
+                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                        {techPartners.map(p => (
+                            <span key={p} className="text-2xl font-bold text-charcoal select-none">{p}</span>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Client Base */}
             <section className="bg-light-grey">
                 <div className="container-main section-padding">
                     <div className="text-center mb-12">
                         <h2 className="text-2xl md:text-3xl font-bold text-charcoal">
-                            Our Client Base
+                            Our Key Client Base
                         </h2>
-                        <p className="mt-3 text-mid-grey">
-                            Join our ecosystem and access opportunities with these brands
-                        </p>
                     </div>
                     <ClientLogoGrid featured clientNames={clientNames} />
-                    <div className="text-center mt-8">
-                        <Link
-                            href="/customers"
-                            className="inline-flex items-center gap-2 text-sm font-semibold text-green-primary hover:gap-3 transition-all duration-200"
-                        >
-                            See All Clients
-                            <ArrowRight size={14} />
-                        </Link>
+                </div>
+            </section>
+
+            {/* Testimonials */}
+            <section className="bg-white">
+                <div className="container-main section-padding border-t border-border/40">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal">
+                            What Our Partners Say
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        {testimonials.map((t) => (
+                            <div key={t.author} className="bg-tag-bg-purple p-8 rounded-2xl border border-persona-partner/5 italic text-persona-partner">
+                                <p className="text-lg leading-relaxed mb-6 font-serif">
+                                    &ldquo;{t.quote}&rdquo;
+                                </p>
+                                <div className="not-italic flex flex-col">
+                                    <span className="font-bold text-charcoal">{t.author}</span>
+                                    <span className="text-sm text-mid-grey">{t.company}</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
             {/* Partner Registration Form */}
-            <section className="bg-white" id="partner-form">
-                <div className="container-main section-padding">
-                    <div className="max-w-2xl mx-auto">
-                        <div className="text-center mb-10">
-                            <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
-                                Get Started
-                            </span>
-                            <h2 className="text-2xl md:text-3xl font-bold text-charcoal">
-                                Register as a Partner
+            <section className="bg-light-grey" id="partner-form">
+                <div className="container-main section-padding border-t border-border/40">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-charcoal mb-4">
+                                Register as a Partner / Arrange a Call
                             </h2>
-                            <p className="mt-3 text-mid-grey">
-                                Tell us about your organisation and how we can work together.
+                            <p className="text-xl text-mid-grey">
+                                Start the conversation today. No email addresses are shown publicly.
                             </p>
                         </div>
 
-                        <PartnerForm />
+                        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl shadow-persona-partner/5 border border-persona-partner/10">
+                            <PartnerForm />
+                        </div>
                     </div>
                 </div>
             </section>

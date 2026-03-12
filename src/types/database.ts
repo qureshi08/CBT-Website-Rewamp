@@ -99,6 +99,8 @@ export interface Database {
                     name: string
                     status: string
                     subject: string | null
+                    region: string | null
+                    industry: string | null
                 }
                 Insert: {
                     company?: string | null
@@ -109,6 +111,8 @@ export interface Database {
                     name: string
                     status?: string
                     subject?: string | null
+                    region?: string | null
+                    industry?: string | null
                 }
                 Update: {
                     company?: string | null
@@ -119,6 +123,8 @@ export interface Database {
                     name?: string
                     status?: string
                     subject?: string | null
+                    region?: string | null
+                    industry?: string | null
                 }
                 Relationships: []
             }
@@ -132,6 +138,8 @@ export interface Database {
                     message: string | null
                     partnership_type: string
                     status: string
+                    region: string | null
+                    industry: string | null
                 }
                 Insert: {
                     company: string
@@ -142,6 +150,8 @@ export interface Database {
                     message?: string | null
                     partnership_type: string
                     status?: string
+                    region?: string | null
+                    industry?: string | null
                 }
                 Update: {
                     company?: string
@@ -152,6 +162,8 @@ export interface Database {
                     message?: string | null
                     partnership_type?: string
                     status?: string
+                    region?: string | null
+                    industry?: string | null
                 }
                 Relationships: []
             }

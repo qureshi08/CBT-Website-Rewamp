@@ -42,51 +42,48 @@ interface PersonaBridgeProps {
 
 export default function PersonaBridge({ exclude }: PersonaBridgeProps) {
     const items = Object.entries(allBridgeItems)
-        .filter(([key]) => key !== exclude)
-        .map(([, item]) => item);
+        .filter(([key]) => key !== exclude);
 
     return (
-        <section className="bg-tag-bg">
-            <div className="container-main section-padding">
-                <div className="text-center mb-10">
-                    <span className="text-xs font-semibold uppercase tracking-[0.15em] text-green-primary">
-                        Explore More
-                    </span>
-                    <h2 className="text-2xl md:text-3xl font-bold text-charcoal mt-2">
-                        Also Relevant for You
-                    </h2>
-                </div>
+        <div className="bg-light-grey border-y border-border/40 py-10">
+            <div className="container-main">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 text-center md:text-left">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-mid-grey uppercase tracking-[0.3em] mb-1">
+                            Continue Browsing
+                        </span>
+                        <span className="text-xl font-bold text-charcoal">
+                            Explore more of CBT
+                        </span>
+                    </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    {items.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="bg-white rounded-xl p-6 flex flex-col items-center text-center group card-hover border border-border/50"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-tag-bg flex items-center justify-center mb-4 group-hover:bg-green-primary transition-colors duration-200">
-                                    <Icon
-                                        size={22}
-                                        className="text-green-primary group-hover:text-white transition-colors duration-200"
-                                    />
-                                </div>
-                                <h3 className="font-semibold text-charcoal mb-1">
-                                    {item.label}
-                                </h3>
-                                <p className="text-sm text-mid-grey mb-4 leading-relaxed">
-                                    {item.description}
-                                </p>
-                                <span className="inline-flex items-center gap-1 text-sm font-medium text-green-primary group-hover:gap-2 transition-all duration-200">
-                                    Explore
-                                    <ArrowRight size={14} />
-                                </span>
-                            </Link>
-                        );
-                    })}
+                    <div className="h-px w-12 bg-border hidden md:block" />
+
+                    <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+                        {items.map(([key, item]) => {
+                            const Icon = item.icon;
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="flex items-center gap-3 text-sm font-bold text-mid-grey hover:text-charcoal transition-all group"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-white border border-border/50 flex items-center justify-center group-hover:bg-charcoal group-hover:text-white transition-all shadow-sm">
+                                        <Icon size={16} />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                                            {item.label}
+                                            <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </span>
+                                        <span className="text-[10px] font-normal opacity-60 hidden sm:block">{item.description}</span>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

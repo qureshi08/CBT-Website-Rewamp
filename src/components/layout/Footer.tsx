@@ -79,19 +79,15 @@ export default function Footer() {
                         <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
                             Get in Touch
                         </h4>
-                        <a
-                            href="mailto:muammad.anas.quershi@convergentbt.com"
-                            className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-green-light transition-colors duration-150 mb-4"
-                        >
-                            <Mail size={16} />
-                            muammad.anas.quershi@convergentbt.com
-                        </a>
+                        <p className="text-sm text-white/60 mb-4">
+                            Ready to transform your business with data? Let&apos;s talk about your goals.
+                        </p>
                         <div className="mt-4">
                             <Link
                                 href="/contact"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-green-light hover:text-white transition-colors duration-150"
                             >
-                                Start a Conversation
+                                Contact Our Team
                                 <ArrowUpRight size={14} />
                             </Link>
                         </div>
@@ -99,13 +95,9 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-xs text-white/40">
-                        © {new Date().getFullYear()} Convergent Business Technologies. All
-                        rights reserved.
-                    </p>
-                    <p className="text-xs text-white/40">
-                        Islamabad, Pakistan
+                <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+                    <p className="text-sm text-white/40">
+                        Convergent Business Technologies | Islamabad, Pakistan
                     </p>
                 </div>
             </div>

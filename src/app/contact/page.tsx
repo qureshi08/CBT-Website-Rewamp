@@ -8,6 +8,8 @@ export const metadata: Metadata = {
         "Get in touch with CBT. We help organisations turn their data into competitive advantage. Offices in Islamabad, Pakistan.",
 };
 
+import PersonaBridge from "@/components/shared/PersonaBridge";
+
 export default function ContactPage() {
     return (
         <>
@@ -15,7 +17,7 @@ export default function ContactPage() {
             <section className="bg-white pt-[72px]">
                 <div className="container-main py-20 md:py-28">
                     <div className="max-w-3xl">
-                        <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
+                        <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
                             Contact
                         </span>
                         <h1 className="text-4xl md:text-5xl font-bold text-charcoal leading-tight">
@@ -35,64 +37,72 @@ export default function ContactPage() {
                         {/* Contact Info */}
                         <div className="lg:col-span-1">
                             <h2 className="text-xl font-bold text-charcoal mb-6">
-                                Get in Touch
+                                Why Contact Us?
                             </h2>
 
-                            <div className="space-y-6">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center shrink-0">
-                                        <Mail size={18} className="text-green-primary" />
+                            <div className="space-y-8">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center shrink-0">
+                                        <Clock size={20} className="text-green-primary" />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-charcoal text-sm">
-                                            Email
+                                        <h3 className="font-bold text-charcoal text-base">
+                                            Quick Response
                                         </h3>
-                                        <a
-                                            href="mailto:muammad.anas.quershi@convergentbt.com"
-                                            className="text-sm text-mid-grey hover:text-green-primary transition-colors"
-                                        >
-                                            muammad.anas.quershi@convergentbt.com
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center shrink-0">
-                                        <MapPin size={18} className="text-green-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-charcoal text-sm">
-                                            Location
-                                        </h3>
-                                        <p className="text-sm text-mid-grey">
-                                            Islamabad, Pakistan
+                                        <p className="text-sm text-mid-grey mt-1">
+                                            Our consultants typically respond within 1 business day.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center shrink-0">
-                                        <Clock size={18} className="text-green-primary" />
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center shrink-0">
+                                        <MapPin size={20} className="text-green-primary" />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-charcoal text-sm">
-                                            Response Time
+                                        <h3 className="font-bold text-charcoal text-base">
+                                            Global Delivery
                                         </h3>
-                                        <p className="text-sm text-mid-grey">
-                                            We respond within 1 business day
+                                        <p className="text-sm text-mid-grey mt-1">
+                                            Based in Islamabad, Pakistan, delivering for brands worldwide.
                                         </p>
                                     </div>
                                 </div>
+
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center shrink-0">
+                                        <Mail size={20} className="text-green-primary" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-charcoal text-base">
+                                            Direct Message
+                                        </h3>
+                                        <p className="text-sm text-mid-grey mt-1">
+                                            Use the form to send a direct message to our support and consultancy team.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-12 p-6 bg-white rounded-2xl border border-border/50">
+                                <p className="text-sm text-mid-grey italic leading-relaxed">
+                                    &ldquo;CBT helped us transform our reporting architecture in weeks, not months. Highly recommend their responsive team.&rdquo;
+                                </p>
+                                <p className="text-xs font-bold text-charcoal mt-4">— Executive Partner, FMCG Client</p>
                             </div>
                         </div>
 
                         {/* Contact Form */}
                         <div className="lg:col-span-2">
-                            <ContactForm />
+                            <div className="bg-white rounded-3xl p-8 md:p-10 shadow-2xl shadow-green-primary/5 border border-border/40">
+                                <ContactForm />
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <PersonaBridge exclude="contact" />
         </>
     );
 }

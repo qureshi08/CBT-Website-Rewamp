@@ -11,162 +11,70 @@ export const metadata: Metadata = {
 
 import { createClient } from "@/lib/supabase/server";
 
-const fallbackProducts = [
-    {
-        name: "CBT Variance Visual",
-        slug: "cbt-variance-visual",
-        category: "Power BI Visual",
-        short_description:
-            "A Power BI custom visual for displaying variance analysis with conditional formatting. Compare actuals against targets with intuitive color-coded indicators, drill-down capabilities, and flexible layout options.",
-        features: [
-            "Conditional colour formatting",
-            "Multi-level drill-down",
-            "Flexible column configuration",
-            "PDF export ready",
-            "Mobile responsive design",
-        ],
-        appsource_url: "#",
-    },
-    {
-        name: "CBT KPI Scorecard",
-        slug: "cbt-kpi-scorecard",
-        category: "Power BI Visual",
-        short_description:
-            "A Power BI custom visual for executive KPI dashboards with traffic light indicators. Monitor key metrics at a glance with customisable thresholds, trend arrows, and sparklines.",
-        features: [
-            "Traffic light indicators",
-            "Configurable thresholds",
-            "Trend sparklines",
-            "Grouping and categories",
-            "Theme-aware styling",
-        ],
-        appsource_url: "#",
-    },
-];
+import ProductFilter from "@/components/products/ProductFilter";
 
 export default async function ProductsPage() {
-    const supabase = await createClient();
-
-    const { data: dbProducts } = await supabase
-        .from("products")
-        .select("*")
-        .order("display_order", { ascending: true });
-
-    const displayProducts = dbProducts?.length ? dbProducts : fallbackProducts;
-
     return (
         <>
             {/* Hero */}
-            <section className="bg-white pt-[72px]">
-                <div className="container-main py-20 md:py-28">
-                    <div className="max-w-3xl">
-                        <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
-                            Products
+            <section className="bg-persona-product text-white pt-[72px]">
+                <div className="container-main py-20 md:py-32">
+                    <div className="max-w-4xl">
+                        <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/70 mb-4 bg-white/10 px-3 py-1 rounded">
+                            Our Products
                         </span>
-                        <h1 className="text-4xl md:text-5xl font-bold text-charcoal leading-tight">
-                            Tools Built by{" "}
-                            <span className="italic-accent">Data People</span>, for Data
-                            People
+                        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+                            Power up your <span className="italic font-serif opacity-70">Analytics</span>
                         </h1>
-                        <p className="mt-6 text-lg text-mid-grey leading-relaxed max-w-2xl">
-                            Power BI custom visuals and analytics tools designed for real-world
-                            data challenges, built by the same team that delivers for
-                            enterprise clients.
+                        <p className="mt-8 text-xl text-white/80 leading-relaxed max-w-2xl">
+                            Industry-grade Power BI custom visuals and automation tools. Built by data professionals for data professionals.
                         </p>
                     </div>
                 </div>
             </section>
 
-            {/* Product Grid */}
+            {/* Products with Filter Tabs */}
             <section className="bg-light-grey">
                 <div className="container-main section-padding">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {displayProducts.map((product: any) => (
-                            <div
-                                key={product.slug}
-                                className="bg-white rounded-2xl border border-border/50 overflow-hidden card-hover group"
-                            >
-                                {/* Product Screenshot Placeholder */}
-                                <div className="aspect-video bg-white flex items-center justify-center relative border-b border-border/50 overflow-hidden">
-                                    <img
-                                        src="/images/product_preview.png"
-                                        alt={product.name}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    {/* Category badge */}
-                                    <span className="absolute top-4 left-4 text-xs font-semibold text-green-primary bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
-                                        {product.category}
-                                    </span>
-                                </div>
-
-                                <div className="p-6 md:p-8">
-                                    <h3 className="text-xl font-bold text-charcoal mb-3">
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-mid-grey leading-relaxed mb-5">
-                                        {product.short_description}
-                                    </p>
-
-                                    {/* Features */}
-                                    <div className="space-y-2 mb-6">
-                                        {product.features?.map((feature: string) => (
-                                            <div key={feature} className="flex items-center gap-2">
-                                                <Star
-                                                    size={14}
-                                                    className="text-green-primary shrink-0"
-                                                    fill="currentColor"
-                                                />
-                                                <span className="text-sm text-charcoal">{feature}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-3">
-                                        <a
-                                            href={product.appsource_url || "#"}
-                                            target={product.appsource_url ? "_blank" : "_self"}
-                                            className="btn-primary text-sm py-2.5 px-5"
-                                        >
-                                            View on AppSource
-                                            <ExternalLink size={14} />
-                                        </a>
-                                        <Link
-                                            href="/contact"
-                                            className="btn-outline text-sm py-2.5 px-5"
-                                        >
-                                            Request a Demo
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <ProductFilter />
                 </div>
             </section>
 
-            {/* Built by CGAP */}
+            {/* Request a Demo Banner (Large) */}
+            <section className="bg-persona-product py-16 text-white text-center">
+                <div className="container-main">
+                    <h2 className="text-4xl font-extrabold mb-6">Need a Custom Solution?</h2>
+                    <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto italic font-serif">
+                        Our product team can build custom visuals and automated reports tailored to your unique requirements.
+                    </p>
+                    <Link
+                        href="/contact?subject=Custom Product Support"
+                        className="inline-flex items-center gap-3 bg-white text-charcoal font-black px-10 py-5 rounded-full text-lg hover:bg-white/90 shadow-2xl shadow-persona-product/20"
+                    >
+                        Request a Demo
+                        <ArrowRight size={22} className="text-persona-product" />
+                    </Link>
+                </div>
+            </section>
+
+            {/* Behind the Products - CGAP Focus */}
             <section className="bg-white">
                 <div className="container-main section-padding">
-                    <div className="text-center max-w-2xl mx-auto">
-                        <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
-                            Behind the Products
-                        </span>
-                        <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-4">
-                            Built by Our Team, Including CGAP Graduates
+                    <div className="max-w-4xl mx-auto bg-tag-bg-orange rounded-3xl p-10 md:p-16 border border-persona-product/10 text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-6">
+                            The CGAP Advantage
                         </h2>
-                        <p className="text-mid-grey leading-relaxed mb-8">
-                            Our products are built by experienced consultants and talented CGAP
-                            graduates — the same people who deliver enterprise data solutions
-                            for global brands.
+                        <p className="text-lg text-mid-grey leading-relaxed mb-10">
+                            The same talented graduates that deliver for our enterprise clients also build and maintain our custom visual library. Every product is tested by our veteran consultants for real-world reliability.
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
-                            <Link href="/cgap" className="btn-outline">
+                            <Link href="/cgap" className="inline-flex items-center gap-3 bg-persona-product text-white font-bold px-8 py-4 rounded-xl hover:bg-persona-product/90 transition-all shadow-lg shadow-persona-product/20">
                                 Meet the CGAP Program
-                                <ArrowRight size={16} />
+                                <ArrowRight size={20} />
                             </Link>
-                            <Link href="/contact" className="btn-primary">
+                            <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-charcoal font-bold px-8 py-4 rounded-xl border border-border/50 hover:bg-tag-bg-orange transition-all">
                                 Contact Product Support
-                                <ArrowRight size={16} />
+                                <BarChart3 size={20} className="text-persona-product" />
                             </Link>
                         </div>
                     </div>

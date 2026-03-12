@@ -13,9 +13,20 @@
   --color-mid-grey: #6B6B6B;
   --color-light-grey: #F2F2F2;
 
+  /* Persona Colors */
+  --color-persona-customer: #2D7D46;
+  --color-persona-partner: #8B5CF6; /* Purple */
+  --color-persona-products: #F59E0B; /* Orange */
+  --color-persona-cgap: #EF4444; /* Red */
+  --color-persona-banking: #3B82F6; /* Blue */
+
   /* Accents */
   --color-border: #E0E0E0;
   --color-tag-bg: #E8F5EC;
+  --color-tag-bg-purple: #F5F3FF;
+  --color-tag-bg-orange: #FFF7ED;
+  --color-tag-bg-red: #FEF2F2;
+  --color-tag-bg-blue: #EFF6FF;
 
   /* Spacing (8px base unit) */
   --spacing-1: 8px;
