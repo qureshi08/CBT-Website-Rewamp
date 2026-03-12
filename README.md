@@ -71,51 +71,36 @@ src/
 └── styles/                      # Global CSS with brand tokens
 ```
 
-## 🎨 Brand
+## 🎨 Persona-Specific Design System
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| Primary Green | `#2D7D46` | CTAs, highlights, active states |
-| Green Light | `#4CAF72` | Hover states, secondary accents |
-| Charcoal | `#2E2E2E` | Headings, primary text |
-| Dark Section | `#1C1C1C` | Client logos section, footer |
-| Light Grey | `#F2F2F2` | Alternating section backgrounds |
-| Tag Background | `#E8F5EC` | Tags, persona bridge section |
+The site uses a dynamic color-coding system to differentiate user journeys:
+- **Customers (Green):** `#2D7D46` — Traditional consultancy.
+- **Partners (Purple):** `#8B5CF6` — Modern ecosystem.
+- **Products (Orange):** `#F59E0B` — Vibrant software/tools.
+- **CGAP (Red):** `#EF4444` — Academic/careers.
+- **Banking (Blue):** `#3B82F6` — Specialized industry focus.
 
 ## 📦 Phased Delivery
 
-### ✅ Phase 1 — Foundation (Current)
-- Multi-persona homepage with 4 entry points
-- All persona landing pages with content
-- Contact + Partner forms (client-side validation + API routes)
-- Cross-persona bridge sections on every page
-- Mobile responsive design
-- Deployed on Vercel
+### ✅ Phase 1 — Foundation
+- Multi-persona homepage with 4 entry points.
+- All persona landing pages with static content.
 
-### 🔜 Phase 2 — Dynamic Content
-- Supabase-backed CMS for clients, products, case studies
-- CGAP cohort data from database
-- Content updates without code changes
-
-### 🔜 Phase 3 — Lead Generation
-- Resend email integration for form confirmations
-- CRM integration
-- Analytics dashboard
-
-### 🔜 Phase 4 — Content Depth
-- Full case study pages
-- Product documentation
-- Alumni profiles
-- Blog
+### ✅ Phase 2 — Refinement & Dynamic Content (Completed March 2026)
+- **Supabase Integration:** Products, Clients, and CGAP Cohorts pulled dynamically.
+- **Email Integration:** Resend API for Partner & Contact form notifications with persona branding.
+- **Form Enhancements:** Added `Region` and `Industry` fields to all leads.
+- **Design Overhaul:** Implemented premium multi-persona styling across all pages.
+- **Privacy:** Public email addresses removed; all contacts routed through secure forms.
 
 ## 📄 Documentation
 
+- [Hand-off Summary](file:///C:/Users/User/.gemini/antigravity/brain/10ff4dbe-48d1-474a-aa1a-83dc454148d1/hand-off.md) — **Read this for a technical overview of recent changes.**
 - `01_BRD.md` — Business Requirements Document
 - `02_PRD.md` — Product Requirements Document
 - `03_UX_UI_Design.md` — UX/UI Design Specification
 - `04_C4_Architecture.md` — C4 Architecture Document
-- `05_Antigravity_Agent_Prompt.md` — Agent Build Instructions
-- `06_DYK_Presenter_Guide.md` — DYK Session Presenter Guide
+- `11-03-2026/01_Wireframes_V2.md` — Updated Design Guidance.
 
 ## 📝 License
 
