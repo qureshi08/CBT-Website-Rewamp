@@ -1,60 +1,82 @@
 import Link from "next/link";
+import { Mail, ArrowRight } from "lucide-react";
 
 export default function Footer() {
     return (
         <>
             {/* CTA BAND */}
-            <section className="bg-text-heading text-white py-16 px-8" id="contact">
-                <div className="container-main p-0 max-w-[1160px] mx-auto grid lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-16">
+            <section className="cta-band" id="contact">
+                <div className="container-main p-0 max-w-[1200px] mx-auto grid lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-20 relative z-10">
                     <div>
-                        <h2 className="font-heading text-[clamp(1.8rem,3.5vw,2.6rem)] font-bold leading-[1.15] mb-4 tracking-[-0.02em]">
-                            Ready to make your data work harder?
+                        <h2 className="cta-heading">
+                            Ready to make your data{" "}
+                            <span className="font-heading italic text-white">work harder?</span>
                         </h2>
-                        <p className="text-base font-light text-white/70 max-w-[500px] leading-[1.6]">
-                            Whether you're at the start of your data journey or scaling an existing capability, let's have a conversation.
+                        <p className="cta-sub">
+                            Whether you&apos;re at the start of your data journey or scaling an existing capability, let&apos;s have a conversation.
                         </p>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-4 shrink-0">
-                        <Link href="/contact" className="inline-flex items-center justify-center bg-white text-text-heading font-body text-[14px] font-semibold px-6 py-3.5 rounded-md transition-transform duration-200 hover:-translate-y-[2px]">
-                            Start a conversation →
+                    <div className="flex flex-col sm:flex-row gap-4 shrink-0 lg:items-center">
+                        <Link href="/contact" className="btn-cta-white">
+                            Start a conversation
+                            <ArrowRight size={16} />
                         </Link>
-                        <Link href="/cgap" className="inline-flex items-center justify-center bg-transparent text-white font-body text-[14px] font-medium px-4 py-3.5 border-b border-white/20 transition-colors duration-200 hover:text-primary hover:border-primary">
-                            View our training programme →
+                        <Link href="/cgap" className="inline-flex items-center justify-center bg-transparent text-white/60 font-body text-[14px] font-medium px-2 py-2 border-b border-white/20 transition-colors duration-200 hover:text-white hover:border-white gap-2">
+                            View our training programme
+                            <ArrowRight size={14} />
                         </Link>
                     </div>
                 </div>
             </section>
 
             {/* FOOTER */}
-            <footer className="bg-surface pt-12 pb-8 px-8 border-t border-border">
-                <div className="container-main p-0 max-w-[1160px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-3">
-                        <div className="w-[30px] h-[30px] bg-text-heading rounded-[6px] flex items-center justify-center relative overflow-hidden">
-                            <span className="text-white font-mono text-[9px] relative z-10 mt-[2px]">CBT</span>
-                            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
+            <footer className="bg-text-heading py-[48px] px-8 border-t-[3px] border-primary">
+                <div className="container-main p-0 max-w-[1200px] mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                        {/* Left: Logo + Name */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-[32px] h-[32px] bg-primary rounded-[6px] flex items-center justify-center relative overflow-hidden">
+                                <span className="text-white font-mono text-[10px] font-bold relative z-10">CBT</span>
+                            </div>
+                            <span className="font-body text-[14px] font-semibold text-white">
+                                Convergent Business Technologies
+                            </span>
                         </div>
-                        <span className="font-body text-[13px] font-semibold text-text-heading">
-                            Convergent Business Technologies
-                        </span>
+
+                        {/* Center: Nav Links */}
+                        <div className="flex flex-wrap justify-center gap-8">
+                            <Link href="/" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                Home
+                            </Link>
+                            <Link href="/customers" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                Customers
+                            </Link>
+                            <Link href="/partners" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                Partners
+                            </Link>
+                            <Link href="/products" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                Products
+                            </Link>
+                            <Link href="/contact" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                Contact
+                            </Link>
+                        </div>
+
+                        {/* Right: Email */}
+                        <a href="mailto:admin@convergentbt.com" className="inline-flex items-center gap-2 text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                            <Mail size={14} />
+                            admin@convergentbt.com
+                        </a>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-8">
-                        <Link href="/services" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
-                            Services
-                        </Link>
-                        <Link href="/cgap" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
-                            Training
-                        </Link>
-                        <Link href="/partners" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
-                            Partners
-                        </Link>
-                        <Link href="/contact" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
-                            Contact
-                        </Link>
-                    </div>
-
-                    <div className="text-[11px] text-text-muted">
-                        © {new Date().getFullYear()} CBT. All rights reserved.
+                    {/* Divider */}
+                    <div className="border-t border-white/10 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <p className="text-[12px] text-white/30 font-body">
+                            © {new Date().getFullYear()} Convergent Business Technologies. All rights reserved.
+                        </p>
+                        <p className="text-[12px] text-white/30 font-body">
+                            Data · Cloud · AI Consultancy
+                        </p>
                     </div>
                 </div>
             </footer>

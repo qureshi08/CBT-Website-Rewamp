@@ -45,9 +45,9 @@
     --text-6xl: 3.75rem;
     /* 60px */
 
-    --font-heading: 'Playfair Display', Georgia, serif;
-    --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --font-heading: var(--font-playfair), "Playfair Display", serif;
+    --font-body: var(--font-dm-sans), "DM Sans", sans-serif;
+    --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
 
     /* ─── SPACING ─── */
     --space-1: 0.25rem;
@@ -64,13 +64,13 @@
     --space-24: 6rem;
 
     /* ─── LAYOUT ─── (from reference: max-width 1160px, section padding 100px) */
-    --container-max: 1160px;
+    --container-max: 1200px;
     --container-wide: 1440px;
     --container-prose: 720px;
     --container-px: var(--space-8);
     /* 32px */
-    --section-py: 64px;
-    --section-py-lg: 80px;
+    --section-py: 80px;
+    --section-py-lg: 100px;
 
     /* ─── RADII ─── (from reference) */
     --radius: 10px;
@@ -89,6 +89,50 @@
     --transition-base: 0.2s ease;
     --transition-slow: 0.35s ease;
     --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes lineGrow {
+    from {
+      transform: scaleX(0);
+    }
+
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
   }
 
   *,
@@ -183,28 +227,126 @@
     padding-bottom: var(--section-py-lg);
   }
 
-  /* ─── BUTTONS ─── (from cbt-homepage reference) */
+  /* ─── HERO ─── */
+  .hero-grid-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
 
-  /* Primary: dark bg, turns green on hover */
+  .btn-primary-v2 {
+    background: var(--color-text-heading);
+    color: var(--color-white);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s var(--ease), transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary-v2:hover {
+    background: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  /* ─── CTA BAND ─── */
+  .cta-band {
+    padding: 100px 32px;
+    background: var(--color-text-heading);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-band::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--color-primary);
+  }
+
+  .cta-band::after {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 153, 77, 0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .cta-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--color-white);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  .btn-cta-white {
+    background: var(--color-white);
+    color: var(--color-text-heading);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-cta-white:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-1px);
+  }
+
+  /* Primary: Green bg, turns dark green on hover */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-text-heading);
+    background: var(--color-primary);
     color: var(--color-white);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 13px;
-    padding: 9px 20px;
-    border-radius: 5px;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 6px;
     border: 2px solid transparent;
     transition: background 0.2s var(--ease), transform 0.15s;
     cursor: pointer;
-    gap: 8px;
+    gap: 10px;
   }
 
   .btn-primary:hover {
-    background: var(--color-primary);
+    background: var(--color-primary-dark);
     transform: translateY(-1px);
   }
 
