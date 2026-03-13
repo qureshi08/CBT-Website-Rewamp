@@ -68,15 +68,15 @@ export default function PartnerForm() {
 
     if (isSubmitted) {
         return (
-            <div className="text-center py-16 bg-tag-bg-purple rounded-2xl border border-persona-partner/20 shadow-sm">
-                <CheckCircle2 size={48} className="text-persona-partner mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-charcoal mb-2">Registration Received!</h3>
-                <p className="text-mid-grey max-w-sm mx-auto">
-                    We&apos;ve received your interest. Our partnership team will reach out to schedule your introductory call shortly.
+            <div className="text-center py-20 bg-white rounded-2xl border border-border/50 shadow-sm font-body">
+                <CheckCircle2 size={56} className="text-primary mx-auto mb-6" />
+                <h3 className="text-2xl font-bold text-text-heading mb-3 font-heading">Thank You!</h3>
+                <p className="text-text-body/70 max-w-sm mx-auto leading-relaxed">
+                    We&apos;ve received your interest. Our partnership team will reach out to schedule your introductory call within 1 business day.
                 </p>
                 <button
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-6 text-persona-partner font-semibold hover:underline"
+                    className="btn-secondary mt-8"
                 >
                     Send Another Request
                 </button>
@@ -85,30 +85,30 @@ export default function PartnerForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 font-body">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                     <label className="form-label">Contact Name *</label>
                     <input
                         {...register("contactName", {
                             required: "Contact name is required",
                         })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
-                        placeholder="Your name"
+                        className="form-input"
+                        placeholder="Jane Smith"
                     />
                     {errors.contactName && (
-                        <p className="form-error">{errors.contactName.message}</p>
+                        <p className="text-xs text-error mt-2">{errors.contactName.message}</p>
                     )}
                 </div>
                 <div>
                     <label className="form-label">Company *</label>
                     <input
                         {...register("company", { required: "Company name is required" })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
+                        className="form-input"
                         placeholder="Organisation"
                     />
                     {errors.company && (
-                        <p className="form-error">{errors.company.message}</p>
+                        <p className="text-xs text-error mt-2">{errors.company.message}</p>
                     )}
                 </div>
                 <div>
@@ -122,39 +122,39 @@ export default function PartnerForm() {
                                 message: "Enter a valid email",
                             },
                         })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
-                        placeholder="you@company.com"
+                        className="form-input"
+                        placeholder="jane@company.com"
                     />
-                    {errors.email && <p className="form-error">{errors.email.message}</p>}
+                    {errors.email && <p className="text-xs text-error mt-2">{errors.email.message}</p>}
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                     <label className="form-label">Region *</label>
                     <select
                         {...register("region", { required: "Select region" })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
+                        className="form-input"
                     >
                         <option value="">Select region...</option>
                         {regions.map((r) => (
                             <option key={r} value={r}>{r}</option>
                         ))}
                     </select>
-                    {errors.region && <p className="form-error">{errors.region.message}</p>}
+                    {errors.region && <p className="text-xs text-error mt-2">{errors.region.message}</p>}
                 </div>
                 <div>
                     <label className="form-label">Industry *</label>
                     <select
                         {...register("industry", { required: "Select industry" })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
+                        className="form-input"
                     >
                         <option value="">Select industry...</option>
                         {industries.map((i) => (
                             <option key={i} value={i}>{i}</option>
                         ))}
                     </select>
-                    {errors.industry && <p className="form-error">{errors.industry.message}</p>}
+                    {errors.industry && <p className="text-xs text-error mt-2">{errors.industry.message}</p>}
                 </div>
                 <div>
                     <label className="form-label">Partnership Type *</label>
@@ -162,7 +162,7 @@ export default function PartnerForm() {
                         {...register("partnershipType", {
                             required: "Select a type",
                         })}
-                        className="form-input focus:border-persona-partner focus:ring-persona-partner/10"
+                        className="form-input"
                     >
                         <option value="">Select type...</option>
                         <option value="technology">Technology Partner</option>
@@ -170,7 +170,7 @@ export default function PartnerForm() {
                         <option value="referral">Referral Partner</option>
                     </select>
                     {errors.partnershipType && (
-                        <p className="form-error">{errors.partnershipType.message}</p>
+                        <p className="text-xs text-error mt-2">{errors.partnershipType.message}</p>
                     )}
                 </div>
             </div>
@@ -180,22 +180,23 @@ export default function PartnerForm() {
                 <textarea
                     {...register("message")}
                     rows={4}
-                    className="form-input resize-none focus:border-persona-partner focus:ring-persona-partner/10"
+                    className="form-input resize-none"
                     placeholder="Briefly describe your interest..."
                 />
             </div>
 
-            <div className="pt-2">
+            <div className="pt-4 flex flex-col md:flex-row items-center justify-between gap-6">
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 bg-persona-partner text-white font-bold px-8 py-4 rounded-lg hover:bg-persona-partner/90 transition-all disabled:opacity-60 shadow-lg shadow-persona-partner/20"
+                    className="btn-primary w-full md:w-auto min-w-[220px] py-4 disabled:opacity-60"
                 >
                     {isSubmitting ? "Sending..." : "Arrange a Call"}
                     {!isSubmitting && <ArrowRight size={18} />}
                 </button>
-                <p className="text-[11px] text-mid-grey mt-4 italic">
-                    * Your information will be shared with our internal partnership team only. No emails are shown publicly.
+                <p className="text-[11px] text-text-body/60 italic leading-relaxed max-w-sm text-center md:text-right">
+                    * Your information will be shared with our internal partnership team only.
+                    We respect your privacy and never share details publicly.
                 </p>
             </div>
         </form>

@@ -95,7 +95,7 @@ The site uses a dynamic color-coding system to differentiate user journeys:
 
 ## 📄 Documentation
 
-- [Hand-off Summary](file:///C:/Users/User/.gemini/antigravity/brain/10ff4dbe-48d1-474a-aa1a-83dc454148d1/hand-off.md) — **Read this for a technical overview of recent changes.**
+- [HANDOFF_GUIDE.md](HANDOFF_GUIDE.md) — **Read this for a technical overview of recent design revamp.**
 - `01_BRD.md` — Business Requirements Document
 - `02_PRD.md` — Product Requirements Document
 - `03_UX_UI_Design.md` — UX/UI Design Specification

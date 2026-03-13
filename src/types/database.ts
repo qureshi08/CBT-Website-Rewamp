@@ -182,6 +182,7 @@ export interface Database {
                     screenshot_urls: string[]
                     short_description: string | null
                     slug: string
+                    industry: string | null
                 }
                 Insert: {
                     appsource_url?: string | null
@@ -197,6 +198,7 @@ export interface Database {
                     screenshot_urls?: string[]
                     short_description?: string | null
                     slug: string
+                    industry?: string | null
                 }
                 Update: {
                     appsource_url?: string | null
@@ -212,6 +214,7 @@ export interface Database {
                     screenshot_urls?: string[]
                     short_description?: string | null
                     slug?: string
+                    industry?: string | null
                 }
                 Relationships: []
             }
@@ -277,6 +280,72 @@ export interface Database {
                     cohort?: string | null
                     quote?: string | null
                     avatar_url?: string | null
+                    display_order?: number
+                }
+                Relationships: []
+            }
+            partners: {
+                Row: {
+                    id: string
+                    created_at: string
+                    name: string
+                    logo_url: string | null
+                    website_url: string | null
+                    partner_type: "Technology" | "Delivery" | "Referral"
+                    display_order: number
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    name: string
+                    logo_url?: string | null
+                    website_url?: string | null
+                    partner_type: "Technology" | "Delivery" | "Referral"
+                    display_order?: number
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    name?: string
+                    logo_url?: string | null
+                    website_url?: string | null
+                    partner_type?: "Technology" | "Delivery" | "Referral"
+                    display_order?: number
+                }
+                Relationships: []
+            }
+            testimonials: {
+                Row: {
+                    id: string
+                    created_at: string
+                    quote: string
+                    author: string
+                    company: string
+                    role: string | null
+                    avatar_url: string | null
+                    page: "Home" | "CGAP" | "Partners" | "Products" | "General"
+                    display_order: number
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    quote: string
+                    author: string
+                    company: string
+                    role?: string | null
+                    avatar_url?: string | null
+                    page?: "Home" | "CGAP" | "Partners" | "Products" | "General"
+                    display_order?: number
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    quote?: string
+                    author?: string
+                    company?: string
+                    role?: string | null
+                    avatar_url?: string | null
+                    page?: "Home" | "CGAP" | "Partners" | "Products" | "General"
                     display_order?: number
                 }
                 Relationships: []

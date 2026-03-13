@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Star, ExternalLink, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Star, ExternalLink, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 interface Product {
     name: string;
@@ -12,116 +13,149 @@ interface Product {
     features: string[];
     appsource_url?: string;
     industry?: string;
-    image: string;
 }
 
-const allProducts: Product[] = [
-    {
-        name: "CBT Variance Visual",
-        slug: "cbt-variance-visual",
-        category: "Power BI Visual",
-        industry: "Retail",
-        image: "/images/product_retail.png",
-        short_description: "A Power BI custom visual for displaying variance analysis with conditional formatting. Perfect for retail sales vs target comparisons.",
-        features: ["Conditional colour formatting", "Multi-level drill-down", "Flexible column configuration"],
-        appsource_url: "#",
-    },
-    {
-        name: "CBT KPI Scorecard",
-        slug: "cbt-kpi-scorecard",
-        category: "Power BI Visual",
-        industry: "Banking",
-        image: "/images/product_banking.png",
-        short_description: "Executive KPI dashboards with traffic light indicators. Designed for high-frequency banking metrics and risk monitoring.",
-        features: ["Traffic light indicators", "Configurable thresholds", "Trend sparklines"],
-        appsource_url: "#",
-    },
-    {
-        name: "CBT Data Auditor",
-        slug: "cbt-data-auditor",
-        category: "Analytics Tool",
-        industry: "Technology",
-        image: "/images/product_tech.png",
-        short_description: "Automated data quality auditing and reporting. Ensure your tech stack is feeding clean, reliable data into your BI layer.",
-        features: ["Auto-validation rules", "Anomalies detection", "Weekly PDF reports"],
-        appsource_url: "#",
-    },
-];
-
-const industries = ["All", "Banking", "Retail", "Technology"];
-
 export default function ProductFilter() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [industries, setIndustries] = useState<string[]>(["All"]);
     const [activeIndustry, setActiveIndustry] = useState("All");
+    const [isLoading, setIsLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    async function fetchProducts() {
+        setIsLoading(true);
+        const { data, error } = await supabase
+            .from("products")
+            .select("*")
+            .order("display_order", { ascending: true });
+
+        if (!error && data) {
+            // Map the DB data to our UI format
+            const mappedProducts: Product[] = data.map(p => ({
+                name: p.name,
+                slug: p.slug,
+                category: p.category,
+                short_description: p.short_description || "",
+                features: p.screenshot_urls || [], // Reusing this for demo feature list
+                appsource_url: p.appsource_url || "#",
+                industry: p.industry || "General",
+            }));
+
+            setProducts(mappedProducts);
+
+            // Extract unique industries
+            const uniqueIndustries = ["All", ...new Set(mappedProducts.map(p => p.industry).filter(Boolean) as string[])];
+            setIndustries(uniqueIndustries);
+        }
+        setIsLoading(false);
+    }
 
     const filteredProducts = activeIndustry === "All"
-        ? allProducts
-        : allProducts.filter(p => p.industry === activeIndustry);
+        ? products
+        : products.filter(p => p.industry === activeIndustry);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-32 space-y-6">
+                <Loader2 className="animate-spin text-primary" size={48} />
+                <p className="text-text-body/60 font-body animate-pulse">Gathering our product portfolio...</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-16 font-body">
             {/* Filter Tabs */}
-            <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4 pb-4 border-b border-border/40">
                 {industries.map((ind) => (
                     <button
                         key={ind}
                         onClick={() => setActiveIndustry(ind)}
-                        className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${activeIndustry === ind
-                                ? "bg-persona-product text-white shadow-lg shadow-persona-product/20"
-                                : "bg-white text-mid-grey border border-border/50 hover:border-persona-product/50"
+                        className={`px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeIndustry === ind
+                            ? "bg-primary text-white shadow-xl shadow-primary/10 scale-105"
+                            : "bg-white text-text-muted border border-border/60 hover:border-primary/30 hover:bg-surface"
                             }`}
                     >
-                        {ind}
+                        {ind === "All" ? "All" : ind}
                     </button>
                 ))}
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {filteredProducts.map((product) => (
                     <div
                         key={product.slug}
-                        className="bg-white rounded-2xl border border-border/40 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col"
+                        className="bg-white rounded-3xl border border-border/40 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group flex flex-col h-full"
                     >
-                        <div className="aspect-[16/10] bg-tag-bg-orange relative overflow-hidden group-hover:bg-persona-product/10 transition-colors">
-                            <div className="absolute inset-4 rounded-xl bg-white/80 backdrop-blur-sm border border-white/50 flex items-center justify-center p-4">
-                                <span className="text-persona-product font-bold text-center text-sm">{product.name} Preview</span>
+                        {/* Product Visual Mock */}
+                        <div className="aspect-[16/11] bg-surface relative overflow-hidden flex items-center justify-center p-8 group-hover:bg-primary-muted transition-colors duration-500">
+                            <div className="relative w-full h-full bg-white rounded-xl shadow-2xl border border-border/20 flex flex-col p-4 overflow-hidden">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <div className="w-2 h-2 rounded-full bg-primary/40" />
+                                    <div className="w-12 h-1.5 rounded-full bg-surface" />
+                                </div>
+                                <div className="flex-grow flex items-end gap-1">
+                                    <div className="flex-grow bg-primary/10 rounded-t-sm h-[40%]" />
+                                    <div className="flex-grow bg-primary/20 rounded-t-sm h-[70%]" />
+                                    <div className="flex-grow bg-primary h-[90%]" />
+                                    <div className="flex-grow bg-primary/10 rounded-t-sm h-[30%]" />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent flex items-center justify-center p-6 text-center">
+                                    <span className="text-text-heading font-heading font-bold text-lg opacity-80">{product.name}</span>
+                                </div>
                             </div>
-                            <span className="absolute top-4 right-4 text-[10px] uppercase font-black text-white bg-persona-product px-2 py-1 rounded shadow-sm">
+
+                            <span className="absolute top-6 left-6 uppercase-label text-white bg-primary px-3 py-1 rounded-full shadow-lg">
                                 {product.industry}
                             </span>
                         </div>
 
-                        <div className="p-6 flex flex-col flex-grow">
-                            <div className="text-[11px] font-bold text-persona-product uppercase tracking-widest mb-2">{product.category}</div>
-                            <h3 className="text-xl font-bold text-charcoal mb-3 group-hover:text-persona-product transition-colors">
+                        <div className="p-8 flex flex-col flex-grow">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-5 h-[1px] bg-primary" />
+                                <span className="uppercase-label text-primary">{product.category}</span>
+                            </div>
+
+                            <h3 className="text-2xl font-bold text-text-heading mb-4 font-heading group-hover:text-primary transition-colors duration-300">
                                 {product.name}
                             </h3>
-                            <p className="text-sm text-mid-grey leading-relaxed mb-6 flex-grow">
+
+                            <p className="text-text-body/70 leading-relaxed mb-8 text-sm font-body">
                                 {product.short_description}
                             </p>
 
-                            <div className="space-y-2 mb-8">
-                                {product.features.map((f) => (
-                                    <div key={f} className="flex items-center gap-2">
-                                        <Star size={12} className="text-persona-product opacity-40 shrink-0" fill="currentColor" />
-                                        <span className="text-xs text-charcoal">{f}</span>
+                            <div className="space-y-3 mb-10 border-t border-border/30 pt-6">
+                                {product.features.slice(0, 3).map((f) => (
+                                    <div key={f} className="flex items-center gap-3">
+                                        <div className="w-4 h-4 rounded-full bg-primary-muted flex items-center justify-center">
+                                            <Star size={8} className="text-primary" fill="currentColor" />
+                                        </div>
+                                        <span className="text-[11px] font-medium text-text-body font-body truncate">{f}</span>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="flex flex-col gap-2">
+                            <div className="mt-auto flex flex-col gap-3">
                                 <a
                                     href={product.appsource_url || "#"}
-                                    className="inline-flex items-center justify-center gap-2 bg-persona-product text-white font-bold py-3 rounded-lg text-sm hover:bg-persona-product/90 transition-all shadow-lg shadow-persona-product/10"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-primary w-full py-3 text-sm"
                                 >
-                                    Get it on AppSource
+                                    Get on AppSource
                                     <ExternalLink size={14} />
                                 </a>
                                 <Link
-                                    href={`/contact?subject=Product Demo - ${product.name}`}
-                                    className="inline-flex items-center justify-center gap-2 border border-border/60 text-charcoal font-bold py-3 rounded-lg text-sm hover:bg-tag-bg-orange transition-all"
+                                    href={`/contact?subject=Demo: ${product.name}`}
+                                    className="btn-ghost justify-center text-sm font-bold"
                                 >
                                     Request a Demo
+                                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </div>
                         </div>

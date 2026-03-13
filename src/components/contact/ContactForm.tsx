@@ -76,15 +76,15 @@ export default function ContactForm() {
 
     if (isSubmitted) {
         return (
-            <div className="text-center py-16 bg-white rounded-2xl border border-border/50 shadow-sm">
-                <CheckCircle2 size={48} className="text-persona-customer mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-charcoal mb-2">Thank You!</h3>
-                <p className="text-mid-grey max-w-md mx-auto">
-                    We&apos;ve received your message. Our team will get back to you shortly.
+            <div className="text-center py-20 bg-white rounded-2xl border border-border/50 shadow-sm font-body">
+                <CheckCircle2 size={56} className="text-primary mx-auto mb-6" />
+                <h3 className="text-2xl font-bold text-text-heading mb-3 font-heading">Thank You!</h3>
+                <p className="text-text-muted max-w-md mx-auto leading-relaxed">
+                    We&apos;ve received your message. Our consultants typically respond within 1 business day.
                 </p>
                 <button
                     onClick={() => setIsSubmitted(false)}
-                    className="btn-outline mt-6"
+                    className="btn-secondary mt-8"
                 >
                     Send Another Message
                 </button>
@@ -95,25 +95,25 @@ export default function ContactForm() {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white rounded-2xl p-6 md:p-10 border border-border/50 shadow-sm"
+            className="bg-white rounded-3xl p-8 md:p-12 border border-border/40 shadow-xl shadow-primary/5 font-body"
         >
-            <div className="space-y-10">
+            <div className="space-y-12">
                 {/* Basic Info Group */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                        <span className="w-6 h-6 rounded-full bg-persona-customer/10 text-persona-customer flex items-center justify-center text-xs font-bold">1</span>
-                        <h3 className="font-bold text-charcoal uppercase tracking-wider text-sm">Basic info</h3>
+                <div className="space-y-8">
+                    <div className="flex items-center gap-4 pb-3 border-b border-border/40">
+                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">1</span>
+                        <h3 className="font-bold text-text-heading uppercase tracking-widest text-xs">Basic info</h3>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label className="form-label">Full Name *</label>
                             <input
                                 {...register("name", { required: "Name is required" })}
                                 className="form-input"
-                                placeholder="Your full name"
+                                placeholder="Jane Smith"
                             />
-                            {errors.name && <p className="form-error">{errors.name.message}</p>}
+                            {errors.name && <p className="text-xs text-error mt-2">{errors.name.message}</p>}
                         </div>
                         <div>
                             <label className="form-label">Company *</label>
@@ -122,7 +122,7 @@ export default function ContactForm() {
                                 className="form-input"
                                 placeholder="Organisation name"
                             />
-                            {errors.company && <p className="form-error">{errors.company.message}</p>}
+                            {errors.company && <p className="text-xs text-error mt-2">{errors.company.message}</p>}
                         </div>
                         <div>
                             <label className="form-label">Region *</label>
@@ -135,7 +135,7 @@ export default function ContactForm() {
                                     <option key={r} value={r}>{r}</option>
                                 ))}
                             </select>
-                            {errors.region && <p className="form-error">{errors.region.message}</p>}
+                            {errors.region && <p className="text-xs text-error mt-2">{errors.region.message}</p>}
                         </div>
                         <div>
                             <label className="form-label">Industry *</label>
@@ -148,19 +148,19 @@ export default function ContactForm() {
                                     <option key={i} value={i}>{i}</option>
                                 ))}
                             </select>
-                            {errors.industry && <p className="form-error">{errors.industry.message}</p>}
+                            {errors.industry && <p className="text-xs text-error mt-2">{errors.industry.message}</p>}
                         </div>
                     </div>
                 </div>
 
                 {/* Contact Details Group */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                        <span className="w-6 h-6 rounded-full bg-persona-customer/10 text-persona-customer flex items-center justify-center text-xs font-bold">2</span>
-                        <h3 className="font-bold text-charcoal uppercase tracking-wider text-sm">Contact details</h3>
+                <div className="space-y-8">
+                    <div className="flex items-center gap-4 pb-3 border-b border-border/40">
+                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">2</span>
+                        <h3 className="uppercase-label text-text-heading text-[10px]">Contact details</h3>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label className="form-label">Work Email *</label>
                             <input
@@ -173,9 +173,9 @@ export default function ContactForm() {
                                     },
                                 })}
                                 className="form-input"
-                                placeholder="you@company.com"
+                                placeholder="jane@company.com"
                             />
-                            {errors.email && <p className="form-error">{errors.email.message}</p>}
+                            {errors.email && <p className="text-xs text-error mt-2">{errors.email.message}</p>}
                         </div>
                         <div>
                             <label className="form-label">Subject *</label>
@@ -191,17 +191,17 @@ export default function ContactForm() {
                                 ))}
                             </select>
                             {errors.subject && (
-                                <p className="form-error">{errors.subject.message}</p>
+                                <p className="text-xs text-error mt-2">{errors.subject.message}</p>
                             )}
                         </div>
                     </div>
                 </div>
 
                 {/* Message Group */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                        <span className="w-6 h-6 rounded-full bg-persona-customer/10 text-persona-customer flex items-center justify-center text-xs font-bold">3</span>
-                        <h3 className="font-bold text-charcoal uppercase tracking-wider text-sm">Message</h3>
+                <div className="space-y-8">
+                    <div className="flex items-center gap-4 pb-3 border-b border-border/40">
+                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">3</span>
+                        <h3 className="uppercase-label text-text-heading text-[10px]">Message</h3>
                     </div>
 
                     <div>
@@ -213,28 +213,28 @@ export default function ContactForm() {
                             placeholder="Tell us about your project or enquiry..."
                         />
                         {errors.message && (
-                            <p className="form-error">{errors.message.message}</p>
+                            <p className="text-xs text-error mt-2">{errors.message.message}</p>
                         )}
                     </div>
                 </div>
 
-                <div className="pt-4">
+                <div className="pt-6">
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="btn-primary min-w-[200px] disabled:opacity-60"
+                        className="btn-primary w-full md:w-auto min-w-[220px] py-4 disabled:opacity-60"
                     >
                         {isSubmitting ? (
                             "Sending..."
                         ) : (
                             <>
                                 Send Message
-                                <Send size={16} />
+                                <Send size={18} />
                             </>
                         )}
                     </button>
-                    <p className="text-[11px] text-mid-grey mt-4 leading-relaxed italic">
-                        * We value your privacy. Your contact details are only used for the purpose of responding to your enquiry and are never shared publicly.
+                    <p className="text-[11px] text-text-muted mt-6 leading-relaxed italic max-w-lg">
+                        * Respecting your privacy is our priority. Your contact details are only used to respond to your enquiry and are never shared with third parties.
                     </p>
                 </div>
             </div>

@@ -1,106 +1,63 @@
 import Link from "next/link";
-import { Mail, ArrowUpRight } from "lucide-react";
-
-const footerLinks = {
-    company: [
-        { href: "/", label: "Home" },
-        { href: "/customers", label: "Customers" },
-        { href: "/partners", label: "Partners" },
-        { href: "/contact", label: "Contact" },
-    ],
-    offerings: [
-        { href: "/products", label: "Products" },
-        { href: "/cgap", label: "CGAP" },
-        { href: "/customers", label: "Case Studies" },
-    ],
-};
 
 export default function Footer() {
     return (
-        <footer className="bg-charcoal text-white/80">
-            <div className="container-main section-padding">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-                    {/* Brand */}
-                    <div className="lg:col-span-1">
-                        <div className="flex items-center gap-2 mb-5">
-                            <div className="w-9 h-9 bg-green-primary rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-base">C</span>
-                            </div>
-                            <span className="font-bold text-white text-lg tracking-tight">
-                                CBT
-                            </span>
-                        </div>
-                        <p className="text-sm leading-relaxed text-white/60 max-w-xs">
-                            Convergent Business Technologies — a data and technology
-                            consultancy helping organisations unlock the power of their data.
+        <>
+            {/* CTA BAND */}
+            <section className="bg-text-heading text-white py-16 px-8" id="contact">
+                <div className="container-main p-0 max-w-[1160px] mx-auto grid lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-16">
+                    <div>
+                        <h2 className="font-heading text-[clamp(1.8rem,3.5vw,2.6rem)] font-bold leading-[1.15] mb-4 tracking-[-0.02em]">
+                            Ready to make your data work harder?
+                        </h2>
+                        <p className="text-base font-light text-white/70 max-w-[500px] leading-[1.6]">
+                            Whether you're at the start of your data journey or scaling an existing capability, let's have a conversation.
                         </p>
                     </div>
-
-                    {/* Company Links */}
-                    <div>
-                        <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
-                            Company
-                        </h4>
-                        <ul className="space-y-3">
-                            {footerLinks.company.map((link) => (
-                                <li key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-white/60 hover:text-green-light transition-colors duration-150"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="flex flex-col sm:flex-row gap-4 shrink-0">
+                        <Link href="/contact" className="inline-flex items-center justify-center bg-white text-text-heading font-body text-[14px] font-semibold px-6 py-3.5 rounded-md transition-transform duration-200 hover:-translate-y-[2px]">
+                            Start a conversation →
+                        </Link>
+                        <Link href="/cgap" className="inline-flex items-center justify-center bg-transparent text-white font-body text-[14px] font-medium px-4 py-3.5 border-b border-white/20 transition-colors duration-200 hover:text-primary hover:border-primary">
+                            View our training programme →
+                        </Link>
                     </div>
+                </div>
+            </section>
 
-                    {/* Offerings Links */}
-                    <div>
-                        <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
-                            Offerings
-                        </h4>
-                        <ul className="space-y-3">
-                            {footerLinks.offerings.map((link) => (
-                                <li key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-white/60 hover:text-green-light transition-colors duration-150"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Contact */}
-                    <div>
-                        <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
-                            Get in Touch
-                        </h4>
-                        <p className="text-sm text-white/60 mb-4">
-                            Ready to transform your business with data? Let&apos;s talk about your goals.
-                        </p>
-                        <div className="mt-4">
-                            <Link
-                                href="/contact"
-                                className="inline-flex items-center gap-2 text-sm font-medium text-green-light hover:text-white transition-colors duration-150"
-                            >
-                                Contact Our Team
-                                <ArrowUpRight size={14} />
-                            </Link>
+            {/* FOOTER */}
+            <footer className="bg-surface pt-12 pb-8 px-8 border-t border-border">
+                <div className="container-main p-0 max-w-[1160px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex items-center gap-3">
+                        <div className="w-[30px] h-[30px] bg-text-heading rounded-[6px] flex items-center justify-center relative overflow-hidden">
+                            <span className="text-white font-mono text-[9px] relative z-10 mt-[2px]">CBT</span>
+                            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
                         </div>
+                        <span className="font-body text-[13px] font-semibold text-text-heading">
+                            Convergent Business Technologies
+                        </span>
+                    </div>
+
+                    <div className="flex flex-wrap justify-center gap-8">
+                        <Link href="/services" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
+                            Services
+                        </Link>
+                        <Link href="/cgap" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
+                            Training
+                        </Link>
+                        <Link href="/partners" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
+                            Partners
+                        </Link>
+                        <Link href="/contact" className="text-[13px] font-medium text-text-body hover:text-primary transition-colors">
+                            Contact
+                        </Link>
+                    </div>
+
+                    <div className="text-[11px] text-text-muted">
+                        © {new Date().getFullYear()} CBT. All rights reserved.
                     </div>
                 </div>
-
-                {/* Bottom Bar */}
-                <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
-                    <p className="text-sm text-white/40">
-                        Convergent Business Technologies | Islamabad, Pakistan
-                    </p>
-                </div>
-            </div>
-        </footer>
+            </footer>
+        </>
     );
 }
