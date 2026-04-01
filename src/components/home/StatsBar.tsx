@@ -81,7 +81,7 @@ export default function StatsBar({ stats = defaultStats }: StatsBarProps) {
     const displayStats = stats.length > 0 ? stats : defaultStats;
 
     return (
-        <section className="bg-surface py-16 px-8" id="about" ref={ref}>
+        <section className="bg-surface py-24 px-8" id="about" ref={ref}>
             <div className="container-main w-full p-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     {/* Left Side - Text */}

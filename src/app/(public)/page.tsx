@@ -3,6 +3,7 @@ import ServicesGrid from "@/components/home/ServicesGrid";
 import ClientLogoStrip from "@/components/home/ClientLogoStrip";
 import StatsBar from "@/components/home/StatsBar";
 import Testimonials from "@/components/home/Testimonials";
+import CGAPTeaser from "@/components/home/CGAPTeaser";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,15 +11,15 @@ export default async function HomePage() {
   const supabase = await createClient();
   const [
     { data: clientsData },
-    { data: dbStats }
+    { data: dbStats },
+    { count: batchCount },
   ] = await Promise.all([
     supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
     supabase.from("stats" as any).select("*").order("display_order", { ascending: true }),
+    supabase.from("cgap_cohorts").select("*", { count: "exact", head: true }),
   ]);
 
   const clientNames = clientsData?.map(c => c.name);
-
-  // Fallback to empty array if fetch fails, StatsBar has its own defaults
   const stats = (dbStats as any) || [];
 
   return (
@@ -28,6 +29,7 @@ export default async function HomePage() {
       <ServicesGrid />
       <StatsBar stats={stats} />
       <Testimonials />
+      <CGAPTeaser batchCount={batchCount ?? 0} />
       <ClientLogoStrip clientNames={clientNames} />
     </>
   );

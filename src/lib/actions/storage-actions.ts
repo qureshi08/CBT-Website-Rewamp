@@ -21,12 +21,14 @@ export async function uploadFile(formData: FormData) {
             });
 
         if (error) {
-            // If bucket doesn't exist, try creating it (though normally it should be pre-created)
-            if (error.message.includes("does not exist")) {
-                await supabaseAdmin.storage.createBucket(bucket, { public: true });
+            // If bucket doesn't exist, try creating it
+            if (error.message.toLowerCase().includes("not found") || error.message.toLowerCase().includes("does not exist")) {
+                const { error: createError } = await supabaseAdmin.storage.createBucket(bucket, { public: true });
+                if (createError) throw createError;
+
                 // Retry upload
-                const retry = await supabaseAdmin.storage.from(bucket).upload(filePath, file);
-                if (retry.error) throw retry.error;
+                const { data: retryData, error: retryError } = await supabaseAdmin.storage.from(bucket).upload(filePath, file);
+                if (retryError) throw retryError;
 
                 const { data: { publicUrl } } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
                 return { success: true, url: publicUrl };

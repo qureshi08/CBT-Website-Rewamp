@@ -55,7 +55,7 @@ const services = [
 
 export default function ServicesGrid() {
     return (
-        <section className="bg-white py-16 px-8" id="services">
+        <section className="bg-white py-24 px-8" id="services">
             <div className="container-main w-full p-0">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-border gap-5">
                     <div className="max-w-xl">
@@ -93,8 +93,11 @@ export default function ServicesGrid() {
                                 <p className="text-[13px] leading-[1.65] text-text-body mb-[20px] flex-grow">
                                     {service.description}
                                 </p>
-                                <Link href="#" className="flex items-center gap-[6px] text-[12px] font-semibold text-text-muted transition-colors duration-200 group-hover:text-primary uppercase tracking-widest">
-                                    Learn more <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                                <Link
+                                    href={`/contact?subject=Customer Enquiry`}
+                                    className="flex items-center gap-[6px] text-[12px] font-semibold text-text-muted transition-colors duration-200 group-hover:text-primary uppercase tracking-widest"
+                                >
+                                    Enquire <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                                 </Link>
                             </div>
                         );

@@ -19,21 +19,15 @@ export default function SectionHeader({
     return (
         <div className={`mb-12 ${centered ? "text-center" : ""}`}>
             {label && (
-                <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-green-primary bg-tag-bg px-3 py-1.5 rounded-full mb-4">
+                <span className="section-tag px-3 py-1 bg-primary-muted rounded-full inline-block mb-4">
                     {label}
                 </span>
             )}
-            <h2
-                className={`text-3xl md:text-4xl font-bold leading-tight ${light ? "text-white" : "text-charcoal"
-                    }`}
-            >
+            <h2 className={`section-heading ${light ? "!text-white" : ""}`}>
                 {title}
             </h2>
             {description && (
-                <p
-                    className={`mt-4 text-lg max-w-2xl leading-relaxed ${centered ? "mx-auto" : ""
-                        } ${light ? "text-white/70" : "text-mid-grey"}`}
-                >
+                <p className={`section-sub mt-4 ${centered ? "mx-auto" : ""} ${light ? "!text-white/70" : ""}`}>
                     {description}
                 </p>
             )}

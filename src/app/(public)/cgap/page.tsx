@@ -166,7 +166,7 @@ export default async function CGAPPage() {
         <>
             <div className="font-body">
                 {/* Hero */}
-                <section className="bg-white pt-20 relative overflow-hidden">
+                <section className="bg-white pt-20 md:pt-24 relative overflow-hidden">
                     {/* Background decorative element */}
                     <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2 -z-10" />
 

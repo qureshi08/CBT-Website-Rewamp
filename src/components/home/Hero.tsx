@@ -40,10 +40,10 @@ export default function Hero() {
                             Work with us
                             <ArrowRight size={18} />
                         </Link>
-                        <Link href="/services" className="btn-secondary h-[52px] px-8 text-[15px] group">
+                        <a href="#services" className="btn-secondary h-[52px] px-8 text-[15px] group">
                             Explore services
                             <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
-                        </Link>
+                        </a>
                     </div>
                 </div>
 

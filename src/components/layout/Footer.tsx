@@ -44,23 +44,28 @@ export default function Footer() {
                         </div>
 
                         {/* Center: Nav Links */}
-                        <div className="flex flex-wrap justify-center gap-8">
-                            <Link href="/" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                Home
-                            </Link>
-                            <Link href="/customers" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                Customers
-                            </Link>
-                            <Link href="/partners" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                Partners
-                            </Link>
-                            <Link href="/products" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                Products
-                            </Link>
-                            <Link href="/contact" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                Contact
-                            </Link>
-                        </div>
+                        <nav aria-label="Footer navigation">
+                            <div className="flex flex-wrap justify-center gap-8">
+                                <Link href="/" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    Home
+                                </Link>
+                                <Link href="/customers" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    Customers
+                                </Link>
+                                <Link href="/partners" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    Partners
+                                </Link>
+                                <Link href="/products" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    Products
+                                </Link>
+                                <Link href="/cgap" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    CGAP
+                                </Link>
+                                <Link href="/contact" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
+                                    Contact
+                                </Link>
+                            </div>
+                        </nav>
 
                         {/* Right: Email */}
                         <a href="mailto:admin@convergentbt.com" className="inline-flex items-center gap-2 text-[13px] font-medium text-white/50 hover:text-primary transition-colors">

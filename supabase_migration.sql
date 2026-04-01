@@ -68,6 +68,29 @@ DROP POLICY IF EXISTS "Public Read Access" ON public.testimonials;
 CREATE POLICY "Public Read Access" ON public.testimonials FOR SELECT USING (true);
 
 -- 6. ENSURE STORAGE BUCKETS EXIST
--- Note: Supabase UI is preferred for bucket creation, but these are common ones needed
--- Bucket: 'partners', 'products', 'clients', 'uploads'
--- You must go to Storage -> New Bucket and create these manually if the errors persist.
+-- Run these one by one if using the SQL editor to create buckets (Note: Supabase API is safer)
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('partners', 'partners', true) ON CONFLICT (id) DO NOTHING;
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('products', 'products', true) ON CONFLICT (id) DO NOTHING;
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('clients', 'clients', true) ON CONFLICT (id) DO NOTHING;
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('uploads', 'uploads', true) ON CONFLICT (id) DO NOTHING;
+
+-- STORAGE POLICIES (Allow public access to read and authenticated/public to upload for demo)
+-- Replace 'authenticated' with 'public' if you want anyone to upload without login (careful!)
+DO $$
+BEGIN
+    -- Public Read access for all buckets
+    INSERT INTO storage.policies (name, bucket_id, definition, operation)
+    VALUES ('Public Read', 'partners', '(true)', 'SELECT'),
+           ('Public Read', 'products', '(true)', 'SELECT'),
+           ('Public Read', 'clients', '(true)', 'SELECT'),
+           ('Public Read', 'uploads', '(true)', 'SELECT')
+    ON CONFLICT DO NOTHING;
+
+    -- Public Insert access (for demo purposes)
+    INSERT INTO storage.policies (name, bucket_id, definition, operation)
+    VALUES ('Public Insert', 'partners', '(true)', 'INSERT'),
+           ('Public Insert', 'products', '(true)', 'INSERT'),
+           ('Public Insert', 'clients', '(true)', 'INSERT'),
+           ('Public Insert', 'uploads', '(true)', 'INSERT')
+    ON CONFLICT DO NOTHING;
+END $$;

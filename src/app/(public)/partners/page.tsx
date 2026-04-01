@@ -126,12 +126,12 @@ export default async function PartnersPage() {
         <>
             <div className="font-body">
                 {/* Hero */}
-                <section className="bg-surface relative overflow-hidden">
+                <section className="bg-surface pt-20 md:pt-24 relative overflow-hidden">
                     {/* Abstract background elements */}
                     <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-15deg] translate-x-1/2 -z-0" />
                     <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
 
-                    <div className="container-main py-12 md:py-16 lg:py-20 relative z-10">
+                    <div className="container-main py-12 md:py-16 relative z-10">
                         <div className="max-w-3xl text-center md:text-left">
                             <span className="uppercase-label text-primary mb-6 inline-block border-b border-primary/30 pb-1">
                                 Partner Ecosystem

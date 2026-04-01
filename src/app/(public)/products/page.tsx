@@ -17,7 +17,7 @@ export default async function ProductsPage() {
     return (
         <div className="font-body">
             {/* Hero */}
-            <section className="bg-surface relative overflow-hidden">
+            <section className="bg-surface pt-20 md:pt-24 relative overflow-hidden">
                 {/* Abstract decorative elements */}
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-15deg] translate-x-1/2 -z-0" />
                 <div className="absolute top-1/4 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2" />
