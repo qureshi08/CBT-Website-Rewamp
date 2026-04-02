@@ -475,19 +475,346 @@ export function HeroIllustration() {
 
 // ─── CUSTOMERS (APPROVED) ────────────────────────────────────────────────────
 export function CustomersIllustration() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const cv = canvasRef.current;
+        if (!cv) return;
+        const ctx = cv.getContext('2d')!;
+
+        let W = 0, H = 0, raf = 0, t = 0;
+        let startTime: number | null = null;
+
+        const G = '#00994D', GL = '#00C060', GD = '#007A3D';
+        const BG = 'transparent';
+
+        function resize() {
+            const r = cv!.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            cv!.width = r.width * dpr;
+            cv!.height = r.height * dpr;
+            ctx.scale(dpr, dpr);
+            W = r.width; H = r.height;
+        }
+
+        function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+        function clamp(v: number, a: number, b: number) { return Math.max(a, Math.min(b, v)); }
+        function ease(t: number) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+        const FLOORS = [
+            { label: 'Raw Data', sublabel: 'Siloed sources', color: '#E6F5ED', accent: GD, icon: 'db', level: 0 },
+            { label: 'DWH Layer', sublabel: 'Unified warehouse', color: '#D1EAD9', accent: G, icon: 'stack', level: 1 },
+            { label: 'Analytics', sublabel: 'Self-service BI', color: '#BDE0C6', accent: G, icon: 'chart', level: 2 },
+            { label: 'Decisions', sublabel: 'Decision sciences', color: '#A8D5B2', accent: GL, icon: 'brain', level: 3 },
+            { label: 'AI & Insight', sublabel: 'Intelligent automation', color: '#93CB9F', accent: GL, icon: 'spark', level: 4 },
+        ];
+
+        const FLOOR_COUNT = FLOORS.length;
+
+        class DataPacket {
+            x: number; y: number; speed: number; size: number; alpha: number; color: string; trail: { x: number, y: number }[] = [];
+            constructor(x: number, startY: number) {
+                this.x = x + (Math.random() - 0.5) * 6;
+                this.y = startY;
+                this.speed = 0.4 + Math.random() * 0.8;
+                this.size = 2 + Math.random() * 2.5;
+                this.alpha = 0.6 + Math.random() * 0.4;
+                this.color = Math.random() > 0.3 ? G : (Math.random() > .5 ? GL : GD);
+            }
+            update() {
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > 10) this.trail.shift();
+                this.y -= this.speed;
+            }
+            draw() {
+                if (this.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = this.size * 0.5;
+                    ctx.globalAlpha = this.alpha * 0.25;
+                    ctx.stroke();
+                }
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.alpha;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        class ScanLine {
+            y: number; floorY: number; floorH: number; alpha: number; speed: number; color: string;
+            constructor(floorY: number, floorH: number, color: string) {
+                this.y = floorY + Math.random() * floorH;
+                this.floorY = floorY;
+                this.floorH = floorH;
+                this.alpha = 0.15 + Math.random() * 0.25;
+                this.speed = 0.3 + Math.random() * 0.5;
+                this.color = color;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < this.floorY) this.y = this.floorY + this.floorH;
+            }
+            draw(x: number, w: number) {
+                ctx.beginPath();
+                ctx.moveTo(x, this.y);
+                ctx.lineTo(x + w, this.y);
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = this.alpha;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        let particles: DataPacket[] = [];
+        let scanLines: ScanLine[] = [];
+
+        function drawIcon(type: string, cx: number, cy: number, r: number, color: string, alpha: number) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            if (type === 'db') {
+                ctx.beginPath(); ctx.ellipse(cx, cy - r * 0.4, r * 0.7, r * 0.25, 0, 0, Math.PI * 2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(cx - r * 0.7, cy - r * 0.4); ctx.lineTo(cx - r * 0.7, cy + r * 0.4); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(cx + r * 0.7, cy - r * 0.4); ctx.lineTo(cx + r * 0.7, cy + r * 0.4); ctx.stroke();
+                ctx.beginPath(); ctx.ellipse(cx, cy + r * 0.4, r * 0.7, r * 0.25, 0, 0, Math.PI * 2); ctx.stroke();
+                ctx.beginPath(); ctx.ellipse(cx, cy, r * 0.7, r * 0.25, 0, 0, Math.PI * 2); ctx.stroke();
+            } else if (type === 'stack') {
+                for (let i = 0; i < 3; i++) {
+                    const yy = cy - r * 0.5 + i * r * 0.5;
+                    ctx.beginPath();
+                    ctx.roundRect(cx - r * 0.7, yy - r * 0.18, r * 1.4, r * 0.3, 2);
+                    ctx.stroke();
+                }
+            } else if (type === 'chart') {
+                const bars = [0.4, 0.75, 0.55, 1.0, 0.65];
+                bars.forEach((h, i) => {
+                    const bx = cx - r * 0.8 + i * (r * 1.6 / bars.length);
+                    const bh = h * r * 0.8;
+                    ctx.fillRect(bx, cy + r * 0.4 - bh, r * 0.22, bh);
+                });
+            } else if (type === 'brain') {
+                ctx.beginPath(); ctx.arc(cx - r * 0.2, cy, r * 0.55, Math.PI * 0.1, Math.PI * 1.9); ctx.stroke();
+                ctx.beginPath(); ctx.arc(cx + r * 0.2, cy, r * 0.55, Math.PI * 1.1, Math.PI * 2.9); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(cx, cy - r * 0.55); ctx.lineTo(cx, cy + r * 0.55); ctx.stroke();
+            } else if (type === 'spark') {
+                ctx.beginPath();
+                ctx.moveTo(cx + r * 0.2, cy - r * 0.9);
+                ctx.lineTo(cx - r * 0.3, cy - r * 0.0);
+                ctx.lineTo(cx + r * 0.15, cy + r * 0.05);
+                ctx.lineTo(cx - r * 0.2, cy + r * 0.9);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawKpiTag(x: number, y: number, label: string, value: string, color: string) {
+            const pad = 8;
+            const w = 82, h = 30;
+            ctx.save();
+            ctx.globalAlpha = 0.92;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, 4);
+            ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#374151'; // text-body
+            ctx.font = '500 9px "DM Sans",sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(label, x + pad, y + 11);
+            ctx.fillStyle = color;
+            ctx.font = '600 12px "DM Sans",sans-serif';
+            ctx.fillText(value, x + pad, y + 24);
+            ctx.restore();
+        }
+
+        function frame(ts: number) {
+            if (!startTime) startTime = ts;
+            t = (ts - startTime) * 0.001;
+
+            ctx.clearRect(0, 0, W, H);
+
+            const margin = 20;
+            const labelW = 90;
+            const buildingX = margin + labelW + 12;
+            const buildingW = W - buildingX - margin;
+            const buildingH = H - 80;
+            const buildingY = 30;
+            const floorH = buildingH / FLOOR_COUNT;
+
+            const pipeXs = [
+                buildingX + buildingW * 0.12,
+                buildingX + buildingW * 0.32,
+                buildingX + buildingW * 0.55,
+                buildingX + buildingW * 0.75,
+            ];
+
+            if (scanLines.length === 0) {
+                FLOORS.forEach((f, fi) => {
+                    const fy = buildingY + fi * floorH;
+                    for (let i = 0; i < 4; i++) scanLines.push(new ScanLine(fy, floorH, f.accent));
+                });
+            }
+            scanLines.forEach(s => s.update());
+
+            if (Math.random() < 0.18) {
+                const px = pipeXs[Math.floor(Math.random() * pipeXs.length)];
+                particles.push(new DataPacket(px, buildingY + buildingH));
+            }
+            particles = particles.filter(p => p.y > buildingY - 20);
+            particles.forEach(p => p.update());
+
+            FLOORS.forEach((f, fi) => {
+                const fy = buildingY + fi * floorH;
+                const floorProgress = clamp((t * 0.6 - fi * 0.18), 0, 1);
+                const fp = ease(floorProgress);
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(buildingX, fy, buildingW * fp, floorH - 1);
+                ctx.fillStyle = f.color;
+                ctx.fill();
+
+                ctx.clip();
+                scanLines.filter(s => s.floorY === fy).forEach(s => s.draw(buildingX, buildingW));
+                ctx.restore();
+
+                ctx.beginPath();
+                ctx.rect(buildingX, fy, buildingW * fp, floorH - 1);
+                ctx.strokeStyle = f.accent;
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = 0.4;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+
+                ctx.fillStyle = f.accent;
+                ctx.globalAlpha = fp * 0.9;
+                ctx.fillRect(buildingX, fy, 3, floorH - 1);
+                ctx.globalAlpha = 1;
+
+                for (let d = 0; d <= f.level; d++) {
+                    ctx.beginPath();
+                    ctx.arc(buildingX + 14 + d * 11, fy + floorH / 2, 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = f.accent;
+                    ctx.globalAlpha = fp * (d === f.level ? 1 : 0.35);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+
+                ctx.globalAlpha = fp;
+                ctx.fillStyle = '#0C1A10'; // GDARK
+                ctx.font = '600 11px "DM Sans",sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(f.label, buildingX - 16, fy + floorH / 2 - 5);
+                ctx.fillStyle = '#6B7280'; // MUTED
+                ctx.font = '400 9px "DM Sans",sans-serif';
+                ctx.fillText(f.sublabel, buildingX - 16, fy + floorH / 2 + 8);
+                ctx.globalAlpha = 1;
+
+                const iconX = buildingX + buildingW * 0.88;
+                const iconY = fy + floorH / 2;
+                drawIcon(f.icon, iconX, iconY, 13, f.accent, fp * (0.6 + 0.4 * Math.sin(t * 1.2 + fi)));
+
+                const barCount = 6;
+                const barW = 9;
+                const barGap = 4;
+                const barX = buildingX + 60;
+                for (let b = 0; b < barCount; b++) {
+                    const phase = t * (0.4 + fi * 0.1) + b * 0.8;
+                    const bh = (0.35 + 0.55 * Math.abs(Math.sin(phase))) * (floorH - 14);
+                    ctx.fillStyle = f.accent;
+                    ctx.globalAlpha = fp * (0.3 + 0.5 * (fi / FLOOR_COUNT));
+                    ctx.fillRect(barX + b * (barW + barGap), fy + floorH - 7 - bh, barW, bh);
+                }
+                ctx.globalAlpha = 1;
+
+                pipeXs.forEach(px => {
+                    ctx.beginPath();
+                    ctx.rect(px - 2, fy, 4, floorH - 1);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.globalAlpha = 0.7;
+                    ctx.fill();
+                    ctx.strokeStyle = GD;
+                    ctx.lineWidth = 0.5;
+                    ctx.globalAlpha = 0.4;
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                });
+            });
+
+            particles.forEach(p => p.draw());
+
+            const kpiAlpha = clamp(t * 0.4 - 0.9, 0, 1);
+            if (kpiAlpha > 0) {
+                const kpis = [
+                    { label: 'Data Maturity', value: '+2.4 levels' },
+                    { label: 'Report Time', value: '-68% faster' },
+                    { label: 'Accuracy', value: '99.1%' },
+                ];
+                const kpiY = buildingY + buildingH + 16;
+                const spacing = buildingW / kpis.length;
+                kpis.forEach((k, i) => {
+                    const kx = buildingX + i * spacing + spacing / 2 - 41;
+                    ctx.globalAlpha = kpiAlpha * ease(clamp(t * 0.5 - 1.0 - i * 0.12, 0, 1));
+                    drawKpiTag(kx, kpiY, k.label, k.value, GL);
+                    ctx.globalAlpha = 1;
+                });
+            }
+
+            const elevProgress = clamp((t * 0.22) % 1.2, 0, 1);
+            const elevY = buildingY + buildingH - elevProgress * buildingH;
+            const elevX = buildingX + buildingW * 0.96;
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.fillStyle = GL;
+            ctx.beginPath();
+            ctx.arc(elevX, elevY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(elevX, elevY + 5);
+            ctx.lineTo(elevX, elevY + 30);
+            ctx.strokeStyle = GL;
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = 0.25;
+            ctx.stroke();
+            ctx.restore();
+
+            raf = requestAnimationFrame(frame);
+        }
+
+        const onResize = () => { resize(); };
+        resize();
+        raf = requestAnimationFrame(frame);
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("resize", onResize);
+        };
+    }, []);
+
     return (
-        <motion.svg width="340" height="260" viewBox="0 0 360 260" fill="none" initial="hidden" animate="visible">
-            <motion.path d="M260 60 L300 80 L280 120 L240 100 Z" fill="white" stroke={GREEN} strokeWidth="2" animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity }} />
-            <motion.circle cx="270" cy="90" r="20" fill={GREEN} opacity="0.12" animate={{ opacity: [0.1, 0.35, 0.1] }} transition={{ duration: 2, repeat: Infinity }} />
-            <text x="245" y="140" fontSize="10" fontWeight="800" fill={GREEN}>GOAL REACHED</text>
-            <motion.path d="M60 180 Q 160 180 260 100" stroke={GREEN} strokeWidth="4" fill="none" strokeDasharray="500" strokeDashoffset="500" animate={{ strokeDashoffset: 0 }} transition={{ duration: 2.5, ease: "easeInOut" }} />
-            <g transform="translate(60, 210)">
-                <circle r="25" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-                <path d="M-12 10 Q -12 -5 0 -5 Q 12 -5 12 10" fill="#D1D5DB" />
-                <circle cy="-8" r="8" fill="#D1D5DB" />
-                <motion.path d="M-5 15l5 5l10-10" stroke={GREEN} strokeWidth="2.5" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.5, duration: 0.6 }} />
-            </g>
-        </motion.svg>
+        <canvas
+            ref={canvasRef}
+            style={{
+                display: "block",
+                width: "480px",
+                height: "420px",
+                background: "transparent",
+                flexShrink: 0,
+            }}
+        />
     );
 }
 
