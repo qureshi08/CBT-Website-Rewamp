@@ -6,16 +6,17 @@ import { revalidatePath } from "next/cache";
 export async function adminCrud(
     table: string,
     action: "insert" | "update" | "delete" | "read",
-    data?: any,
+    data?: Record<string, unknown>,
     id?: string,
     options?: {
         orderBy?: { column: string; ascending?: boolean },
-        filter?: { column: string; value: any }
+        filter?: { column: string; value: unknown }
     }
 ) {
     try {
         let result;
-        const dbTable = supabaseAdmin.from(table as any);
+        // @ts-expect-error Supabase expects string literal for Table type
+        const dbTable = supabaseAdmin.from(table);
 
         if (action === "insert") {
             result = await dbTable.insert([data]).select();
@@ -41,8 +42,8 @@ export async function adminCrud(
         }
 
         return { success: true, data: result?.data };
-    } catch (error: any) {
+    } catch (error) {
         console.error(`Admin CRUD Error (${table} - ${action}):`, error);
-        return { success: false, error: error.message };
+        return { success: false, error: error instanceof Error ? error.message : "An unknown error occurred" };
     }
 }

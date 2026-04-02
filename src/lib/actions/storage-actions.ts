@@ -13,7 +13,7 @@ export async function uploadFile(formData: FormData) {
         const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        const { data, error } = await supabaseAdmin.storage
+        const { error } = await supabaseAdmin.storage
             .from(bucket)
             .upload(filePath, file, {
                 cacheControl: "3600",
@@ -27,7 +27,7 @@ export async function uploadFile(formData: FormData) {
                 if (createError) throw createError;
 
                 // Retry upload
-                const { data: retryData, error: retryError } = await supabaseAdmin.storage.from(bucket).upload(filePath, file);
+                const { error: retryError } = await supabaseAdmin.storage.from(bucket).upload(filePath, file);
                 if (retryError) throw retryError;
 
                 const { data: { publicUrl } } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
@@ -38,8 +38,8 @@ export async function uploadFile(formData: FormData) {
 
         const { data: { publicUrl } } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
         return { success: true, url: publicUrl };
-    } catch (error: any) {
+    } catch (error) {
         console.error("Upload Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: error instanceof Error ? error.message : "An unknown error occurred" };
     }
 }

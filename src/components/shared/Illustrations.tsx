@@ -572,7 +572,7 @@ export function CustomersIllustration() {
         }
 
         let particles: DataPacket[] = [];
-        let scanLines: ScanLine[] = [];
+        const scanLines: ScanLine[] = [];
 
         function drawIcon(type: string, cx: number, cy: number, r: number, color: string, alpha: number) {
             ctx.save();
@@ -1060,7 +1060,7 @@ export function PartnersIllustration() {
             });
         }
 
-        let cbtSats: Satellite[] = [], partSats: Satellite[] = [];
+        const cbtSats: Satellite[] = [], partSats: Satellite[] = [];
         function initSats(cx: number, cy: number, color: string, arr: Satellite[]) {
             arr.length = 0;
             [28, 20, 36].forEach((r, i) => {
