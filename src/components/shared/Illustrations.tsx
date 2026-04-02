@@ -2,14 +2,12 @@
 import { motion } from "framer-motion";
 
 // ─── HERO: THE NEURAL DATA NETWORK ───
-// Represents "Harnessing Data and Delivering Value"
 export function HeroIllustration() {
     return (
         <motion.svg
             width="320" height="240" viewBox="0 0 320 240" fill="none"
             initial="hidden" animate="visible"
         >
-            {/* Core Hub */}
             <motion.circle
                 cx="160" cy="120" r="40" stroke="var(--green)" strokeWidth="1.5" fill="var(--green-muted)"
                 animate={{ scale: [1, 1.05, 1] }}
@@ -17,7 +15,6 @@ export function HeroIllustration() {
             />
             <circle cx="160" cy="120" r="28" fill="var(--green)" opacity="0.15" />
 
-            {/* Floating Data Nodes */}
             {[
                 { x: 60, y: 60, r: 8 }, { x: 260, y: 80, r: 12 },
                 { x: 220, y: 190, r: 10 }, { x: 80, y: 180, r: 14 }
@@ -29,12 +26,11 @@ export function HeroIllustration() {
                         transition={{ duration: 3 + i, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.line
-                        x1={node.x} y1={node.y} x2={160} y2={120} stroke="var(--green)" strokeWidth="1" strokeDasharray="4 4"
+                        x1={node.x} y1={node.y} x2={160} y2={120} stroke="var(--green)" strokeWidth="1" strokeDasharray="4,4"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 0.2 }}
                         transition={{ duration: 1.5, delay: i * 0.2 }}
                     />
-                    {/* Flowing particles */}
                     <motion.circle
                         r="3" fill="var(--green)"
                         animate={{
@@ -47,7 +43,6 @@ export function HeroIllustration() {
                 </g>
             ))}
 
-            {/* Central Brain Symbol */}
             <motion.path
                 d="M150 115a10 10 0 0110-10 10 10 0 0110 10v10a10 10 0 01-10 10 10 10 0 01-10-10z"
                 stroke="var(--green)" strokeWidth="2"
@@ -59,34 +54,29 @@ export function HeroIllustration() {
 }
 
 // ─── CGAP: THE SUCCESS PATHWAY ───
-// Represents "Bridging Academia & Industry"
 export function CGAPIllustration() {
     return (
         <motion.svg
             width="280" height="200" viewBox="0 0 280 200" fill="none"
             initial="hidden" animate="visible"
         >
-            {/* The Bridge Arc */}
             <motion.path
-                d="M40 160 Q140 60 240 160" stroke="var(--green)" strokeWidth="2" strokeDasharray="6 4" opacity="0.2"
+                d="M40 160 Q140 60 240 160" stroke="var(--green)" strokeWidth="2" strokeDasharray="6,4" opacity="0.2"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2 }}
             />
 
-            {/* Academic Stack (Books) */}
             <g transform="translate(30, 140)">
                 <motion.rect x="0" y="0" width="40" height="10" rx="2" fill="var(--border)" initial={{ x: -20 }} animate={{ x: 0 }} />
                 <motion.rect x="5" y="-12" width="30" height="10" rx="2" fill="var(--border)" opacity="0.6" initial={{ x: -25 }} animate={{ x: 5 }} transition={{ delay: 0.2 }} />
                 <motion.rect x="2" y="-24" width="36" height="10" rx="2" fill="var(--green-muted)" initial={{ x: -30 }} animate={{ x: 2 }} transition={{ delay: 0.4 }} />
             </g>
 
-            {/* The Transform Point */}
             <motion.circle
                 cx="140" cy="100" r="24" fill="white" stroke="var(--green)" strokeWidth="1.5"
                 animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Infinity }}
             />
             <motion.path d="M132 108l8-8 8 8" stroke="var(--green)" strokeWidth="2" />
 
-            {/* Industrial Result (Consultancy) */}
             <g transform="translate(210, 130)">
                 {[15, 30, 22].map((h, i) => (
                     <motion.rect
@@ -96,7 +86,6 @@ export function CGAPIllustration() {
                 ))}
             </g>
 
-            {/* Graduation Cap (Floating) */}
             <motion.g
                 animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -109,20 +98,17 @@ export function CGAPIllustration() {
 }
 
 // ─── PRODUCTS: PRECISION ENGINEERING ───
-// Represents "Power BI Custom Visuals"
 export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
     return (
         <motion.svg
             width="240" height="180" viewBox="0 0 240 180" fill="none"
             initial="hidden" animate="visible"
         >
-            {/* The Precision Frame */}
             <motion.rect
                 x="40" y="40" width="160" height="100" rx="8" stroke="var(--border)" strokeWidth="1.5"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             />
 
-            {/* Exploded Pie Chart */}
             <g transform="translate(120, 90)">
                 <motion.path
                     d="M0 0 L-20 -35 A40 40 0 0 1 20 -35 Z" fill={color} opacity="0.9"
@@ -132,16 +118,14 @@ export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
                     d="M0 0 L25 -30 A40 40 0 0 1 35 15 Z" fill={color} opacity="0.6"
                     animate={{ x: [5, 10, 5], y: [-5, -8, -5] }} transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
                 />
-                <motion.circle r="40" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="2 2" />
+                <motion.circle r="40" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="2,2" />
             </g>
 
-            {/* Grid Overlay */}
             <motion.path
                 d="M50 120h140 M50 100h140 M50 80h140" stroke="var(--border)" strokeWidth="0.5" opacity="0.3"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.8 }}
             />
 
-            {/* Code Brackets */}
             <motion.text
                 x="50" y="60" fontFamily="monospace" fontSize="8" fill="var(--green)"
                 initial={{ opacity: 0 }} animate={{ opacity: 0.4 }} transition={{ delay: 1.2 }}
@@ -153,30 +137,26 @@ export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
 }
 
 // ─── PARTNERS: STRATEGIC INTERLOCK ───
-// Represents "Technology & Delivery Partnership"
 export function PartnersIllustration() {
     return (
         <motion.svg
             width="260" height="200" viewBox="0 0 260 200" fill="none"
             initial="hidden" animate="visible"
         >
-            {/* Left Hub (Technology) */}
             <motion.g animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
-                <circle cx="80" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+                <circle cx="80" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4,4" />
                 {[0, 90, 180, 270].map(deg => (
                     <circle key={deg} cx={80 + 40 * Math.cos(deg * Math.PI / 180)} cy={100 + 40 * Math.sin(deg * Math.PI / 180)} r="4" fill="var(--green)" />
                 ))}
             </motion.g>
 
-            {/* Right Hub (CBT Delivery) */}
             <motion.g animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
-                <circle cx="180" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+                <circle cx="180" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4,4" />
                 {[45, 135, 225, 315].map(deg => (
                     <rect key={deg} x={180 + 40 * Math.cos(deg * Math.PI / 180) - 3} y={100 + 40 * Math.sin(deg * Math.PI / 180) - 3} width="6" height="6" fill="var(--green)" opacity="0.6" />
                 ))}
             </motion.g>
 
-            {/* Central Interlock */}
             <motion.rect
                 x="110" y="85" width="40" height="30" rx="15" fill="white" stroke="var(--green)" strokeWidth="1.5"
                 animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}
@@ -190,17 +170,14 @@ export function PartnersIllustration() {
 }
 
 // ─── CUSTOMERS: SCALABLE GROWTH ───
-// Represents "Enterprise Data Strategy & Success"
 export function CustomersIllustration() {
     return (
         <motion.svg
             width="300" height="220" viewBox="0 0 300 220" fill="none"
             initial="hidden" animate="visible"
         >
-            {/* The Foundation Grid */}
             <path d="M40 180h220" stroke="var(--border)" strokeWidth="2" />
 
-            {/* Growing Buildings (Enterprise Blocks) */}
             {[
                 { x: 60, h: 40, d: 0.2 }, { x: 90, h: 70, d: 0.4 },
                 { x: 120, h: 110, d: 0.6 }, { x: 150, h: 60, d: 0.8 },
@@ -214,7 +191,6 @@ export function CustomersIllustration() {
                 />
             ))}
 
-            {/* Success Trendline Over Buildings */}
             <motion.path
                 d="M71 140 L101 110 L131 70 L161 120 L191 40 L221 80"
                 stroke="var(--green)" strokeWidth="2.5" fill="none" strokeLinecap="round"
@@ -223,15 +199,14 @@ export function CustomersIllustration() {
                 transition={{ duration: 2, delay: 1.5 }}
             />
 
-            {/* Floating Achievement Node */}
             <motion.g
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 3, type: "spring" }}
             >
                 <circle cx="191" cy="40" r="6" fill="var(--green)" />
-                <circle cx="191" cy="40" r="12" stroke="var(--green)" strokeWidth="1" strokeDasharray="4 2" />
-            </g>
+                <circle cx="191" cy="40" r="12" stroke="var(--green)" strokeWidth="1" strokeDasharray="4,2" />
+            </motion.g>
         </motion.svg>
     );
 }
