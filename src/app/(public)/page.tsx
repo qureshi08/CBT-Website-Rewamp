@@ -15,12 +15,15 @@ export default async function HomePage() {
 
   try {
     const supabase = await createClient();
-    const [{ data: clientsData }, { count }] = await Promise.all([
+    const [
+      { data: clientsData },
+      { data: batchStat }
+    ] = await Promise.all([
       supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
-      supabase.from("cgap_cohorts").select("*", { count: "exact", head: true }),
+      (supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any),
     ]);
     clientNames = clientsData?.map(c => c.name);
-    batchCount = count ?? 12;
+    batchCount = batchStat?.value ?? 12;
   } catch {
     // Supabase unavailable — use static fallbacks
   }

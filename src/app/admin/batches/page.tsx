@@ -1,199 +1,125 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Plus, Search, Edit2, Trash2, GraduationCap, Loader2 } from "lucide-react";
-import Modal from "@/components/ui/Modal";
+import { GraduationCap, Loader2, Save, ArrowRight } from "lucide-react";
 import { adminCrud } from "@/lib/actions/admin-actions";
 
 export default function AdminBatches() {
-    const [batches, setBatches] = useState<any[]>([]);
+    const [batchCount, setBatchCount] = useState<number>(0);
+    const [statId, setStatId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingBatch, setEditingBatch] = useState<any>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const supabase = createClient();
+    const [isSaving, setIsSaving] = useState(false);
+    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     useEffect(() => {
-        fetchBatches();
+        fetchBatchStat();
     }, []);
 
-    async function fetchBatches() {
+    async function fetchBatchStat() {
         setIsLoading(true);
-        // Using direct supabase client for read if possible, but adminCrud read is safer for bypass RLS
-        const result = await adminCrud("cgap_cohorts", "read", null, undefined, {
-            orderBy: { column: "cohort_number", ascending: false }
+        // Try to find the CGAP Batches stat
+        const result = await adminCrud("stats", "read", null, undefined, {
+            filter: { column: "label", value: "CGAP Batches" }
         });
 
-        if (result.success) {
-            setBatches(result.data || []);
+        if (result.success && result.data && result.data.length > 0) {
+            const stat = result.data[0] as any;
+            setBatchCount(stat.value);
+            setStatId(stat.id);
         } else {
-            console.error("Error fetching batches:", result.error);
+            // If it doesn't exist, we'll create it on the first save or just handle it
+            console.log("CGAP Batches stat not found in stats table.");
         }
         setIsLoading(false);
     }
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setIsSubmitting(true);
-        const formData = new FormData(e.currentTarget);
+    async function handleSave() {
+        setIsSaving(true);
+        setMessage(null);
 
-        const batchData = {
-            cohort_number: parseInt(formData.get("cohort_number") as string),
-            start_date: formData.get("start_date") as string,
-            end_date: formData.get("end_date") as string || null,
-            status: formData.get("status") as string,
-            applications_open: formData.get("applications_open") === "on",
+        const statData = {
+            label: "CGAP Batches",
+            value: batchCount,
+            suffix: "+",
+            display_order: 10 // Arbitrary order
         };
 
-        const result = editingBatch
-            ? await adminCrud("cgap_cohorts", "update", batchData, editingBatch.id)
-            : await adminCrud("cgap_cohorts", "insert", batchData);
+        const result = statId
+            ? await adminCrud("stats", "update", statData, statId)
+            : await adminCrud("stats", "insert", statData);
 
         if (result.success) {
-            setIsModalOpen(false);
-            setEditingBatch(null);
-            fetchBatches();
+            setMessage({ type: 'success', text: 'Batch count updated successfully!' });
+            if (!statId && result.data) {
+                setStatId((result.data as any)[0]?.id || null);
+            }
         } else {
-            alert(`Error: ${result.error}`);
+            setMessage({ type: 'error', text: `Failed to update: ${result.error}` });
         }
-        setIsSubmitting(false);
+        setIsSaving(false);
     }
-
-    async function handleDelete(id: string) {
-        if (!confirm("Delete this batch?")) return;
-        const result = await adminCrud("cgap_cohorts", "delete", null, id);
-        if (result.success) fetchBatches();
-        else alert(`Error: ${result.error}`);
-    }
-
-    const filteredBatches = batches.filter(b =>
-        String(b.cohort_number).includes(searchTerm) ||
-        b.status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
-        <div className="space-y-8 font-body">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-bold text-text-heading font-heading mb-2">CGAP Batches</h1>
-                    <p className="text-sm text-text-body/60">Manage the Graduate Academy training cycles.</p>
-                </div>
-                <button
-                    onClick={() => { setEditingBatch(null); setIsModalOpen(true); }}
-                    className="btn-primary py-3 px-6 text-sm"
-                >
-                    <Plus size={18} />
-                    Add Batch
-                </button>
+        <div className="space-y-8 font-body max-w-2xl">
+            <div>
+                <h1 className="text-3xl font-bold text-text-heading font-heading mb-2">CGAP Batch Management</h1>
+                <p className="text-sm text-text-body/60">Update the total number of CGAP batches conducted globally.</p>
             </div>
 
-            <div className="bg-white rounded-[24px] border border-border/40 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-border/40 bg-surface/30">
-                    <div className="relative max-w-sm">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-body/30" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Search batches..."
-                            className="w-full pl-10 pr-4 py-2.5 border border-border/60 rounded-xl outline-none text-sm"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
+            {isLoading ? (
+                <div className="p-20 flex justify-center">
+                    <Loader2 className="animate-spin text-primary" size={32} />
                 </div>
+            ) : (
+                <div className="bg-white rounded-[24px] border border-border/40 shadow-sm p-8 space-y-6">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                            <GraduationCap size={24} />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-text-heading">Total Batches</h3>
+                            <p className="text-xs text-text-body/50">This number is reflected across the entire website.</p>
+                        </div>
+                    </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="bg-surface/50 text-[10px] uppercase tracking-widest font-bold text-text-body/40 border-b border-border/20">
-                                <th className="px-8 py-4">Batch #</th>
-                                <th className="px-8 py-4">Start Date</th>
-                                <th className="px-8 py-4">Status</th>
-                                <th className="px-8 py-4">Hiring</th>
-                                <th className="px-8 py-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/20 text-sm">
-                            {isLoading ? (
-                                <tr><td colSpan={5} className="px-8 py-12 text-center text-text-body/40">Loading...</td></tr>
-                            ) : filteredBatches.length > 0 ? (
-                                filteredBatches.map((batch) => (
-                                    <tr key={batch.id} className="hover:bg-surface/30 group">
-                                        <td className="px-8 py-4 font-bold text-text-heading">Batch {batch.cohort_number}</td>
-                                        <td className="px-8 py-4 text-text-body/70">{new Date(batch.start_date).toLocaleDateString()}</td>
-                                        <td className="px-8 py-4">
-                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${batch.status === 'ongoing' ? 'bg-primary/10 text-primary' :
-                                                batch.status === 'upcoming' ? 'bg-blue-50 text-blue-600' : 'bg-surface text-text-muted border border-border/20'
-                                                }`}>
-                                                {batch.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-4">
-                                            {batch.applications_open ? (
-                                                <span className="text-primary flex items-center gap-1.5 font-medium">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                                    Open
-                                                </span>
-                                            ) : (
-                                                <span className="text-text-muted">Closed</span>
-                                            )}
-                                        </td>
-                                        <td className="px-8 py-4 text-right">
-                                            <div className="flex justify-end gap-1">
-                                                <button onClick={() => { setEditingBatch(batch); setIsModalOpen(true); }} className="p-2 hover:bg-primary/10 text-primary rounded-lg"><Edit2 size={14} /></button>
-                                                <button onClick={() => handleDelete(batch.id)} className="p-2 hover:bg-red-50 text-red-500 rounded-lg"><Trash2 size={14} /></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr><td colSpan={5} className="px-8 py-12 text-center text-text-body/40">No batches found.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    <div className="space-y-2">
+                        <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Number of Batches</label>
+                        <div className="relative">
+                            <input
+                                type="number"
+                                value={batchCount}
+                                onChange={(e) => setBatchCount(parseInt(e.target.value) || 0)}
+                                className="w-full pl-6 pr-16 py-4 border border-border/60 rounded-2xl outline-none text-2xl font-bold font-heading focus:border-primary/50 transition-colors"
+                            />
+                            <div className="absolute right-6 top-1/2 -translate-y-1/2 text-primary font-bold text-xl">+</div>
+                        </div>
+                    </div>
 
-            <Modal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title={editingBatch ? "Edit Batch" : "Add New Batch"}
-            >
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Batch Number</label>
-                            <input name="cohort_number" type="number" defaultValue={editingBatch?.cohort_number} required className="form-input" />
+                    {message && (
+                        <div className={`p-4 rounded-xl text-sm font-medium ${message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+                            {message.text}
                         </div>
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Status</label>
-                            <select name="status" defaultValue={editingBatch?.status || "upcoming"} className="form-input">
-                                <option value="upcoming">Upcoming</option>
-                                <option value="ongoing">Ongoing</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Start Date</label>
-                            <input name="start_date" type="date" defaultValue={editingBatch?.start_date} required className="form-input" />
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">End Date (Optional)</label>
-                            <input name="end_date" type="date" defaultValue={editingBatch?.end_date} className="form-input" />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3 pt-4">
-                        <input name="applications_open" type="checkbox" defaultChecked={editingBatch?.applications_open} id="hiring-check" className="w-5 h-5 accent-primary" />
-                        <label htmlFor="hiring-check" className="text-sm font-medium text-text-heading">Applications Open</label>
-                    </div>
-                    <button disabled={isSubmitting} className="btn-primary w-full py-3 mt-4">
-                        {isSubmitting ? "Processing..." : editingBatch ? "Update Batch" : "Create Batch"}
+                    )}
+
+                    <button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="btn-primary w-full py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-primary/20"
+                    >
+                        {isSaving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                        {isSaving ? 'Updating...' : 'Update Static Count'}
                     </button>
-                </form>
-            </Modal>
+
+                    <div className="pt-4 border-t border-border/20">
+                        <div className="text-[11px] font-bold uppercase text-text-muted tracking-widest mb-3">Live Preview (Stats Bar)</div>
+                        <div className="flex items-center gap-3 bg-surface p-4 rounded-xl border border-border/40">
+                            <div className="font-heading text-2xl font-bold text-primary">{batchCount}+</div>
+                            <div className="text-xs text-text-body/60 font-medium">CGAP Batches Conducted</div>
+                            <ArrowRight size={14} className="ml-auto text-primary opacity-30" />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

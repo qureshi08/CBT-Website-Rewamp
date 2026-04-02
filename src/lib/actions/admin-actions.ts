@@ -8,7 +8,10 @@ export async function adminCrud(
     action: "insert" | "update" | "delete" | "read",
     data?: any,
     id?: string,
-    options?: { orderBy?: { column: string; ascending?: boolean } }
+    options?: {
+        orderBy?: { column: string; ascending?: boolean },
+        filter?: { column: string; value: any }
+    }
 ) {
     try {
         let result;
@@ -22,6 +25,9 @@ export async function adminCrud(
             result = await dbTable.delete().eq("id", id!);
         } else if (action === "read") {
             let query = dbTable.select("*");
+            if (options?.filter) {
+                query = query.eq(options.filter.column, options.filter.value);
+            }
             if (options?.orderBy) {
                 query = query.order(options.orderBy.column, { ascending: options.orderBy.ascending ?? true });
             }

@@ -74,19 +74,19 @@ export default async function PartnersPage() {
         { data: clientsData },
         { data: partnersData },
         { count: clientCount },
-        { count: batchCount },
+        { data: batchStat },
         { data: dbTestimonials },
     ] = await Promise.all([
         supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
         supabase.from("partners").select("name, logo_url").eq("partner_type", "Technology").order("display_order", { ascending: true }),
         supabase.from("clients").select("*", { count: "exact", head: true }),
-        supabase.from("cgap_cohorts").select("*", { count: "exact", head: true }),
+        (supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any),
         supabase.from("testimonials").select("*").or("page.eq.Partners,page.eq.General").order("display_order", { ascending: true }),
     ]);
 
     const clientNames = clientsData?.map((c) => c.name);
     const displayClientCount = clientCount || 0;
-    const displayBatchCount = batchCount || 0;
+    const displayBatchCount = batchStat?.value || 12;
     const testimonials = dbTestimonials?.length ? dbTestimonials : fallbackTestimonials;
 
     const partnershipTypes = [

@@ -52,19 +52,19 @@ export default async function CGAPPage() {
         { data: clientsData },
         { data: dbAlumni },
         { data: openBatches },
-        { count: batchCount }
+        { data: batchStat }
     ] = await Promise.all([
         supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
         supabase.from("cgap_alumni").select("*").order("display_order", { ascending: true }),
         supabase.from("cgap_cohorts").select("*").eq("status", "open").order("cohort_number", { ascending: false }).limit(1),
-        supabase.from("cgap_cohorts").select("*", { count: "exact", head: true })
+        (supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any)
     ]);
 
     const clientNames = clientsData?.map(c => c.name);
     const displayAlumni = dbAlumni?.length ? dbAlumni : fallbackAlumni;
     const activeBatch = openBatches?.[0];
     const applicationUrl = activeBatch?.application_url || "https://cbt-recruitment-portal.vercel.app/";
-    const displayBatchCount = batchCount || 0;
+    const displayBatchCount = batchStat?.value || 12;
 
     return (
         <main>
