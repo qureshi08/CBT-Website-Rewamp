@@ -93,7 +93,7 @@ export default function StatsBar({
                     {/* Left Side - Text */}
                     <div className="reveal" style={{ display: "flex", flexDirection: "column" }}>
                         <span className="section-tag animate-fade-in block" style={{ marginBottom: "var(--space-3)" }}>Why CBT</span>
-                        <h2 className="animate-fade-up animation-delay-100" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-3xl)", fontWeight: 700, color: "var(--color-text-heading)", lineHeight: 1.2 }}>
+                        <h2 className="animate-fade-up animation-delay-100" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)", fontWeight: 700, color: "var(--color-text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
                             Built for businesses that want results, not reports
                         </h2>
 
@@ -127,7 +127,7 @@ export default function StatsBar({
                         <div style={{ position: "absolute", bottom: "-60px", right: "-60px", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,153,77,0.3) 0%, transparent 65%)" }} />
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "var(--color-primary)" }} />
 
-                        <div style={{ fontFamily: "var(--font-heading)", fontSize: "56px", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.04em", color: "white", marginBottom: "var(--space-2)", position: "relative", zIndex: 10 }}>
+                        <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(3rem, 5vw, 3.75rem)", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.04em", color: "white", marginBottom: "var(--space-2)", position: "relative", zIndex: 10 }}>
                             <AnimatedCounter target={experienceValue} suffix="+" isVisible={isVisible} />
                         </div>
                         <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 300, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, marginBottom: "var(--space-8)", position: "relative", zIndex: 10 }}>
