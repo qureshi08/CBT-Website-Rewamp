@@ -23,12 +23,12 @@ export default function ServicesGrid() {
                         Cross-functional teams of architects, developers, cloud experts and analysts. Engagement models from dedicated delivery to executive advisory.
                     </p>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
                     {services.map((s, i) => (
                         <div key={s.title} className={`v2-stile v2-reveal v2-d${(i % 3) + 1}`}>
                             <div className="v2-stile-icon"><Ic name={s.icon} size={18} stroke="var(--green)" /></div>
-                            <h3 className="v2-h3" style={{ fontSize: "15px", marginBottom: "6px" }}>{s.title}</h3>
-                            <p style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "var(--muted)", lineHeight: "1.6" }}>{s.desc}</p>
+                            <h3 className="v2-h3" style={{ fontSize: "15px", marginBottom: "8px" }}>{s.title}</h3>
+                            <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>{s.desc}</p>
                         </div>
                     ))}
                 </div>

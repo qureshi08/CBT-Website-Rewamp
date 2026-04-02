@@ -80,16 +80,18 @@ export function PersonaCards() {
                     <p className="v2-lbl v2-reveal">Choose your journey</p>
                     <h2 className="v2-h2 v2-reveal" style={{ fontSize: "30px" }}>Who are you?</h2>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "16px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px", alignItems: "stretch" }}>
                     {personas.map((p, i) => (
-                        <Link key={p.href} href={p.href} style={{ textDecoration: "none" }}>
+                        <Link key={p.href} href={p.href} style={{ textDecoration: "none", display: "flex" }}>
                             <div className={`v2-pc v2-reveal v2-d${i + 1}`}>
                                 <div className="v2-pc-icon">
                                     <Ic name={p.icon} size={20} stroke="var(--green)" />
                                 </div>
-                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "7px" }}>{p.title}</h3>
-                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "var(--muted)", lineHeight: "1.6", marginBottom: "14px" }}>{p.sub}</p>
-                                <div style={{ display: "flex", alignItems: "center", gap: "5px", fontFamily: "var(--f-body)", fontSize: "13px", fontWeight: 600, color: "var(--green)" }}>
+                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{p.title}</h3>
+                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6", marginBottom: "20px" }}>
+                                    {p.sub}
+                                </p>
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--f-body)", fontSize: "13.5px", fontWeight: 600, color: "var(--green)", marginTop: "auto" }}>
                                     Explore <Ic name="arrowRight" size={14} stroke="var(--green)" />
                                 </div>
                             </div>
