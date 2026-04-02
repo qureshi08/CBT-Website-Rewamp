@@ -193,7 +193,13 @@ export default async function PartnersPage() {
                                     &ldquo;{t.quote}&rdquo;
                                 </p>
                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "10px" }}>{t.author[0]}</div>
+                                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontWeight: 700, fontSize: "10px" }}>
+                                        {t.avatar_url ? (
+                                            <img src={t.avatar_url} className="w-full h-full object-cover" alt="" />
+                                        ) : (
+                                            t.author[0]
+                                        )}
+                                    </div>
                                     <div>
                                         <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "12px" }}>{t.author}</div>
                                         <div style={{ fontFamily: "var(--f-body)", fontSize: "10px", color: "var(--muted)", textTransform: "uppercase" }}>{t.company}</div>

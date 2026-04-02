@@ -135,7 +135,13 @@ export default async function CGAPPage() {
                                         <Quote size={20} style={{ color: "var(--green)", opacity: 0.2, marginBottom: "12px" }} />
                                         <p style={{ fontFamily: "var(--f-body)", fontStyle: "italic", fontSize: "13.5px", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "16px" }}>&ldquo;{alum.quote}&rdquo;</p>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "9px" }}>{alum.name[0]}</div>
+                                            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontWeight: 700, fontSize: "9px" }}>
+                                                {alum.avatar_url ? (
+                                                    <img src={alum.avatar_url} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    alum.name[0]
+                                                )}
+                                            </div>
                                             <div>
                                                 <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "11px" }}>{alum.name}</div>
                                                 <div style={{ fontFamily: "var(--f-body)", fontSize: "9px", color: "var(--muted)" }}>{alum.role} • {alum.cohort}</div>
