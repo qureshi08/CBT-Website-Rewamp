@@ -56,7 +56,7 @@ function AnimatedCounter({
     return (
         <span>
             {displayCount}
-            <span className="text-primary-light">{suffix}</span>
+            <span style={{ color: "var(--color-primary)" }}>{suffix}</span>
         </span>
     );
 }
@@ -87,63 +87,138 @@ export default function StatsBar({
     const displayStats = stats && stats.length > 0 ? stats : defaultStats;
 
     return (
-        <section className="bg-surface section-padding" id="about" ref={ref}>
-            <div className="container-main">
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-12)", alignItems: "center" }}>
+        <section className="section-padding section-surface" id="about" ref={ref}>
+            <div className="v2-wrap">
+                <div className="stats-bar-grid">
                     {/* Left Side - Text */}
-                    <div className="reveal" style={{ display: "flex", flexDirection: "column" }}>
-                        <span className="section-tag animate-fade-in block" style={{ marginBottom: "var(--space-3)" }}>Why CBT</span>
-                        <h2 className="animate-fade-up animation-delay-100" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)", fontWeight: 700, color: "var(--color-text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+                    <div>
+                        <span style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                            color: "var(--color-primary)",
+                            marginBottom: "14px",
+                            display: "block",
+                        }}>Why CBT</span>
+                        <h2 className="v2-h2" style={{
+                            fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+                        }}>
                             Built for businesses that want results, not reports
                         </h2>
 
-                        <div className="animate-fade-up animation-delay-200" style={{ marginTop: "var(--space-8)", display: "flex", flexDirection: "column" }}>
-                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
-                                <div style={{ width: "6px", height: "6px", background: "var(--color-primary)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
-                                <div>
-                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Outcome-first approach</div>
-                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Every engagement starts with a clear business outcome in mind. We measure success by the impact on your organisation, not by deliverables.</p>
+                        <div style={{ marginTop: "var(--space-8)", display: "flex", flexDirection: "column" }}>
+                            {[
+                                {
+                                    title: "Outcome-first approach",
+                                    body: "Every engagement starts with a clear business outcome in mind. We measure success by the impact on your organisation, not by deliverables.",
+                                    first: true,
+                                },
+                                {
+                                    title: "Specialists, not generalists",
+                                    body: "Our team brings deep domain expertise in data, cloud and AI — so you're always working with people who truly understand your technical landscape.",
+                                },
+                                {
+                                    title: "Approachable by design",
+                                    body: "Complex technology, plain language. We cut through jargon to make sure every stakeholder — technical or not — is always fully informed and confident.",
+                                },
+                            ].map((item) => (
+                                <div
+                                    key={item.title}
+                                    className="group"
+                                    style={{
+                                        display: "flex",
+                                        gap: "20px",
+                                        padding: "28px 0",
+                                        borderTop: item.first ? "1px solid var(--color-border)" : "none",
+                                        borderBottom: "1px solid var(--color-border)",
+                                    }}
+                                >
+                                    <div style={{
+                                        width: "8px",
+                                        height: "8px",
+                                        background: "var(--color-border)",
+                                        borderRadius: "50%",
+                                        marginTop: "8px",
+                                        flexShrink: 0,
+                                        transition: "background 0.2s",
+                                    }} />
+                                    <div>
+                                        <div className="v2-h3" style={{
+                                            fontSize: "1.4rem",
+                                            marginBottom: "8px",
+                                        }}>{item.title}</div>
+                                        <p style={{
+                                            fontFamily: "var(--font-body)",
+                                            fontSize: "16px",
+                                            color: "var(--color-text-body)",
+                                            lineHeight: 1.6,
+                                        }}>{item.body}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderBottom: "1px solid var(--color-border)" }}>
-                                <div className="group-hover:bg-primary transition-colors duration-200" style={{ width: "6px", height: "6px", background: "var(--color-border)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
-                                <div>
-                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Specialists, not generalists</div>
-                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Our team brings deep domain expertise in data, cloud and AI — so you're always working with people who truly understand your technical landscape.</p>
-                                </div>
-                            </div>
-                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderBottom: "1px solid var(--color-border)" }}>
-                                <div className="group-hover:bg-primary transition-colors duration-200" style={{ width: "6px", height: "6px", background: "var(--color-border)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
-                                <div>
-                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Approachable by design</div>
-                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Complex technology, plain language. We cut through jargon to make sure every stakeholder — technical or not — is always fully informed and confident.</p>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Right Side - Stat Block */}
-                    <div className="reveal reveal-delay-1 relative overflow-hidden" style={{ background: "var(--color-text-heading)", borderRadius: "12px", padding: "var(--space-10)", color: "white", boxShadow: "0 24px 50px rgba(0,0,0,0.15)" }}>
+                    <div className="stats-box">
+                        {/* Green glow */}
                         <div style={{ position: "absolute", bottom: "-60px", right: "-60px", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,153,77,0.3) 0%, transparent 65%)" }} />
+
+                        {/* Top accent bar */}
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "var(--color-primary)" }} />
 
-                        <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(3rem, 5vw, 3.75rem)", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.04em", color: "white", marginBottom: "var(--space-2)", position: "relative", zIndex: 10 }}>
-                            <AnimatedCounter target={experienceValue} suffix="+" isVisible={isVisible} />
+                        {/* BIG NUMBER SECTION */}
+                        <div style={{
+                            fontFamily: 'var(--font-playfair), var(--font-heading), serif',
+                            fontSize: "5rem",
+                            fontWeight: 700,
+                            lineHeight: 1,
+                            letterSpacing: "-0.04em",
+                            color: "white",
+                            marginBottom: "8px",
+                            position: "relative",
+                            zIndex: 1,
+                        }}>
+                            {experienceValue}+
                         </div>
-                        <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 300, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, marginBottom: "var(--space-8)", position: "relative", zIndex: 10 }}>
+
+                        {/* SUBTITLE SECTION */}
+                        <div style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: "14px",
+                            fontWeight: 300,
+                            color: "rgba(255, 255, 255, 0.6)",
+                            lineHeight: 1.5,
+                            marginBottom: "40px",
+                            position: "relative",
+                            zIndex: 1,
+                        }}>
                             {experienceLabel}
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", position: "relative", zIndex: 10 }}>
+                        {/* STATS LIST SECTION */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", zIndex: 1 }}>
                             {displayStats.map((stat, i) => {
-                                const isFloat = stat.value % 1 !== 0;
                                 return (
-                                    <div key={stat.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "var(--space-4)", borderBottom: "1px solid rgba(255,255,255,0.1)" }} className="last:border-b-0 last:pb-0">
-                                        <span style={{ fontFamily: "var(--font-body)", fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
+                                    <div key={stat.label} style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        paddingBottom: "16px",
+                                        borderBottom: i < displayStats.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                    }}>
+                                        <span style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>
                                             {stat.label}
                                         </span>
-                                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-primary)", fontWeight: "bold" }}>
-                                            <AnimatedCounter target={stat.value} suffix={stat.suffix} isVisible={isVisible} isFloat={isFloat} />
+
+                                        <span style={{
+                                            fontFamily: 'var(--font-mono), "JetBrains Mono", monospace',
+                                            fontSize: "16px",
+                                            color: "var(--color-primary)",
+                                            fontWeight: "bold"
+                                        }}>
+                                            {stat.value}{stat.suffix}
                                         </span>
                                     </div>
                                 );

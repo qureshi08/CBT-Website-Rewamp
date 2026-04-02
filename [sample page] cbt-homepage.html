@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convergent Business Technologies</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --green: #00994D;
+      --green-light: #00C060;
+      --green-muted: #E6F5ED;
+      --green-dim: rgba(0, 153, 77, 0.08);
+
+      --white: #FFFFFF;
+      --surface: #F7F8F7;
+      --border: #E4E6E3;
+      --text-muted: #8A9099;
+      --text-body: #4B5563;
+      --text-heading: #0F1514;
+
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    /* ─── RESET ──────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--text-body);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ─── KEYFRAMES ──────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes lineGrow {
+      from {
+        transform: scaleX(0);
+      }
+
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* ─── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-mark {
+      width: 34px;
+      height: 34px;
+      background: var(--text-heading);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-logo-mark::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--green);
+    }
+
+    .nav-logo-mark span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: 0.03em;
+    }
+
+    .nav-wordmark {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-heading);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-heading);
+    }
+
+    .nav-links a.active {
+      color: var(--green);
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+      border-radius: 1px;
+    }
+
+    .nav-cta {
+      background: var(--text-heading);
+      color: var(--white) !important;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--green) !important;
+      color: var(--white) !important;
+    }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 32px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grid texture */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.45;
+    }
+
+    /* Green glow bottom-right */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -120px;
+      right: -120px;
+      width: 560px;
+      height: 560px;
+      background: radial-gradient(circle, rgba(0, 153, 77, 0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 24px;
+      animation: fadeIn 0.6s var(--ease) both;
+    }
+
+    .hero-tag-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+      font-weight: 700;
+      color: var(--text-heading);
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      margin-bottom: 24px;
+      animation: fadeUp 0.7s var(--ease) 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-body);
+      max-width: 460px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.7s var(--ease) 0.2s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      animation: fadeUp 0.7s var(--ease) 0.3s both;
+    }
+
+    .btn-primary {
+      background: var(--text-heading);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px 28px;
+      border-radius: 7px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s var(--ease), transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--green);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-body);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 13px 4px;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .btn-arrow {
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .btn-secondary:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Hero right — abstract stat card */
+    .hero-visual {
+      animation: fadeUp 0.8s var(--ease) 0.25s both;
+    }
+
+    .hero-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 32px;
+      right: 32px;
+      height: 3px;
+      background: var(--green);
+      border-radius: 0 0 3px 3px;
+    }
+
+    .hero-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .stat-cell {
+      background: var(--white);
+      padding: 20px;
+    }
+
+    .stat-cell:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    .stat-cell:last-child {
+      border-radius: 0 0 10px 10px;
+      grid-column: span 2;
+    }
+
+    .stat-num {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-num span {
+      color: var(--green);
+    }
+
+    .stat-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .stat-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .stat-bar-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-bar-name {
+      font-size: 12px;
+      color: var(--text-body);
+      font-weight: 500;
+    }
+
+    .stat-bar-val {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .stat-bar-track {
+      height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 2px;
+      animation: lineGrow 1.2s var(--ease) 0.8s both;
+      transform-origin: left;
+    }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .trust-avatars {
+      display: flex;
+    }
+
+    .trust-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      background: var(--surface);
+      margin-left: -6px;
+
+      first-of-type {
+        margin-left: 0;
+      }
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      overflow: hidden;
+    }
+
+    .trust-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .trust-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .trust-text strong {
+      color: var(--text-heading);
+    }
+
+    /* ─── SECTION SHARED ─────────────────────────────────── */
+    .section {
+      padding: 100px 32px;
+    }
+
+    .section-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .section-heading {
+      font-family: var(--font-head);
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text-heading);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-body);
+      max-width: 520px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── SERVICES ───────────────────────────────────────── */
+    .services {
+      background: var(--white);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .service-card {
+      background: var(--white);
+      padding: 40px 36px;
+      transition: background 0.25s var(--ease);
+      position: relative;
+      cursor: default;
+    }
+
+    .service-card:hover {
+      background: var(--surface);
+    }
+
+    .service-card:hover .service-icon-wrap {
+      background: var(--green);
+    }
+
+    .service-card:hover .service-icon {
+      color: var(--white);
+    }
+
+    .service-card:hover .service-link {
+      color: var(--green);
+    }
+
+    .service-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border);
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      transition: color 0.25s;
+    }
+
+    .service-card:hover .service-num {
+      color: var(--text-muted);
+    }
+
+    .service-icon-wrap {
+      width: 44px;
+      height: 44px;
+      background: var(--surface);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: background 0.25s var(--ease);
+    }
+
+    .service-icon {
+      font-size: 20px;
+      color: var(--green);
+      transition: color 0.25s;
+    }
+
+    .service-title {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-body);
+      margin-bottom: 24px;
+    }
+
+    .service-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    /* ─── WHY SECTION ────────────────────────────────────── */
+    .why {
+      background: var(--surface);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .why-left {}
+
+    .why-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .why-item {
+      display: flex;
+      gap: 20px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .why-item:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .why-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      margin-top: 8px;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .why-item:hover .why-dot {
+      background: var(--green);
+    }
+
+    .why-item-head {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+    }
+
+    .why-item-body {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.7;
+    }
+
+    /* Right side big stat display */
+    .why-stat-block {
+      background: var(--text-heading);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .why-stat-block::before {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(0, 153, 77, 0.3) 0%, transparent 65%);
+    }
+
+    .why-stat-block::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--green);
+    }
+
+    .why-big-num {
+      font-family: var(--font-head);
+      font-size: 5rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .why-big-num span {
+      color: var(--green);
+    }
+
+    .why-big-label {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
+
+    .why-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .why-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .why-metric:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .why-metric-name {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .why-metric-val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    /* ─── TESTIMONIALS ───────────────────────────────────── */
+    .testimonials {
+      background: var(--white);
+    }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: relative;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .testi-card:hover {
+      box-shadow: 0 12px 40px rgba(0, 153, 77, 0.09);
+      transform: translateY(-3px);
+    }
+
+    .testi-card.featured {
+      background: var(--text-heading);
+      border-color: transparent;
+    }
+
+    .testi-card.featured .testi-quote {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .testi-card.featured .testi-text {
+      color: var(--white);
+    }
+
+    .testi-card.featured .testi-name {
+      color: var(--white);
+    }
+
+    .testi-card.featured .testi-role {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .testi-card.featured .testi-mark {
+      color: var(--green);
+    }
+
+    .testi-mark {
+      font-size: 48px;
+      line-height: 1;
+      font-family: var(--font-head);
+      color: var(--green);
+      opacity: 0.25;
+      position: absolute;
+      top: 24px;
+      right: 28px;
+    }
+
+    .testi-card.featured .testi-mark {
+      opacity: 1;
+    }
+
+    .testi-quote {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--text-body);
+      margin-bottom: 28px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--green-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .testi-card.featured .testi-avatar {
+      background: rgba(0, 153, 77, 0.25);
+    }
+
+    .testi-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-heading);
+    }
+
+    .testi-role {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── CTA BAND ───────────────────────────────────────── */
+    .cta-band {
+      padding: 100px 32px;
+      background: var(--text-heading);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--green);
+    }
+
+    .cta-band::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 153, 77, 0.12) 0%, transparent 65%);
+    }
+
+    .cta-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-heading {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-heading em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .cta-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .btn-cta-white {
+      background: var(--white);
+      color: var(--text-heading);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 7px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-cta-white:hover {
+      background: var(--green);
+      color: var(--white);
+      transform: translateY(-1px);
+    }
+
+    .btn-cta-ghost {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .btn-cta-ghost:hover {
+      color: var(--white);
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--text-heading);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 48px 32px 36px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-mark {
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-mark span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--green);
+    }
+
+    .footer-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.35);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-copy {
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 12px;
+    }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-mark"><span>CBT</span></div>
+        <span class="nav-wordmark">Convergent Business Technologies</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#case-studies">Case Studies</a></li>
+        <li><a href="#training">Training</a></li>
+        <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          Data · Cloud · Artificial Intelligence
+        </div>
+        <h1>Where data meets <em>intelligent</em> business strategy</h1>
+        <p class="hero-sub">We help ambitious businesses unlock the full potential of their data — through modern cloud
+          infrastructure, AI adoption, and strategic consultancy that actually delivers.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Work with us <span>→</span></a>
+          <a href="#services" class="btn-secondary">Explore services <span class="btn-arrow">→</span></a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-label">Client outcomes at a glance</div>
+          <div class="stat-grid">
+            <div class="stat-cell">
+              <div class="stat-num">40<span>%</span></div>
+              <div class="stat-desc">Average reduction in data processing time</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-num">3<span>×</span></div>
+              <div class="stat-desc">Faster cloud deployment cycles</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-bar-row">
+                <div class="stat-bar-item">
+                  <div class="stat-bar-top">
+                    <span class="stat-bar-name">Data Strategy</span>
+                    <span class="stat-bar-val">94%</span>
+                  </div>
+                  <div class="stat-bar-track">
+                    <div class="stat-bar-fill" style="width:94%"></div>
+                  </div>
+                </div>
+                <div class="stat-bar-item">
+                  <div class="stat-bar-top">
+                    <span class="stat-bar-name">Cloud Migration</span>
+                    <span class="stat-bar-val">87%</span>
+                  </div>
+                  <div class="stat-bar-track">
+                    <div class="stat-bar-fill" style="width:87%"></div>
+                  </div>
+                </div>
+                <div class="stat-bar-item">
+                  <div class="stat-bar-top">
+                    <span class="stat-bar-name">AI Adoption</span>
+                    <span class="stat-bar-val">91%</span>
+                  </div>
+                  <div class="stat-bar-track">
+                    <div class="stat-bar-fill" style="width:91%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-trust">
+            <div class="trust-avatars">
+              <div class="trust-avatar">SO</div>
+              <div class="trust-avatar">MK</div>
+              <div class="trust-avatar">JA</div>
+              <div class="trust-avatar" style="background:var(--green-muted);color:var(--green);">+</div>
+            </div>
+            <div class="trust-text"><strong>50+ businesses</strong> transformed<br>across the UK & beyond</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section services" id="services">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <span class="section-tag reveal">What we do</span>
+          <h2 class="section-heading reveal reveal-delay-1">End-to-end expertise,<br>from pipeline to product</h2>
+          <p class="section-sub reveal reveal-delay-2">Three core practice areas — each one designed to move your
+            business forward with clarity and confidence.</p>
+        </div>
+        <a href="#contact" class="btn-secondary reveal" style="flex-shrink:0">All services <span
+            class="btn-arrow">→</span></a>
+      </div>
+      <div class="services-grid reveal">
+        <div class="service-card">
+          <span class="service-num">01</span>
+          <div class="service-icon-wrap"><span class="service-icon">◈</span></div>
+          <div class="service-title">Data Strategy & Engineering</div>
+          <p class="service-desc">From raw data to reliable insight. We design, build and govern data infrastructure
+            that scales with your organisation — pipelines, warehouses, and governance frameworks included.</p>
+          <a href="#" class="service-link">Learn more <span>→</span></a>
+        </div>
+        <div class="service-card">
+          <span class="service-num">02</span>
+          <div class="service-icon-wrap"><span class="service-icon">☁</span></div>
+          <div class="service-title">Cloud Migration & Architecture</div>
+          <p class="service-desc">We plan and execute cloud migrations that minimise disruption and maximise performance
+            — whether you're moving to AWS, Azure, or GCP, or optimising what's already there.</p>
+          <a href="#" class="service-link">Learn more <span>→</span></a>
+        </div>
+        <div class="service-card">
+          <span class="service-num">03</span>
+          <div class="service-icon-wrap"><span class="service-icon">⬡</span></div>
+          <div class="service-title">AI Adoption & Integration</div>
+          <p class="service-desc">Practical AI — not hype. We help businesses identify where AI creates real value, then
+            build and integrate the solutions that deliver it, from LLM tooling to predictive analytics.</p>
+          <a href="#" class="service-link">Learn more <span>→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CBT -->
+  <section class="section why" id="about">
+    <div class="section-inner">
+      <div class="why-grid">
+        <div class="why-left">
+          <span class="section-tag reveal">Why CBT</span>
+          <h2 class="section-heading reveal reveal-delay-1">Built for businesses that want results, not reports</h2>
+          <div class="why-items">
+            <div class="why-item reveal">
+              <div class="why-dot"></div>
+              <div>
+                <div class="why-item-head">Outcome-first approach</div>
+                <p class="why-item-body">Every engagement starts with a clear business outcome in mind. We measure
+                  success by the impact on your organisation, not by deliverables.</p>
+              </div>
+            </div>
+            <div class="why-item reveal reveal-delay-1">
+              <div class="why-dot"></div>
+              <div>
+                <div class="why-item-head">Specialists, not generalists</div>
+                <p class="why-item-body">Our team brings deep domain expertise in data, cloud and AI — so you're always
+                  working with people who truly understand your technical landscape.</p>
+              </div>
+            </div>
+            <div class="why-item reveal reveal-delay-2">
+              <div class="why-dot"></div>
+              <div>
+                <div class="why-item-head">Approachable by design</div>
+                <p class="why-item-body">Complex technology, plain language. We cut through jargon to make sure every
+                  stakeholder — technical or not — is always fully informed and confident.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="why-right reveal reveal-delay-1">
+          <div class="why-stat-block">
+            <div class="why-big-num">12<span>+</span></div>
+            <div class="why-big-label">Years of combined experience in<br>data, cloud and AI consultancy</div>
+            <div class="why-metrics">
+              <div class="why-metric">
+                <span class="why-metric-name">Projects delivered</span>
+                <span class="why-metric-val">120+</span>
+              </div>
+              <div class="why-metric">
+                <span class="why-metric-name">Client retention rate</span>
+                <span class="why-metric-val">96%</span>
+              </div>
+              <div class="why-metric">
+                <span class="why-metric-name">Average ROI for clients</span>
+                <span class="why-metric-val">3.4×</span>
+              </div>
+              <div class="why-metric">
+                <span class="why-metric-name">Industries served</span>
+                <span class="why-metric-val">14</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section testimonials" id="case-studies">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <span class="section-tag reveal">Client stories</span>
+          <h2 class="section-heading reveal reveal-delay-1">Don't take our word for it</h2>
+        </div>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card reveal">
+          <div class="testi-mark">"</div>
+          <p class="testi-quote">CBT helped us build a data infrastructure we should have had five years ago. Within
+            three months, our ops team was making decisions from live dashboards rather than week-old spreadsheets.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SO</div>
+            <div>
+              <div class="testi-name">Sarah Okonkwo</div>
+              <div class="testi-role">CTO, NovaTech Solutions</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card featured reveal reveal-delay-1">
+          <div class="testi-mark">"</div>
+          <p class="testi-quote">The team made our AWS migration feel effortless. Complex architecture decisions were
+            explained clearly, timelines were kept, and the end result exceeded what we thought was possible.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MK</div>
+            <div>
+              <div class="testi-name">Marcus Kwame</div>
+              <div class="testi-role">Head of Engineering, PulseHR</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal reveal-delay-2">
+          <div class="testi-mark">"</div>
+          <p class="testi-quote">As a startup, we weren't sure where to start with AI. CBT helped us identify the right
+            use cases, build quickly, and avoid the expensive mistakes we'd have made alone.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JA</div>
+            <div>
+              <div class="testi-name">Jamie Adeyemi</div>
+              <div class="testi-role">CEO, Rootly AI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band" id="contact">
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-heading">Ready to make your data <em>work harder?</em></h2>
+        <p class="cta-sub">Whether you're at the start of your data journey or scaling an existing capability, let's
+          have a conversation.</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn-cta-white">Start a conversation →</button>
+        <button class="btn-cta-ghost">View our training programme →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="footer-mark"><span>CBT</span></div>
+        <span class="footer-name">Convergent Business Technologies</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">Services</a>
+        <a href="#">Training</a>
+        <a href="#">Partners</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-copy">© 2026 CBT. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav active state on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+</body>
+
+</html>
