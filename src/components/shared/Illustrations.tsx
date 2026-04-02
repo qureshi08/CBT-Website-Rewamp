@@ -103,14 +103,89 @@ export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
             {[
                 { x: 20, h: 52, o: 0.9 }, { x: 44, h: 38, o: 0.65 }, { x: 68, h: 60, o: 0.8 },
                 { x: 92, h: 30, o: 0.5 }, { x: 116, h: 50, o: 0.75 }, { x: 140, h: 66, o: 0.9 }, { x: 164, h: 42, o: 0.6 }
-            ].map(({ x, h, o }, i) => (
-                <rect key={i} x={x} y={104 - h} width={18} height={h} rx="3" fill={color} opacity={o} />
+            ].map((bar, i) => (
+                <rect key={i} x={bar.x} y={104 - bar.h} width={18} height={bar.h} rx="3" fill={color} opacity={bar.o} />
             ))}
             <polyline points="29,78 53,90 77,72 101,96 125,80 149,60 173,74"
                 stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
             {[0, 1, 2].map(i => (
                 <line key={i} x1="12" y1={44 + i * 24} x2="188" y2={44 + i * 24} stroke="#E2E8E4" strokeWidth=".8" />
             ))}
+        </svg>
+    );
+}
+
+// Customers: Enterprise Growth & Global Presence
+export function CustomersIllustration() {
+    return (
+        <svg width="280" height="200" viewBox="0 0 280 200" fill="none" style={{ flexShrink: 0 }}>
+            {/* Global Grid Background */}
+            <path d="M40 160h200M40 120h200M40 80h200M40 40h200M80 40v120M120 40v120M160 40v120M200 40v120"
+                stroke="#E2E8E4" strokeWidth="0.5" strokeDasharray="3 3" />
+
+            {/* Central Enterprise Node */}
+            <g style={{ animation: "float 4s ease-in-out infinite" }}>
+                <rect x="110" y="70" width="60" height="60" rx="12" fill="white" stroke="#00994D" strokeWidth="1.5" />
+                <path d="M125 100l5-5 5 5M145 100l-5-5-5 5" stroke="#00994D" strokeWidth="1.5" strokeLinecap="round" />
+            </g>
+
+            {/* Orbiting client nodes */}
+            <circle cx="50" cy="60" r="6" fill="#E6F5ED" stroke="#00994D" strokeWidth="1"
+                style={{ animation: "pulse 2.5s infinite" }} />
+            <circle cx="230" cy="80" r="8" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.2"
+                style={{ animation: "pulse 3s infinite" }} />
+            <circle cx="60" cy="150" r="5" fill="#E6F5ED" stroke="#00994D" strokeWidth="1"
+                style={{ animation: "pulse 2.8s infinite" }} />
+            <circle cx="210" cy="140" r="7" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.2"
+                style={{ animation: "pulse 3.2s infinite" }} />
+
+            {/* Connecting lines */}
+            <line x1="56" y1="65" x2="110" y2="90" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3"
+                style={{ animation: "drawLine 1s 0.2s ease forwards", strokeDashoffset: 100 }} />
+            <line x1="222" y1="85" x2="170" y2="105" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" />
+            <line x1="68" y1="145" x2="115" y2="125" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" />
+
+            {/* Success Bar */}
+            <g style={{ animation: "floatB 3.5s 0.5s ease-in-out infinite" }}>
+                <rect x="170" y="30" width="80" height="32" rx="8" fill="white" stroke="#E2E8E4" strokeWidth="1" />
+                <rect x="182" y="43" width="30" height="5" rx="2" fill="#00994D" opacity="0.4" />
+                <path d="M220 46l4-4 4 4" stroke="#00994D" strokeWidth="1.5" strokeLinecap="round" />
+            </g>
+        </svg>
+    );
+}
+
+// Partners: Interlocking Synergy
+export function PartnersIllustration() {
+    return (
+        <svg width="240" height="180" viewBox="0 0 240 180" fill="none" style={{ flexShrink: 0 }}>
+            {/* Background Hex Pattern */}
+            <path d="M20 40l15-8 15 8v16l-15 8-15-8z M190 120l15-8 15 8v16l-15 8-15-8z"
+                stroke="#E2E8E4" strokeWidth="1" strokeDasharray="2 2" />
+
+            {/* Two Interlocking Hexagons/Cubes */}
+            <g style={{ animation: "float 4s ease-in-out infinite" }}>
+                <path d="M80 60l30-16 30 16v32l-30 16-30-16z" fill="white" stroke="#00994D" strokeWidth="1.5" />
+                <path d="M110 44v32l-30-16 M110 76l30-16" stroke="#00994D" strokeWidth="1" opacity="0.3" />
+            </g>
+
+            <g style={{ animation: "floatB 4s 0.5s ease-in-out infinite" }}>
+                <path d="M130 90l30-16 30 16v32l-30 16-30-16z" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.5" opacity="0.8" />
+                <path d="M160 74v32l-30-16 M160 106l30-16" stroke="#00994D" strokeWidth="1" opacity="0.4" />
+            </g>
+
+            {/* Flowing data particles */}
+            <circle r="3" fill="#00C060">
+                <animateMotion path="M110 90 Q130 90 150 90" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.5" fill="#00994D" opacity="0.6">
+                <animateMotion path="M110 110 Q140 100 170 100" dur="2.5s" begin="0.5s" repeatCount="indefinite" />
+            </circle>
+
+            {/* Floating Connection Tag */}
+            <rect x="20" y="100" width="70" height="24" rx="12" fill="white" stroke="#E2E8E4" strokeWidth="1"
+                style={{ animation: "scaleIn 0.5s 1s ease both", opacity: 0 }} />
+            <text x="35" y="115" fontFamily="DM Sans" fontSize="9" fontWeight="700" fill="#00994D">SYNCED</text>
         </svg>
     );
 }

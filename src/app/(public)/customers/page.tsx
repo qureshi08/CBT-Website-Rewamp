@@ -10,16 +10,17 @@ import {
     BookOpen,
     FileText,
 } from "lucide-react";
+import { useScrollReveal } from "@/components/home/Hero";
+import { CustomersIllustration } from "@/components/shared/Illustrations";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
     title: "Our Customers | CBT — Convergent Business Technologies",
     description:
         "See who trusts CBT for data analytics, business intelligence, and technology consulting. Clients include Pepsi, Microsoft, Coca-Cola, KPMG, and more.",
 };
-
-import { createClient } from "@/lib/supabase/server";
 
 const services = [
     {
@@ -83,6 +84,7 @@ const fallbackCaseStudies = [
 
 export default async function CustomersPage() {
     const supabase = await createClient();
+    useScrollReveal();
 
     // Fetch clients
     const { data: clientsData } = await supabase
@@ -104,153 +106,112 @@ export default async function CustomersPage() {
         : fallbackCaseStudies;
 
     return (
-        <>
-            <div className="font-body">
-                {/* Hero */}
-                <section className="bg-white pt-20 md:pt-24 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 -skew-x-12 translate-x-1/2 -z-10" />
-
-                    <div className="container-main py-12 md:py-16">
-                        <div className="max-w-2xl">
-                            <span className="uppercase-label text-primary mb-5 inline-block border-b border-primary/30 pb-1">
-                                Our Portfolio
-                            </span>
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-heading leading-[1.15] font-heading tracking-tight mb-5">
-                                Trusted by Leading <br /> Organisations <span className="italic-accent text-primary">Across Industries.</span>
-                            </h1>
-                            <p className="text-base md:text-lg text-text-body/80 leading-relaxed max-w-xl font-normal mb-8 font-body">
-                                From FMCG giants to financial institutions, we help organisations
-                                turn their data into competitive advantage through delivery excellence.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Link href="/contact" className="btn-primary shadow-lg shadow-primary/5">
-                                    Start a Conversation
-                                    <ArrowRight size={16} />
-                                </Link>
-                                <a href="#works" className="btn-secondary">
-                                    View Case Studies
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Client Logos — scrolling marquee */}
-                <IndustryLeadersStrip clientNames={clientNames} />
-
-                {/* Services */}
-                <section className="bg-white py-16">
-                    <div className="container-main">
-                        <div className="text-center mb-12">
-                            <span className="uppercase-label text-primary mb-2 block">
-                                Expertise
-                            </span>
-                            <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading">
-                                Services We <span className="italic-accent text-primary">Deliver</span>
-                            </h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                            {services.map((service) => {
-                                const Icon = service.icon;
-                                return (
-                                    <div
-                                        key={service.title}
-                                        className="group card border border-border/40 p-6 flex flex-col"
-                                    >
-                                        <div className="w-10 h-10 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                            <Icon size={20} />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-text-heading mb-2 font-heading group-hover:text-primary transition-colors">
-                                            {service.title}
-                                        </h3>
-                                        <p className="text-sm text-text-body/70 leading-relaxed font-body">
-                                            {service.description}
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Case Studies */}
-                <section className="bg-surface py-16 relative overflow-hidden" id="works">
-                    <div className="container-main">
-                        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
-                            <div className="max-w-2xl">
-                                <span className="uppercase-label text-primary mb-2 block">
-                                    Impact
-                                </span>
-                                <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading leading-tight">
-                                    Our Work in <span className="italic-accent text-primary">Action</span>
-                                </h2>
-                            </div>
-                            <div className="pb-1 hidden md:block">
-                                <FileText size={32} className="text-primary opacity-10" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            {displayCaseStudies.map((study: any) => (
-                                <div
-                                    key={study.title}
-                                    className="bg-white rounded-xl p-6 border border-border/40 shadow-sm relative group hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col"
-                                >
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors" />
-
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {study.tags?.map((tag: string) => (
-                                            <span
-                                                key={tag}
-                                                className="uppercase-label text-[9px] text-primary bg-primary-muted px-2 py-0.5 rounded-full"
-                                            >
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <h3 className="text-lg font-bold text-text-heading mb-3 font-heading leading-tight group-hover:text-primary transition-colors">
-                                        {study.title}
-                                    </h3>
-                                    <p className="text-[13px] text-text-body/70 leading-relaxed font-body mb-5 flex-grow">
-                                        {study.summary}
-                                    </p>
-                                    <Link href="/contact" className="mt-auto inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] group-hover:gap-3 transition-all">
-                                        Learn More
-                                        <ArrowRight size={12} />
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Final CTA */}
-                <section className="py-16 px-6">
-                    <div className="container-main rounded-[24px] bg-text-heading overflow-hidden relative shadow-xl">
-                        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-20deg] translate-x-1/2" />
-
-                        <div className="relative z-10 py-12 px-8 text-center text-white">
-                            <h2 className="text-2xl md:text-4xl font-bold mb-5 font-heading tracking-tight leading-tight">
-                                Ready to Transform Your <br className="hidden md:block" /> <span className="italic-accent text-primary">Data Capability?</span>
-                            </h2>
-                            <p className="text-white/60 mb-8 max-w-xl mx-auto text-base leading-relaxed font-body font-light">
-                                Tell us about your challenge. We&apos;ll show you how data can solve it.
-                            </p>
-                            <Link
-                                href="/contact"
-                                className="btn-primary shadow-lg shadow-black/20"
-                            >
-                                Start a Conversation
-                                <ArrowRight size={16} />
+        <main>
+            {/* Hero */}
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
+                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+                    <div>
+                        <div className="v2-lbl v2-reveal">Success Stories</div>
+                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 50px)", marginBottom: "18px" }}>
+                            Enterprise Solutions <br />
+                            <em style={{ fontStyle: "italic", color: "var(--green)" }}>Delivered with Precision</em>
+                        </h1>
+                        <p className="v2-sub v2-reveal" style={{ maxWidth: "520px" }}>
+                            From global banking to retail giants, we help organisations turn their data into competitive advantage through delivery excellence.
+                        </p>
+                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
+                            <Link href="/contact" className="v2-btn v2-btn-p">
+                                Start a Conversation <ArrowRight size={16} stroke="white" />
                             </Link>
+                            <a href="#works" className="v2-btn v2-btn-s">
+                                View Case Studies
+                            </a>
                         </div>
                     </div>
-                </section>
+                    <div className="v2-reveal a-scaleIn">
+                        <CustomersIllustration />
+                    </div>
+                </div>
+            </section>
 
-                <PersonaBridge exclude="customers" />
-            </div>
-        </>
+            {/* Client Logos — scrolling marquee */}
+            <IndustryLeadersStrip clientNames={clientNames} />
+
+            {/* Services */}
+            <section className="bg-white py-16">
+                <div className="v2-wrap">
+                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <span className="v2-lbl v2-reveal">Expertise</span>
+                        <h2 className="v2-h2 v2-reveal">Services We Deliver</h2>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
+                        {services.map((service, i) => {
+                            const Icon = service.icon;
+                            return (
+                                <div key={service.title} className={`v2-stile v2-reveal v2-d${(i % 3) + 1}`}>
+                                    <div className="v2-stile-icon"><Icon size={20} /></div>
+                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>{service.title}</h3>
+                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>
+                                        {service.description}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* Case Studies */}
+            <section className="bg-surface py-16 relative overflow-hidden" id="works">
+                <div className="v2-wrap">
+                    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "48px" }}>
+                        <div>
+                            <span className="v2-lbl v2-reveal">Impact</span>
+                            <h2 className="v2-h2 v2-reveal">Our Work in Action</h2>
+                        </div>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
+                        {displayCaseStudies.map((study: any, i) => (
+                            <div key={study.title} className={`v2-card v2-reveal v2-d${(i % 3) + 1}`} style={{ display: "flex", flexDirection: "column" }}>
+                                <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+                                    {study.tags?.map((tag: string) => (
+                                        <span key={tag} className="v2-tag" style={{ background: "var(--green-muted)", color: "var(--green)" }}>{tag}</span>
+                                    ))}
+                                </div>
+                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "12px" }}>{study.title}</h3>
+                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6", marginBottom: "20px", flexGrow: 1 }}>
+                                    {study.summary}
+                                </p>
+                                <Link href="/contact" style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--f-body)", fontSize: "12px", fontWeight: 700, color: "var(--green)", textDecoration: "none" }}>
+                                    LEARN MORE <ArrowRight size={12} />
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Final CTA */}
+            <section style={{ padding: "64px 24px" }}>
+                <div className="v2-wrap" style={{ background: "var(--heading-c)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", top: 0, right: 0, width: "50%", height: "100%", background: "rgba(0,153,77,0.05)", transform: "skewX(-20deg) translateX(50%)" }} />
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                        <h2 className="v2-h2" style={{ color: "white", fontSize: "32px", marginBottom: "18px" }}>
+                            Ready to Transform Your <br /> <em style={{ fontStyle: "italic", color: "var(--green)" }}>Data Capability?</em>
+                        </h2>
+                        <p style={{ fontFamily: "var(--f-body)", color: "rgba(255,255,255,0.6)", maxWidth: "560px", margin: "0 auto 32px" }}>
+                            Tell us about your challenge. We&apos;ll show you how data can solve it.
+                        </p>
+                        <Link href="/contact" className="v2-btn v2-btn-p">
+                            Start a Conversation <ArrowRight size={16} stroke="white" />
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            <PersonaBridge exclude="customers" />
+        </main>
     );
 }
-

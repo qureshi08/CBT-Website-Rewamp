@@ -14,6 +14,8 @@ import {
 import { IndustryLeadersStrip, TechPartnersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 import PartnerForm from "@/components/partners/PartnerForm";
+import { useScrollReveal } from "@/components/home/Hero";
+import { PartnersIllustration } from "@/components/shared/Illustrations";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -21,27 +23,6 @@ export const metadata: Metadata = {
     description:
         "Join CBT's partner ecosystem. We work with technology providers and delivery partners to bring superior data solutions to global clients.",
 };
-
-const partnershipTypes = [
-    {
-        icon: Cpu,
-        title: "Technology Partner",
-        description:
-            "Integrate your technology with our analytics expertise. Joint solutions for shared clients.",
-    },
-    {
-        icon: Truck,
-        title: "Delivery Partner",
-        description:
-            "Co-deliver engagements leveraging CBT's data domain expertise and your client relationships.",
-    },
-    {
-        icon: Share2,
-        title: "Referral Partner",
-        description:
-            "Refer opportunities and earn commission. Simple, transparent, and mutually beneficial.",
-    },
-];
 
 const staticValueProps = [
     {
@@ -87,6 +68,7 @@ const fallbackTestimonials = [
 
 export default async function PartnersPage() {
     const supabase = await createClient();
+    useScrollReveal();
 
     // Fetch all data in parallel
     const [
@@ -104,17 +86,16 @@ export default async function PartnersPage() {
     ]);
 
     const clientNames = clientsData?.map((c) => c.name);
-
-    const techPartners = partnersData?.length
-        ? partnersData
-        : [{ name: "WeCrunch", logo_url: null }, { name: "Microsoft", logo_url: null }, { name: "Databricks", logo_url: null }, { name: "Fivetran", logo_url: null }, { name: "Snowflake", logo_url: null }];
-
     const displayClientCount = clientCount || 0;
     const displayBatchCount = batchCount || 0;
-
     const testimonials = dbTestimonials?.length ? dbTestimonials : fallbackTestimonials;
 
-    // Build dynamic value props
+    const partnershipTypes = [
+        { icon: Cpu, title: "Technology Partner", desc: "Integrate your technology with our analytics expertise. Joint solutions for shared clients." },
+        { icon: Truck, title: "Delivery Partner", desc: "Co-deliver engagements leveraging CBT's data domain expertise and your client relationships." },
+        { icon: Share2, title: "Referral Partner", desc: "Refer opportunities and earn commission. Simple, transparent, and mutually beneficial." },
+    ];
+
     const valueProps = staticValueProps.map(vp => ({
         ...vp,
         description: vp.title === "Track Record"
@@ -123,193 +104,128 @@ export default async function PartnersPage() {
     }));
 
     return (
-        <>
-            <div className="font-body">
-                {/* Hero */}
-                <section className="bg-surface pt-20 md:pt-24 relative overflow-hidden">
-                    {/* Abstract background elements */}
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-15deg] translate-x-1/2 -z-0" />
-                    <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        <main>
+            {/* Hero */}
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
+                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+                    <div>
+                        <div className="v2-lbl v2-reveal">Partner Ecosystem</div>
+                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 50px)", marginBottom: "18px" }}>
+                            Deliver Superior Value, <br /> <span className="italic-accent text-primary">Together.</span>
+                        </h1>
+                        <p className="v2-sub v2-reveal" style={{ maxWidth: "560px" }}>
+                            Technology. Delivery. Referral. Three ways to partner with CBT and unlock enterprise-grade data opportunities for your clients.
+                        </p>
+                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
+                            <a href="#partner-form" className="v2-btn v2-btn-p">Arrange a Call <ArrowRight size={16} stroke="white" /></a>
+                            <a href="#models" className="v2-btn v2-btn-s">Explore Models</a>
+                        </div>
+                    </div>
+                    <div className="v2-reveal a-scaleIn">
+                        <PartnersIllustration />
+                    </div>
+                </div>
+            </section>
 
-                    <div className="container-main py-12 md:py-16 relative z-10">
-                        <div className="max-w-3xl text-center md:text-left">
-                            <span className="uppercase-label text-primary mb-6 inline-block border-b border-primary/30 pb-1">
-                                Partner Ecosystem
-                            </span>
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-heading leading-[1.15] font-heading tracking-tight mb-6">
-                                Deliver Superior Value, <br /> <span className="italic-accent text-primary">Together.</span>
-                            </h1>
-                            <p className="mt-6 text-base md:text-lg text-text-body/80 leading-relaxed max-w-2xl font-normal font-body">
-                                Technology. Delivery. Referral. Three ways to partner with CBT
-                                and unlock enterprise-grade data opportunities for your clients.
-                            </p>
-                            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                                <a href="#partner-form" className="btn-primary shadow-lg shadow-primary/5">
-                                    Arrange a Call
-                                    <ArrowRight size={16} />
-                                </a>
-                                <a href="#models" className="btn-secondary">
-                                    Explore Models
-                                    <ArrowRight size={16} />
-                                </a>
+            {/* Models */}
+            <section className="bg-white py-16" id="models">
+                <div className="v2-wrap">
+                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <span className="v2-lbl v2-reveal">Co-Innovation</span>
+                        <h2 className="v2-h2 v2-reveal">Partnership Models</h2>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
+                        {partnershipTypes.map((type, i) => {
+                            const Icon = type.icon;
+                            return (
+                                <div key={type.title} className={`v2-pc v2-reveal v2-d${(i % 3) + 1}`} style={{ textAlign: "center", alignItems: "center" }}>
+                                    <div className="v2-pc-icon"><Icon size={20} /></div>
+                                    <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{type.title}</h3>
+                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>{type.desc}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Partner */}
+            <section className="bg-surface py-16">
+                <div className="v2-wrap">
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                        <div>
+                            <span className="v2-lbl v2-reveal">The Advantage</span>
+                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "20px" }}>Why Global Leaders Partner with CBT?</h2>
+                            <p className="v2-sub v2-reveal" style={{ marginBottom: "32px" }}>We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack.</p>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+                                {valueProps.map(prop => (
+                                    <div key={prop.title}>
+                                        <div style={{ color: "var(--green)", marginBottom: "8px" }}><prop.icon size={24} /></div>
+                                        <h3 className="v2-h3" style={{ fontSize: "15px", marginBottom: "4px" }}>{prop.title}</h3>
+                                        <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "var(--muted)", lineHeight: "1.5" }}>{prop.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="v2-reveal v2-card" style={{ padding: "40px" }}>
+                            <div style={{ display: "grid", gap: "32px" }}>
+                                {[[displayClientCount + "+", "Enterprise Clients"], ["30+", "Data Specialists"], [displayBatchCount + "+", "CGAP Batches"]].map(([n, l]) => (
+                                    <div key={l} style={{ borderBottom: "1px solid var(--border)", paddingBottom: "20px" }}>
+                                        <div style={{ color: "var(--green)", fontSize: "32px", fontWeight: 700 }}>{n}</div>
+                                        <div className="v2-lbl" style={{ marginBottom: 0 }}>{l}</div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* Partnership Models */}
-                <section className="bg-white relative z-10 -mt-8 md:-mt-12" id="models">
-                    <div className="container-main rounded-[24px] bg-white shadow-xl shadow-black/5 p-8 md:p-12 border border-border/40">
-                        <div className="text-center mb-10">
-                            <span className="uppercase-label text-primary mb-2 block">Co-Innovation</span>
-                            <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading">
-                                Our Partnership <span className="italic-accent text-primary">Models</span>
-                            </h2>
-                        </div>
+            {/* Marquees */}
+            <IndustryLeadersStrip clientNames={clientNames} />
+            <TechPartnersStrip />
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                            {partnershipTypes.map((type) => {
-                                const Icon = type.icon;
-                                return (
-                                    <div
-                                        key={type.title}
-                                        className="group card border border-border/40 p-8 flex flex-col items-center text-center"
-                                    >
-                                        <div className="w-12 h-12 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-6 shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                            <Icon size={22} />
-                                        </div>
-                                        <h3 className="text-xl font-bold text-text-heading mb-4 font-heading group-hover:text-primary transition-colors">
-                                            {type.title}
-                                        </h3>
-                                        <p className="text-sm text-text-body/70 leading-relaxed font-body">
-                                            {type.description}
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                        </div>
+            {/* Testimonials */}
+            <section className="bg-surface py-16">
+                <div className="v2-wrap">
+                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <span className="v2-lbl v2-reveal">Strategic Alliance</span>
+                        <h2 className="v2-h2 v2-reveal">What Our Partners Say</h2>
                     </div>
-                </section>
-
-                {/* Why Partner */}
-                <section className="bg-surface relative overflow-hidden">
-                    <div className="container-main py-16">
-                        <div className="grid lg:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <span className="uppercase-label text-primary mb-3 block">The Advantage</span>
-                                <h2 className="text-2xl md:text-4xl font-bold text-text-heading font-heading leading-tight mb-8">
-                                    Why Global Leaders <br /> <span className="italic-accent text-primary">Partner with CBT?</span>
-                                </h2>
-                                <p className="text-base text-text-body/80 leading-relaxed mb-10 font-body">
-                                    We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack and accelerate client success.
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
+                        {testimonials.map((t: any, i) => (
+                            <div key={t.author} className={`v2-card v2-reveal v2-d${(i % 3) + 1}`}>
+                                <Quote size={20} style={{ color: "var(--green)", opacity: 0.2, marginBottom: "16px" }} />
+                                <p style={{ fontFamily: "var(--f-head)", fontStyle: "italic", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "20px" }}>
+                                    &ldquo;{t.quote}&rdquo;
                                 </p>
-                                <div className="grid grid-cols-2 gap-6">
-                                    {valueProps.map((prop) => {
-                                        const Icon = prop.icon;
-                                        return (
-                                            <div key={prop.title} className="space-y-3">
-                                                <div className="text-primary">
-                                                    <Icon size={24} />
-                                                </div>
-                                                <h3 className="font-bold text-text-heading text-base font-heading">{prop.title}</h3>
-                                                <p className="text-[13px] text-text-body/70 leading-relaxed font-body">{prop.description}</p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div className="relative">
-                                <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl" />
-                                <div className="relative bg-white rounded-2xl p-8 border border-border/40 shadow-xl">
-                                    <div className="space-y-8">
-                                        <div className="flex items-center gap-5 pb-8 border-b border-border/40">
-                                            <div className="text-3xl font-bold text-primary font-heading">{displayClientCount}+</div>
-                                            <div className="uppercase-label text-text-heading text-[10px]">Enterprise <br /> Clients</div>
-                                        </div>
-                                        <div className="flex items-center gap-5 pb-8 border-b border-border/40">
-                                            <div className="text-3xl font-bold text-primary font-heading">30+</div>
-                                            <div className="uppercase-label text-text-heading text-[10px]">Data <br /> Specialists</div>
-                                        </div>
-                                        <div className="flex items-center gap-5">
-                                            <div className="text-3xl font-bold text-primary font-heading">{displayBatchCount}+</div>
-                                            <div className="uppercase-label text-text-heading text-[10px]">CGAP <br /> Batches</div>
-                                        </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "10px" }}>{t.author[0]}</div>
+                                    <div>
+                                        <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "12px" }}>{t.author}</div>
+                                        <div style={{ fontFamily: "var(--f-body)", fontSize: "10px", color: "var(--muted)", textTransform: "uppercase" }}>{t.company}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* Trusted by Section — scrolling marquee */}
-                <IndustryLeadersStrip clientNames={clientNames} />
-
-                {/* Tech Partners — scrolling marquee (light) */}
-                <TechPartnersStrip />
-
-                {/* Testimonials */}
-                <section className="bg-surface relative overflow-hidden">
-                    <div className="container-main py-16">
-                        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
-                            <div className="max-w-2xl text-center md:text-left">
-                                <span className="uppercase-label text-primary mb-2 block">
-                                    Strategic Alliance
-                                </span>
-                                <h2 className="text-2xl md:text-4xl font-bold text-text-heading font-heading leading-tight">
-                                    What Our <span className="italic-accent text-primary">Partners</span> Say
-                                </h2>
-                            </div>
-                            <div className="pb-1 hidden md:block">
-                                <Quote size={40} className="text-primary opacity-10" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {testimonials.map((t: any) => (
-                                <div key={t.author} className="bg-white p-8 rounded-2xl border border-border/40 shadow-sm relative group hover:shadow-xl transition-all duration-300">
-                                    <Quote size={20} className="text-primary/20 mb-6" />
-                                    <p className="text-base leading-relaxed text-text-heading font-medium italic mb-8 relative z-10 font-body">
-                                        &ldquo;{t.quote}&rdquo;
-                                    </p>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-primary-muted flex items-center justify-center text-primary font-bold text-[10px]">
-                                            {t.author[0]}
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="font-bold text-text-heading text-xs font-heading">{t.author}</span>
-                                            <span className="uppercase-label text-text-muted text-[8px] mt-0.5">{t.company}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+            {/* Form */}
+            <section id="partner-form" style={{ padding: "64px 24px" }}>
+                <div className="v2-wrap" style={{ background: "var(--surface)", borderRadius: "32px", padding: "64px 32px", position: "relative", overflow: "hidden" }}>
+                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <h2 className="v2-h2">Arrange a Discovery Call</h2>
+                        <p className="v2-sub" style={{ maxWidth: "560px", margin: "10px auto 0" }}>Start a conversation about how we can deliver more value together. Response within 24 hours.</p>
                     </div>
-                </section>
-
-                {/* Partner Form Section */}
-                <section className="bg-white relative overflow-hidden px-6 pb-16 md:pb-20" id="partner-form">
-                    <div className="container-main py-12 md:py-16 bg-surface rounded-[32px] border border-border/60 shadow-inner relative overflow-hidden text-center md:text-left">
-                        {/* Decorative radial gradient */}
-                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-
-                        <div className="max-w-4xl mx-auto relative z-10 px-6">
-                            <div className="text-center mb-12">
-                                <h2 className="text-2xl md:text-5xl font-bold text-text-heading mb-6 font-heading tracking-tight leading-tight">
-                                    Arrange a <span className="italic-accent text-primary">Discovery Call</span>
-                                </h2>
-                                <p className="text-base text-text-body/70 max-w-2xl mx-auto font-body">
-                                    Start a conversation about how we can deliver more value together.
-                                    Our partnership team will respond within 24 hours.
-                                </p>
-                            </div>
-
-                            <PartnerForm />
-                        </div>
+                    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+                        <PartnerForm />
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <PersonaBridge exclude="partners" />
-            </div>
-        </>
+            <PersonaBridge exclude="partners" />
+        </main>
     );
 }

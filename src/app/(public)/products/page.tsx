@@ -1,7 +1,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Star, BarChart3 } from "lucide-react";
+import { ArrowRight, Star, BarChart3 } from "lucide-react";
 import PersonaBridge from "@/components/shared/PersonaBridge";
+import { useScrollReveal } from "@/components/home/Hero";
+import { ProductIllustration } from "@/components/shared/Illustrations";
+import ProductFilter from "@/components/products/ProductFilter";
 
 export const metadata: Metadata = {
     title: "Products | CBT — Power BI Custom Visuals & Analytics Tools",
@@ -9,102 +12,72 @@ export const metadata: Metadata = {
         "Discover CBT's Power BI custom visuals and analytics tools built by data professionals for data professionals.",
 };
 
-import { createClient } from "@/lib/supabase/server";
-
-import ProductFilter from "@/components/products/ProductFilter";
-
-export default async function ProductsPage() {
+export default function ProductsPage() {
+    useScrollReveal();
     return (
-        <div className="font-body">
+        <main className="font-body">
             {/* Hero */}
-            <section className="bg-surface pt-20 md:pt-24 relative overflow-hidden">
-                {/* Abstract decorative elements */}
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-15deg] translate-x-1/2 -z-0" />
-                <div className="absolute top-1/4 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2" />
-
-                <div className="container-main py-12 md:py-16 relative z-10">
-                    <div className="max-w-2xl text-center md:text-left">
-                        <span className="uppercase-label text-primary mb-5 inline-block border-b border-primary/30 pb-1">
-                            Enterprise Tools & Visuals
-                        </span>
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-heading leading-[1.15] font-heading tracking-tight mb-5">
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
+                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+                    <div>
+                        <div className="v2-lbl v2-reveal">Enterprise Tools & Visuals</div>
+                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 50px)", marginBottom: "18px" }}>
                             Power Up Your <br /> <span className="italic-accent text-primary">Analytics Stack.</span>
                         </h1>
-                        <p className="mt-4 text-base md:text-lg text-text-body/80 leading-relaxed max-w-xl font-normal">
-                            Industry-grade Power BI custom visuals and automation tools.
-                            Built for <span className="font-medium text-text-heading">Banking</span>, <span className="font-medium text-text-heading">Retail</span>, and <span className="font-medium text-text-heading">Custom Visuals</span> sectors.
+                        <p className="v2-sub v2-reveal" style={{ maxWidth: "560px" }}>
+                            Industry-grade Power BI custom visuals and automation tools. Built for <span className="font-medium text-text-heading">Banking</span>, <span className="font-medium text-text-heading">Retail</span>, and <span className="font-medium text-text-heading">Custom Visuals</span> sectors.
                         </p>
-                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                            <a href="#products" className="btn-primary">
-                                Browse Products
-                                <ArrowRight size={16} />
-                            </a>
-                            <Link href="/contact" className="btn-secondary">
-                                Custom Request
-                                <ArrowRight size={16} />
-                            </Link>
+                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
+                            <a href="#products" className="v2-btn v2-btn-p">Browse Products <ArrowRight size={16} stroke="white" /></a>
+                            <Link href="/contact" className="v2-btn v2-btn-s">Custom Request</Link>
                         </div>
+                    </div>
+                    <div className="v2-reveal a-scaleIn">
+                        <ProductIllustration />
                     </div>
                 </div>
             </section>
 
             {/* Products with Filter Tabs */}
-            <section className="bg-white relative z-10 -mt-8 sm:-mt-12" id="products">
-                <div className="container-main rounded-[20px] bg-white shadow-xl shadow-black/5 p-6 md:p-8 border border-border/40">
-                    <div className="text-center mb-8">
-                        <span className="uppercase-label text-primary mb-2 block">Marketplace</span>
-                        <h2 className="text-2xl font-bold text-text-heading font-heading">
-                            Our Product <span className="italic-accent text-primary">Portfolio</span>
-                        </h2>
+            <section className="bg-white py-16" id="products">
+                <div className="v2-wrap v2-reveal" style={{ background: "white", borderRadius: "24px", padding: "48px 32px", border: "1px solid var(--border)", boxShadow: "0 10px 40px rgba(0,0,0,0.05)" }}>
+                    <div style={{ textAlign: "center", marginBottom: "40px" }}>
+                        <span className="v2-lbl">Marketplace</span>
+                        <h2 className="v2-h2">Our Product <span className="italic-accent text-primary">Portfolio</span></h2>
                     </div>
-
                     <ProductFilter />
                 </div>
             </section>
 
-            {/* Why Our Products (Advantage) */}
-            <section className="bg-surface py-16 relative overflow-hidden">
-                <div className="container-main">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Edge */}
+            <section className="bg-surface py-20 overflow-hidden">
+                <div className="v2-wrap">
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
                         <div>
-                            <span className="uppercase-label text-primary mb-3 block">Built for Scale</span>
-                            <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading leading-tight mb-6">
-                                The CBT <br /> <span className="italic-accent text-primary">Product Edge</span>
-                            </h2>
-                            <p className="text-sm text-text-body/80 leading-relaxed mb-8 font-body">
-                                Our products aren&apos;t just code; they are the distilled expertise of our
-                                consulting team who solve enterprise data problems every day.
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <div className="w-10 h-10 rounded-xl bg-primary-muted flex items-center justify-center text-primary">
-                                        <BarChart3 size={18} />
-                                    </div>
-                                    <h3 className="font-bold text-text-heading font-heading text-base">User Centric</h3>
-                                    <p className="text-[13px] text-text-body/70 leading-relaxed font-body">Designed for high-frequency use in corporate environments.</p>
+                            <span className="v2-lbl v2-reveal">Built for Scale</span>
+                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "20px" }}>The CBT Product Edge</h2>
+                            <p className="v2-sub v2-reveal" style={{ marginBottom: "32px" }}>Our products aren&apos;t just code; they are the distilled expertise of our consulting team who solve enterprise data problems every day.</p>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
+                                <div className="v2-reveal">
+                                    <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}><BarChart3 size={20} /></div>
+                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>User Centric</h3>
+                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)", lineHeight: "1.6" }}>Designed for high-frequency use in corporate environments.</p>
                                 </div>
-                                <div className="space-y-2">
-                                    <div className="w-10 h-10 rounded-xl bg-primary-muted flex items-center justify-center text-primary">
-                                        <Star size={18} />
-                                    </div>
-                                    <h3 className="font-bold text-text-heading font-heading text-base">Certified Quality</h3>
-                                    <p className="text-[13px] text-text-body/70 leading-relaxed font-body">Rigorously tested to meet enterprise security and performance standards.</p>
+                                <div className="v2-reveal">
+                                    <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}><Star size={20} /></div>
+                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>Certified Quality</h3>
+                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)", lineHeight: "1.6" }}>Rigorously tested to meet enterprise security and performance standards.</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="relative">
-                            <div className="bg-white p-1.5 rounded-[20px] shadow-xl border border-border/40 rotate-1">
-                                <div className="bg-surface rounded-xl p-6 text-center">
-                                    <div className="text-3xl font-bold text-primary font-heading mb-2">2.5M+</div>
-                                    <div className="uppercase-label text-[9px] text-text-muted mb-6">Data Points Rendered Daily</div>
-                                    <div className="aspect-video bg-primary-muted/30 rounded-lg flex items-center justify-center">
-                                        <div className="w-full max-w-[120px] h-16 flex items-end gap-1">
-                                            <div className="flex-grow bg-primary/20 rounded-t h-[40%]" />
-                                            <div className="flex-grow bg-primary/40 rounded-t h-[70%]" />
-                                            <div className="flex-grow bg-primary rounded-t h-[90%]" />
-                                            <div className="flex-grow bg-primary/60 rounded-t h-[55%]" />
-                                        </div>
-                                    </div>
+                        <div className="v2-reveal">
+                            <div className="v2-card" style={{ padding: "48px", textAlign: "center" }}>
+                                <div style={{ color: "var(--green)", fontSize: "42px", fontWeight: 700, marginBottom: "8px" }}>2.5M+</div>
+                                <div className="v2-lbl" style={{ marginBottom: "40px" }}>Data Points Rendered Daily</div>
+                                <div style={{ height: "120px", display: "flex", alignItems: "flex-end", gap: "8px", justifyContent: "center", padding: "0 20px" }}>
+                                    {[0.4, 0.7, 0.9, 0.55, 0.3, 0.85, 0.6].map((h, i) => (
+                                        <div key={i} style={{ flexGrow: 1, background: `linear-gradient(to top, var(--green) ${h * 100}%, var(--green-muted) 0%)`, borderRadius: "4px 4px 0 0", height: "100%", opacity: 0.1 + (i * 0.1) }} />
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -112,35 +85,19 @@ export default async function ProductsPage() {
                 </div>
             </section>
 
-            {/* Custom Requests Banner */}
-            <section className="bg-white py-12">
-                <div className="container-main">
-                    <div className="bg-white border border-border shadow-xl rounded-[20px] p-8 md:p-12 text-center relative overflow-hidden group">
-                        {/* Subtle Background Pattern */}
-                        <div className="absolute inset-0 bg-primary-muted/20 opacity-40 pointer-events-none" />
-
-                        <div className="relative z-10">
-                            <h2 className="text-2xl md:text-4xl font-bold text-text-heading mb-5 font-heading tracking-tight leading-tight">
-                                Need a <span className="italic-accent text-primary">Custom Solution?</span>
-                            </h2>
-                            <p className="text-base text-text-body/70 max-w-xl mx-auto mb-8 font-body">
-                                Our product team can build custom visuals and automated tools
-                                tailored to your unique enterprise requirements.
-                            </p>
-                            <Link
-                                href="/contact?subject=Custom Visual Request"
-                                className="btn-primary"
-                            >
-                                Request a Demo
-                                <ArrowRight size={16} />
-                            </Link>
-                        </div>
+            {/* Custom Banner */}
+            <section style={{ padding: "64px 24px" }}>
+                <div className="v2-wrap" style={{ background: "white", border: "1px solid var(--border)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", top: 0, right: 0, width: "100%", height: "100%", background: "var(--green-muted)", opacity: 0.2, pointerEvents: "none" }} />
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                        <h2 className="v2-h2">Need a <span className="italic-accent text-primary">Custom Solution?</span></h2>
+                        <p className="v2-sub" style={{ maxWidth: "560px", margin: "10px auto 32px" }}>Our product team can build custom visuals and automated tools tailored to your unique enterprise requirements.</p>
+                        <Link href="/contact?subject=Custom Visual Request" className="v2-btn v2-btn-p">Request a Demo <ArrowRight size={16} stroke="white" /></Link>
                     </div>
                 </div>
             </section>
-
 
             <PersonaBridge exclude="products" />
-        </div>
+        </main>
     );
 }
