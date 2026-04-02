@@ -820,38 +820,397 @@ export function CustomersIllustration() {
 
 // ─── PARTNERS (APPROVED) ─────────────────────────────────────────────────────
 export function PartnersIllustration() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const cv = canvasRef.current;
+        if (!cv) return;
+        const ctx = cv.getContext('2d')!;
+
+        let W = 0, H = 0, t = 0;
+        let startTime: number | null = null;
+        let raf = 0;
+
+        const C1 = '#00994D', C1L = '#00C060';
+        const C2 = '#3B82F6', C2L = '#60A5FA';
+        const GOLD = '#F59E0B';
+
+        function resize() {
+            const r = cv!.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            cv!.width = r.width * dpr;
+            cv!.height = r.height * dpr;
+            ctx.scale(dpr, dpr);
+            W = r.width; H = r.height;
+        }
+
+        function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+        function clamp(v: number, a: number, b: number) { return Math.max(a, Math.min(b, v)); }
+        function easeOut(t: number) { return 1 - Math.pow(1 - t, 3); }
+        function easeInOut(t: number) { return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1; }
+        function dist(ax: number, ay: number, bx: number, by: number) { return Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2); }
+
+        const PHASE = [0, 1.5, 3.5, 5.0];
+
+        const CBT_CAPS = ['Analytics', 'DWH', 'AI', 'BI', 'Training'];
+        const PART_CAPS = ['Distribution', 'Tech Stack', 'Market', 'Scale', 'Network'];
+        const JOINT_OUT = ['Joint Revenue', 'Faster Delivery', 'Wider Reach', 'Shared IP', 'More Value'];
+
+        class StreamParticle {
+            sx: number; sy: number; ex: number; ey: number; color: string;
+            t = 0; delay: number; speed: number; size: number; alpha: number; done = false;
+            trail: { x: number, y: number }[] = [];
+
+            constructor(fromX: number, fromY: number, toX: number, toY: number, color: string, delay: number) {
+                this.sx = fromX; this.sy = fromY;
+                this.ex = toX; this.ey = toY;
+                this.color = color;
+                this.delay = delay;
+                this.speed = 0.008 + Math.random() * 0.012;
+                this.size = 1.8 + Math.random() * 2;
+                this.alpha = 0.5 + Math.random() * 0.5;
+            }
+            update() {
+                if (this.t < this.delay) { this.t += 0.016; return; }
+                this.t += this.speed;
+                if (this.t >= 1 + this.delay) this.done = true;
+            }
+            draw() {
+                const p = clamp(this.t - this.delay, 0, 1);
+                if (p <= 0) return;
+                const e = easeInOut(p);
+                const mx = (this.sx + this.ex) / 2, my = (this.sy + this.ey) / 2 - 40;
+                const x = lerp(lerp(this.sx, mx, e), lerp(mx, this.ex, e), e);
+                const y = lerp(lerp(this.sy, my, e), lerp(my, this.ey, e), e);
+                this.trail.push({ x, y });
+                if (this.trail.length > 12) this.trail.shift();
+                if (this.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = this.size * 0.5;
+                    ctx.globalAlpha = this.alpha * 0.3;
+                    ctx.stroke();
+                }
+                ctx.beginPath();
+                ctx.arc(x, y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.alpha * (1 - p * 0.4);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        let streamParticles: StreamParticle[] = [];
+
+        class Satellite {
+            cx: number; cy: number; r: number; speed: number; size: number; color: string; angle: number;
+            trail: { x: number, y: number }[] = [];
+            constructor(cx: number, cy: number, r: number, speed: number, size: number, color: string, angle0: number) {
+                this.cx = cx; this.cy = cy; this.r = r; this.speed = speed; this.size = size; this.color = color; this.angle = angle0;
+            }
+            update(cx: number, cy: number) {
+                this.cx = cx; this.cy = cy;
+                this.angle += this.speed;
+                const x = this.cx + Math.cos(this.angle) * this.r;
+                const y = this.cy + Math.sin(this.angle) * this.r;
+                this.trail.push({ x, y });
+                if (this.trail.length > 20) this.trail.shift();
+            }
+            draw(alpha: number) {
+                if (this.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 0.8;
+                    ctx.globalAlpha = alpha * 0.3;
+                    ctx.stroke();
+                }
+                const x = this.cx + Math.cos(this.angle) * this.r;
+                const y = this.cy + Math.sin(this.angle) * this.r;
+                ctx.beginPath();
+                ctx.arc(x, y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha * 0.85;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function drawFieldRings(cx: number, cy: number, color: string, alpha: number, count: number, maxR: number, pulse: number) {
+            for (let i = 0; i < count; i++) {
+                const r = maxR * (i + 1) / count + pulse * 8;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = alpha * (1 - (i / count) * 0.7);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function drawOrb(cx: number, cy: number, r: number, color: string, colorL: string, label: string, sublabel: string, alpha: number, pulse: number) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, r + 10 + pulse * 6, 0, Math.PI * 2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = alpha * 0.15 * pulse;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+            ctx.strokeStyle = colorL;
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = alpha * 0.35;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.globalAlpha = alpha;
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#0C1A10';
+            ctx.font = '600 12px "DM Sans",sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.globalAlpha = alpha;
+            ctx.fillText(label, cx, cy - 5);
+            ctx.fillStyle = color;
+            ctx.font = '500 9px "DM Sans",sans-serif';
+            ctx.fillText(sublabel, cx, cy + 8);
+            ctx.globalAlpha = 1;
+            ctx.textBaseline = 'alphabetic';
+        }
+
+        function drawCapLabel(cx: number, cy: number, angle: number, r: number, text: string, color: string, alpha: number) {
+            const x = cx + Math.cos(angle) * r;
+            const y = cy + Math.sin(angle) * r;
+            const w = 62, h = 18;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, alpha);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 0.7;
+            ctx.beginPath();
+            ctx.roundRect(x - w / 2, y - h / 2, w, h, 3);
+            ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#0C1A10';
+            ctx.font = '500 9px "DM Sans",sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y);
+            ctx.restore();
+        }
+
+        function drawConnectionArc(ax: number, ay: number, bx: number, by: number, color: string, alpha: number, progress: number) {
+            const mx = (ax + bx) / 2, my = (ay + by) / 2 - H * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            const steps = 40;
+            for (let i = 0; i <= steps * progress; i++) {
+                const tt = i / steps;
+                const e = 1 - tt;
+                const x = e * e * ax + 2 * e * tt * mx + tt * tt * bx;
+                const y = e * e * ay + 2 * e * tt * my + tt * tt * by;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.2;
+            ctx.globalAlpha = alpha;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        function drawJointOutput(cx: number, cy: number, alpha: number) {
+            if (alpha <= 0) return;
+            const r = 38;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r + 10 + 3 * Math.sin(t * 2), 0, Math.PI * 2);
+            ctx.strokeStyle = GOLD;
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = alpha * 0.2;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.strokeStyle = GOLD;
+            ctx.lineWidth = 2;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.globalAlpha = alpha;
+            ctx.fill(); ctx.stroke();
+
+            ctx.fillStyle = '#0C1A10';
+            ctx.font = '600 11px "DM Sans",sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('1+1=3', cx, cy - 5);
+            ctx.fillStyle = GOLD;
+            ctx.font = '500 9px "DM Sans",sans-serif';
+            ctx.fillText('Joint Value', cx, cy + 9);
+            ctx.globalAlpha = 1;
+            ctx.textBaseline = 'alphabetic';
+
+            JOINT_OUT.forEach((lbl, i) => {
+                const a = (-Math.PI / 2) + (i / JOINT_OUT.length) * Math.PI * 2 + t * 0.15;
+                drawCapLabel(cx, cy, a, 78, lbl, GOLD, alpha * 0.85);
+            });
+        }
+
+        let cbtSats: Satellite[] = [], partSats: Satellite[] = [];
+        function initSats(cx: number, cy: number, color: string, arr: Satellite[]) {
+            arr.length = 0;
+            [28, 20, 36].forEach((r, i) => {
+                arr.push(new Satellite(cx, cy, r, 0.025 * (i % 2 === 0 ? 1 : -1) * ((i + 1) * 0.4 + 0.6), 2.5 - i * 0.3, color, Math.random() * Math.PI * 2));
+            });
+        }
+
+        let initted = false;
+
+        function frame(ts: number) {
+            if (!startTime) startTime = ts;
+            t = (ts - startTime) * 0.001;
+
+            if (!initted) {
+                initSats(0, 0, C1, cbtSats);
+                initSats(0, 0, C2, partSats);
+                initted = true;
+            }
+
+            ctx.clearRect(0, 0, W, H);
+
+            const ph1 = clamp((t - PHASE[0]) / (PHASE[1] - PHASE[0]), 0, 1);
+            const ph2 = clamp((t - PHASE[1]) / (PHASE[2] - PHASE[1]), 0, 1);
+            const ph3 = clamp((t - PHASE[2]) / (PHASE[3] - PHASE[2]), 0, 1);
+            const ph4 = clamp((t - PHASE[3]), 0, 999);
+
+            const e2 = easeOut(ph2);
+            const e3 = easeOut(ph3);
+
+            const spread = W * 0.30;
+            const cx0 = W / 2, cy0 = H / 2;
+            const approachFactor = e2;
+            const orbitR = lerp(spread, W * 0.19, approachFactor);
+
+            const orbitAngle = t * (0.4 + ph3 * 0.3);
+            const finalOrbitR = lerp(orbitR, W * 0.17, e3);
+
+            let cbtX, cbtY, partX, partY;
+            if (t < PHASE[1]) {
+                cbtX = cx0 - spread * (1 - ph1 * 0.1);
+                cbtY = cy0 + Math.sin(t * 0.8) * 18;
+                partX = cx0 + spread * (1 - ph1 * 0.1);
+                partY = cy0 + Math.sin(t * 0.8 + Math.PI) * 18;
+            } else {
+                const angle = orbitAngle;
+                cbtX = cx0 - Math.cos(angle) * finalOrbitR;
+                cbtY = cy0 - Math.sin(angle) * finalOrbitR * 0.45;
+                partX = cx0 + Math.cos(angle) * finalOrbitR;
+                partY = cy0 + Math.sin(angle) * finalOrbitR * 0.45;
+            }
+
+            const pulse = 0.5 + 0.5 * Math.abs(Math.sin(t * 1.4));
+            const pulse2 = 0.5 + 0.5 * Math.abs(Math.sin(t * 1.4 + 1.2));
+
+            const fieldAlpha = clamp(ph1 * 2, 0, 0.35) * (1 - ph2 * 0.6);
+            if (fieldAlpha > 0) {
+                drawFieldRings(cbtX, cbtY, C1, fieldAlpha, 4, 90, pulse);
+                drawFieldRings(partX, partY, C2, fieldAlpha, 4, 90, pulse2);
+            }
+
+            const arcAlpha = clamp(ph2 * 3, 0, 0.5);
+            if (arcAlpha > 0) {
+                drawConnectionArc(cbtX, cbtY, partX, partY, '#00994D', arcAlpha * 0.5, ph2);
+            }
+
+            if (ph3 > 0) {
+                const midX = (cbtX + partX) / 2, midY = (cbtY + partY) / 2;
+                const ringR = dist(cbtX, cbtY, partX, partY) * 0.38;
+                ctx.beginPath();
+                ctx.arc(midX, midY, ringR, 0, Math.PI * 2 * e3);
+                ctx.strokeStyle = GOLD;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 6]);
+                ctx.globalAlpha = e3 * 0.4;
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 1;
+            }
+
+            cbtSats.forEach(s => { s.update(cbtX, cbtY); s.draw(clamp(ph1 * 3, 0, 0.8)); });
+            partSats.forEach(s => { s.update(partX, partY); s.draw(clamp(ph1 * 3, 0, 0.8)); });
+
+            const capAlpha = clamp(ph1 * 2 - 0.2, 0, 0.9) * (1 - ph3 * 0.4);
+            CBT_CAPS.forEach((cap, i) => {
+                const a = (i / CBT_CAPS.length) * Math.PI * 2 - Math.PI / 4 + t * 0.04;
+                drawCapLabel(cbtX, cbtY, a, 72, cap, C1, capAlpha);
+            });
+            PART_CAPS.forEach((cap, i) => {
+                const a = (i / PART_CAPS.length) * Math.PI * 2 + Math.PI / 4 - t * 0.04;
+                drawCapLabel(partX, partY, a, 72, cap, C2, capAlpha);
+            });
+
+            drawOrb(cbtX, cbtY, 28, C1, C1L, 'CBT', 'Data & AI', 1, pulse);
+            drawOrb(partX, partY, 28, C2, C2L, 'Partner', 'Your Org', 1, pulse2);
+
+            if (ph2 > 0.3) {
+                if (Math.random() < 0.12) {
+                    const toRight = Math.random() > 0.5;
+                    streamParticles.push(new StreamParticle(
+                        toRight ? cbtX : partX, toRight ? cbtY : partY,
+                        toRight ? partX : cbtX, toRight ? partY : cbtY,
+                        toRight ? C1 : C2, Math.random() * 0.3
+                    ));
+                }
+            }
+            streamParticles = streamParticles.filter(p => !p.done);
+            streamParticles.forEach(p => { p.update(); p.draw(); });
+
+            const joAlpha = clamp(e3 * 2, 0, 1);
+            if (joAlpha > 0) {
+                const jx = (cbtX + partX) / 2, jy = (cbtY + partY) / 2 + (ph4 > 0 ? 0 : -10 * (1 - e3));
+                [cbtX, partX].forEach((ox, i) => {
+                    const oy = i === 0 ? cbtY : partY;
+                    ctx.beginPath();
+                    ctx.moveTo(ox, oy);
+                    ctx.lineTo(jx, jy);
+                    ctx.strokeStyle = i === 0 ? C1 : C2;
+                    ctx.lineWidth = 1;
+                    ctx.globalAlpha = joAlpha * 0.4;
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                });
+                drawJointOutput(jx, jy, joAlpha);
+            }
+
+            raf = requestAnimationFrame(frame);
+        }
+
+        const onResize = () => { resize(); };
+        resize();
+        window.addEventListener("resize", onResize);
+        raf = requestAnimationFrame(frame);
+
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("resize", onResize);
+        };
+    }, []);
+
     return (
-        <motion.svg width="380" height="300" viewBox="0 0 380 300" fill="none" initial="hidden" animate="visible">
-            <g opacity="0.08">
-                <path d="M50 50 L330 80 L300 240 L80 260 Z" stroke={GREEN} strokeWidth="0.8" strokeDasharray="4 4" />
-            </g>
-            <g transform="translate(190, 150)">
-                <circle r="40" fill="white" stroke={GREEN} strokeWidth="1.5" />
-                <motion.path d="M-20 0h40 M0 -20v40" stroke={GREEN} strokeWidth="2" animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
-            </g>
-            <motion.g initial={{ x: 20 }} animate={{ x: 0 }} transition={{ duration: 3, repeat: Infinity }}>
-                <g transform="translate(60, 150)">
-                    <rect x="-30" y="-30" width="60" height="60" rx="12" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-                    <path d="M-10 12 Q -10 0 0 0 Q 10 0 10 12" fill="#D1D5DB" />
-                    <circle cy="-10" r="10" fill="#D1D5DB" />
-                    <motion.rect x="-30" y="-30" width="60" height="60" rx="12" fill="none" stroke={GREEN} strokeWidth="2" animate={{ scale: [1, 1.25], opacity: [0, 0.4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
-                </g>
-            </motion.g>
-            {[{ x: 280, y: 70, d: 2 }, { x: 310, y: 150, d: 2.4 }, { x: 280, y: 230, d: 2.8 }].map((node, i) => (
-                <motion.g key={i} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: node.d }}>
-                    <g transform={`translate(${node.x}, ${node.y})`}>
-                        <circle r="22" fill="white" stroke={GREEN} strokeWidth="1" />
-                        <path d="M-8 8 Q -8 -2 0 -2 Q 8 -2 8 8" fill={GREEN} opacity="0.7" />
-                        <circle cy="-6" r="6" fill={GREEN} />
-                        <motion.line x1="0" y1="0" x2={190 - node.x} y2={150 - node.y} stroke={GREEN} strokeWidth="0.8" strokeDasharray="4 4" opacity="0.25" animate={{ opacity: [0.1, 0.4, 0.1] }} transition={{ duration: 3, repeat: Infinity }} />
-                    </g>
-                </motion.g>
-            ))}
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.2 }} transform="translate(190, 225)">
-                <rect x="-55" y="-12" width="110" height="24" rx="12" fill="#E6F5ED" />
-                <text x="0" y="4" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={GDARK} letterSpacing="0.06em">SCALED SUCCESS</text>
-            </motion.g>
-        </motion.svg>
+        <canvas
+            ref={canvasRef}
+            style={{
+                display: "block",
+                width: "480px",
+                height: "420px",
+                background: "transparent",
+                flexShrink: 0,
+            }}
+        />
     );
 }
 
