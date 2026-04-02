@@ -10,7 +10,7 @@ import {
     BookOpen,
     FileText,
 } from "lucide-react";
-import { ClientLogoGrid } from "@/components/home/ClientLogoStrip";
+import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 
 export const metadata: Metadata = {
@@ -135,20 +135,8 @@ export default async function CustomersPage() {
                     </div>
                 </section>
 
-                {/* Client Logos */}
-                <section className="bg-surface py-12 border-y border-border/50">
-                    <div className="container-main">
-                        <div className="text-center mb-10">
-                            <h2 className="text-2xl font-bold text-text-heading font-heading">
-                                Trusted by Global <span className="italic-accent text-primary">Brands</span>
-                            </h2>
-                            <p className="mt-2 text-text-body/60 font-body text-sm">
-                                Working with industry leaders across 12+ markets.
-                            </p>
-                        </div>
-                        <ClientLogoGrid clientNames={clientNames} />
-                    </div>
-                </section>
+                {/* Client Logos — scrolling marquee */}
+                <IndustryLeadersStrip clientNames={clientNames} />
 
                 {/* Services */}
                 <section className="bg-white py-16">

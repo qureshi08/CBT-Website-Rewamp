@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ScrollRevealInit from "@/components/shared/ScrollRevealInit";
 
 export default function PublicLayout({
     children,
@@ -16,6 +17,7 @@ export default function PublicLayout({
                 Skip to main content
             </a>
             <Navbar />
+            <ScrollRevealInit />
             <main id="main-content">{children}</main>
             <Footer />
         </>

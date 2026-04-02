@@ -39,6 +39,12 @@ export const metadata: Metadata = {
       "Data & Technology Consultancy trusted by leading global brands.",
     type: "website",
     url: "https://convergentbt.com",
+    images: ["https://convergentbt.com/logo.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/logo.png",
   },
 };
 

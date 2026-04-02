@@ -1,69 +1,30 @@
-import Link from "next/link";
-import { GraduationCap, ArrowRight, Sparkles } from "lucide-react";
+"use client";
+import { useScrollReveal } from "@/components/home/Hero";
+import Ic from "@/components/shared/Icons";
 
-interface CGAPTeaserProps {
-    batchCount?: number;
-}
-
-export default function CGAPTeaser({ batchCount = 28 }: CGAPTeaserProps) {
+export default function CGAPTeaser({ batchCount = 12 }: { batchCount?: number }) {
+    useScrollReveal();
     return (
-        <section className="bg-surface">
-            <div className="container-main section-padding">
-                <div className="relative bg-white rounded-[40px] p-10 md:p-16 border border-border/40 overflow-hidden shadow-xl shadow-black/5">
-                    {/* Background decoration */}
-                    <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/4 -z-10" />
-                    <GraduationCap size={200} className="absolute -bottom-10 -right-10 text-primary opacity-5 -rotate-12" />
-
-                    <div className="relative grid md:grid-cols-2 gap-12 items-center">
-                        <div className="max-w-xl">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl bg-primary-muted text-primary flex items-center justify-center">
-                                    <GraduationCap size={22} />
-                                </div>
-                                <span className="uppercase-label text-primary">
-                                    Graduate Academy
-                                </span>
-                            </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-text-heading mb-6 font-heading tracking-tight leading-tight">
-                                Launch Your <br /> <span className="italic-accent text-primary">Data Career</span>
-                            </h2>
-                            <p className="text-lg text-text-body/70 leading-relaxed mb-10 font-body">
-                                Our 6-month paid academy bridges the gap between academia and
-                                industry. Join the next batch of professionals and master
-                                analytics consulting.
-                            </p>
-                            <Link
-                                href="/cgap"
-                                className="btn-primary py-4 px-10 text-lg"
-                            >
-                                Explore the Program
-                                <ArrowRight size={20} />
-                            </Link>
+        <section style={{ background: "var(--dark)", padding: "60px 24px" }}>
+            <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "40px", alignItems: "center" }}>
+                <div className="v2-reveal">
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
+                        <div style={{ width: "38px", height: "38px", background: "var(--green)", borderRadius: "7px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Ic name="graduation" size={18} stroke="white" />
                         </div>
-
-                        <div className="flex justify-center md:justify-end">
-                            <div className="grid grid-cols-2 gap-6 w-full max-w-sm">
-                                {[
-                                    { number: `${batchCount}+`, label: "Batches" },
-                                    { number: "6", label: "Months" },
-                                    { number: "100%", label: "Paid" },
-                                    { number: "∞", label: "Potential" },
-                                ].map((item) => (
-                                    <div
-                                        key={item.label}
-                                        className="bg-surface rounded-3xl p-6 text-center border border-border/30 hover:shadow-lg transition-shadow"
-                                    >
-                                        <div className="text-2xl font-bold text-primary font-heading mb-1">
-                                            {item.number}
-                                        </div>
-                                        <div className="uppercase-label text-[9px] text-text-body/50 font-bold">
-                                            {item.label}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        <span style={{ fontFamily: "var(--f-head)", fontSize: "20px", fontWeight: 700, color: "white" }}>CGAP</span>
                     </div>
+                    <h2 style={{ fontFamily: "var(--f-head)", fontSize: "26px", fontWeight: 700, color: "white", marginBottom: "10px" }}>Convergent Graduate Academy Program</h2>
+                    <p style={{ fontFamily: "var(--f-body)", fontSize: "14.5px", color: "rgba(255,255,255,.55)", lineHeight: "1.7", maxWidth: "460px" }}>
+                        A 6-month paid training program bridging academia and industry in Data Analytics. {batchCount}+ successful cohorts. Stipend provided.
+                    </p>
+                </div>
+                <div className="v2-reveal" style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start" }}>
+                    <a href="/cgap" className="v2-btn v2-btn-p">Learn About CGAP</a>
+                    <a href="https://cbt-recruitment-portal.vercel.app/" target="_blank" rel="noreferrer"
+                        style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--f-body)", fontSize: "13px", color: "var(--green-light)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                        Apply directly <Ic name="external" size={13} stroke="var(--green-light)" />
+                    </a>
                 </div>
             </div>
         </section>

@@ -11,7 +11,7 @@ import {
     Target,
     Quote,
 } from "lucide-react";
-import { ClientLogoGrid } from "@/components/home/ClientLogoStrip";
+import { IndustryLeadersStrip, TechPartnersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 import PartnerForm from "@/components/partners/PartnerForm";
 import { createClient } from "@/lib/supabase/server";
@@ -241,45 +241,11 @@ export default async function PartnersPage() {
                     </div>
                 </section>
 
-                {/* Trusted by Section */}
-                <section className="bg-white">
-                    <div className="container-main py-12 md:py-16 pb-0">
-                        <div className="text-center mb-10">
-                            <span className="uppercase-label text-text-muted mb-2 block">Proven Reach</span>
-                            <h2 className="text-2xl font-bold text-text-heading font-heading">
-                                Trusted by Industry <span className="italic-accent text-primary">Leaders</span>
-                            </h2>
-                            <p className="mt-3 text-[13px] text-text-body/60 max-w-xl mx-auto font-body">
-                                Partners join an ecosystem that delivers for global brands across sectors.
-                            </p>
-                        </div>
-                        <ClientLogoGrid featured clientNames={clientNames} />
-                    </div>
-                </section>
+                {/* Trusted by Section — scrolling marquee */}
+                <IndustryLeadersStrip clientNames={clientNames} />
 
-                {/* Tech Partners Section */}
-                <section className="bg-white border-y border-border/50">
-                    <div className="container-main py-12 md:py-16">
-                        <div className="text-center mb-10">
-                            <span className="uppercase-label text-text-muted mb-2 block">Integration</span>
-                            <h2 className="text-2xl font-bold text-text-heading font-heading">
-                                Our Technology <span className="italic-accent text-primary">Stack Partners</span>
-                            </h2>
-                        </div>
-                        <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
-                            {techPartners.map((p: any) => (
-                                <div key={p.name} className="flex flex-col items-center group">
-                                    {p.logo_url ? (
-                                        <img src={p.logo_url} alt={p.name} className="h-10 max-w-[140px] object-contain grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100 transition-all duration-500" />
-                                    ) : (
-                                        <span className="text-2xl lg:text-3xl font-bold text-text-heading/30 group-hover:text-text-heading tracking-tighter select-none font-heading transition-colors duration-500">{p.name}</span>
-                                    )}
-                                    <div className="w-6 h-1 bg-primary/20 mt-2 rounded-full" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                {/* Tech Partners — scrolling marquee (light) */}
+                <TechPartnersStrip />
 
                 {/* Testimonials */}
                 <section className="bg-surface relative overflow-hidden">

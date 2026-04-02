@@ -1,90 +1,66 @@
+"use client";
 import Link from "next/link";
-import { Mail, ArrowRight } from "lucide-react";
+
+const navLinks = ["customers", "partners", "products", "cgap", "contact"];
+const services = ["Analytical Maturity", "Enterprise DWH", "Business Analytics", "Decision Sciences", "AnalyticOps", "Training & Dev"];
 
 export default function Footer() {
     return (
-        <>
-            {/* CTA BAND */}
-            <section className="cta-band" id="contact">
-                <div className="container-main p-0 max-w-[1200px] mx-auto grid lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-20 relative z-10">
+        <footer className="v2-footer">
+            <div className="v2-wrap">
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "48px" }}>
+                    {/* Brand */}
                     <div>
-                        <h2 className="cta-heading">
-                            Ready to make your data{" "}
-                            <span className="font-heading italic text-white">work harder?</span>
-                        </h2>
-                        <p className="cta-sub">
-                            Whether you&apos;re at the start of your data journey or scaling an existing capability, let&apos;s have a conversation.
-                        </p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-4 shrink-0 lg:items-center">
-                        <Link href="/contact" className="btn-cta-white">
-                            Start a conversation
-                            <ArrowRight size={16} />
-                        </Link>
-                        <Link href="/cgap" className="inline-flex items-center justify-center bg-transparent text-white/60 font-body text-[14px] font-medium px-2 py-2 border-b border-white/20 transition-colors duration-200 hover:text-white hover:border-white gap-2">
-                            View our training programme
-                            <ArrowRight size={14} />
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* FOOTER */}
-            <footer className="bg-text-heading py-[48px] px-8 border-t-[3px] border-primary">
-                <div className="container-main p-0 max-w-[1200px] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                        {/* Left: Logo + Name */}
-                        <div className="flex items-center gap-3">
-                            <div className="w-[32px] h-[32px] bg-primary rounded-[6px] flex items-center justify-center relative overflow-hidden">
-                                <span className="text-white font-mono text-[10px] font-bold relative z-10">CBT</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+                            <div style={{ width: "32px", height: "32px", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <img src="/logo.png" alt="CBT Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                             </div>
-                            <span className="font-body text-[14px] font-semibold text-white">
-                                Convergent Business Technologies
-                            </span>
+                            <span style={{ fontFamily: "var(--f-head)", fontSize: "17px", fontWeight: 700, color: "white" }}>Convergent</span>
                         </div>
+                        <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "rgba(255,255,255,.45)", lineHeight: "1.7", maxWidth: "300px" }}>
+                            Strategic agile development experts helping companies harness data and deliver business value.
+                        </p>
+                    </div>
 
-                        {/* Center: Nav Links */}
-                        <nav aria-label="Footer navigation">
-                            <div className="flex flex-wrap justify-center gap-8">
-                                <Link href="/" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    Home
-                                </Link>
-                                <Link href="/customers" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    Customers
-                                </Link>
-                                <Link href="/partners" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    Partners
-                                </Link>
-                                <Link href="/products" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    Products
-                                </Link>
-                                <Link href="/cgap" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    CGAP
-                                </Link>
-                                <Link href="/contact" className="text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                                    Contact
+                    {/* Navigation */}
+                    <div>
+                        <p style={{ fontFamily: "var(--f-body)", fontSize: "11px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.3)", marginBottom: "14px" }}>
+                            Navigation
+                        </p>
+                        {navLinks.map(l => (
+                            <div key={l} style={{ marginBottom: "9px" }}>
+                                <Link href={`/${l === "home" ? "" : l}`} className="v2-footer-link" style={{ textTransform: "capitalize" }}>
+                                    {l === "cgap" ? "CGAP" : l.charAt(0).toUpperCase() + l.slice(1)}
                                 </Link>
                             </div>
-                        </nav>
-
-                        {/* Right: Email */}
-                        <a href="mailto:admin@convergentbt.com" className="inline-flex items-center gap-2 text-[13px] font-medium text-white/50 hover:text-primary transition-colors">
-                            <Mail size={14} />
-                            admin@convergentbt.com
-                        </a>
+                        ))}
                     </div>
 
-                    {/* Divider */}
-                    <div className="border-t border-white/10 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <p className="text-[12px] text-white/30 font-body">
-                            © {new Date().getFullYear()} Convergent Business Technologies. All rights reserved.
+                    {/* Services */}
+                    <div>
+                        <p style={{ fontFamily: "var(--f-body)", fontSize: "11px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.3)", marginBottom: "14px" }}>
+                            Services
                         </p>
-                        <p className="text-[12px] text-white/30 font-body">
-                            Data · Cloud · AI Consultancy
-                        </p>
+                        {services.map(s => (
+                            <div key={s} style={{ marginBottom: "9px" }}>
+                                <span style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "rgba(255,255,255,.4)" }}>{s}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </footer>
-        </>
+
+                <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,.08)", margin: "36px 0 24px" }} />
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "rgba(255,255,255,.28)" }}>
+                        © {new Date().getFullYear()} Convergent Business Technologies. All rights reserved.
+                    </span>
+                    <div style={{ display: "flex", gap: "20px" }}>
+                        <Link href="/contact" className="v2-footer-link" style={{ fontSize: "12.5px" }}>Contact</Link>
+                        <button className="v2-footer-link" style={{ fontSize: "12.5px" }}>Privacy Policy</button>
+                    </div>
+                </div>
+            </div>
+        </footer>
     );
 }

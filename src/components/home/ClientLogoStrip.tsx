@@ -1,76 +1,215 @@
-const clients = [
-    "Pepsi",
-    "Microsoft",
-    "Coca-Cola",
-    "P&G",
-    "Hush Puppies",
-    "UNICEF",
-    "KPMG",
-    "ThermosPHR",
-    "Shelfr",
-    "Southlakes Housing",
-    "Bunge",
-    "MBC",
-    "SPAR",
-    "Dabur",
-    "Cenium Hospitality ERP",
-    "Goody",
-    "Cumbria Chamber of Commerce",
+"use client";
+
+const CLIENTS = [
+    "ThermosPHR", "Goody", "Cenium", "Pepsi", "Microsoft",
+    "Coca-Cola", "P&G", "KPMG", "UNICEF", "Dabur",
+    "MBC", "SPAR", "Bunge", "Shelfr", "Olayan",
 ];
 
-interface ClientLogoProps {
-    clientNames?: string[];
-}
+const TECH_PARTNERS = [
+    "WeCrunch", "Microsoft", "Tech Alliance", "Strategic Partner",
+    "Partner Co.", "Databricks", "Snowflake", "Power BI",
+];
 
-export default function ClientLogoStrip({ clientNames = clients }: ClientLogoProps) {
+// ─── Shared scrolling rail component ───
+function MarqueeRail({
+    items,
+    label,
+    speed = 38,
+    dark = true,
+}: {
+    items: string[];
+    label: string;
+    speed?: number;
+    dark?: boolean;
+}) {
+    // Triple the items so there's no gap at the seam
+    const tripled = [...items, ...items, ...items];
+
     return (
-        <section className="bg-text-heading py-[100px] px-8">
-            <div className="container-main p-0">
-                <div className="text-center mb-[64px]">
-                    <span className="uppercase-label text-white/40 block mb-[16px]">
-                        Trusted Globally
-                    </span>
-                    <h2 className="font-heading text-[clamp(2rem,4vw,3.2rem)] font-bold text-white tracking-[-0.02em]">
-                        Our Strategic <span className="italic text-primary">Portfolio</span>
-                    </h2>
-                </div>
+        <div
+            style={{
+                background: dark ? "#0C1A10" : "#F7F8F7",
+                padding: "18px 0 20px",
+                overflow: "hidden",
+                borderTop: dark ? "none" : "1px solid #E2E8E4",
+                borderBottom: dark ? "none" : "1px solid #E2E8E4",
+            }}
+        >
+            {/* Label */}
+            <p
+                style={{
+                    fontFamily: "var(--f-body)",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    letterSpacing: ".18em",
+                    textTransform: "uppercase",
+                    color: dark ? "rgba(255,255,255,.28)" : "rgba(0,0,0,.35)",
+                    textAlign: "center",
+                    marginBottom: "14px",
+                }}
+            >
+                {label}
+            </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[24px]">
-                    {clientNames.map((client) => (
-                        <div
-                            key={client}
-                            className="bg-white/[0.03] border border-white/[0.05] rounded-[12px] p-6 flex items-center justify-center min-h-[90px] hover:bg-white/[0.06] hover:border-primary/30 transition-all duration-300 group"
+            {/* Scrolling rail */}
+            <div style={{ overflow: "hidden", position: "relative" }}>
+                {/* left/right fade masks */}
+                <div
+                    style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: "80px",
+                        background: dark
+                            ? "linear-gradient(to right, #0C1A10, transparent)"
+                            : "linear-gradient(to right, #F7F8F7, transparent)",
+                        zIndex: 2,
+                        pointerEvents: "none",
+                    }}
+                />
+                <div
+                    style={{
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: "80px",
+                        background: dark
+                            ? "linear-gradient(to left, #0C1A10, transparent)"
+                            : "linear-gradient(to left, #F7F8F7, transparent)",
+                        zIndex: 2,
+                        pointerEvents: "none",
+                    }}
+                />
+
+                <div
+                    style={{
+                        display: "flex",
+                        animation: `marquee ${speed}s linear infinite`,
+                        width: "max-content",
+                    }}
+                >
+                    {tripled.map((name, i) => (
+                        <span
+                            key={i}
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                fontFamily: "var(--f-head)",
+                                fontSize: "13.5px",
+                                fontWeight: 600,
+                                color: dark ? "rgba(255,255,255,.42)" : "rgba(0,0,0,.38)",
+                                letterSpacing: ".01em",
+                                padding: "0 28px",
+                                whiteSpace: "nowrap",
+                                borderRight: dark
+                                    ? "1px solid rgba(255,255,255,.10)"
+                                    : "1px solid rgba(0,0,0,.10)",
+                                cursor: "default",
+                                transition: "color .2s",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.color = dark
+                                    ? "rgba(255,255,255,.86)"
+                                    : "var(--green)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.color = dark
+                                    ? "rgba(255,255,255,.42)"
+                                    : "rgba(0,0,0,.38)";
+                            }}
                         >
-                            <span className="text-[14px] font-medium text-white/40 group-hover:text-white transition-colors duration-300 text-center leading-tight font-body">
-                                {client}
-                            </span>
-                        </div>
+                            {name}
+                        </span>
                     ))}
                 </div>
             </div>
-        </section>
+        </div>
     );
 }
 
-export function ClientLogoGrid({
-    featured = false,
-    clientNames = clients
+// ─── Default export: client marquee (dark) ───
+export default function ClientLogoStrip({
+    clientNames,
 }: {
-    featured?: boolean;
     clientNames?: string[];
 }) {
-    const displayClients = featured ? clientNames.slice(0, 8) : clientNames;
-
+    const names = clientNames?.length ? clientNames : CLIENTS;
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[24px]">
-            {displayClients.map((client) => (
+        <MarqueeRail
+            items={names}
+            label="Trusted by Leading Organisations"
+            speed={38}
+            dark={true}
+        />
+    );
+}
+
+// ─── Named export: "Trusted by Industry Leaders" (dark) ───
+export function IndustryLeadersStrip({
+    clientNames,
+}: {
+    clientNames?: string[];
+}) {
+    const names = clientNames?.length ? clientNames : CLIENTS;
+    return (
+        <MarqueeRail
+            items={names}
+            label="Trusted by Industry Leaders"
+            speed={42}
+            dark={true}
+        />
+    );
+}
+
+// ─── Named export: Technology Partners (dark — matches other strips) ───
+export function TechPartnersStrip() {
+    return (
+        <MarqueeRail
+            items={TECH_PARTNERS}
+            label="Our Technology Partners"
+            speed={28}
+            dark={true}
+        />
+    );
+}
+
+// ─── Named export: static logo grid for sub-pages ───
+export function ClientLogoGrid({
+    clientNames,
+}: {
+    clientNames?: string[];
+}) {
+    const names = clientNames?.length ? clientNames : CLIENTS;
+    return (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {names.map((c) => (
                 <div
-                    key={client}
-                    className="bg-surface rounded-[12px] p-6 flex items-center justify-center min-h-[80px] hover:bg-white hover:shadow-[0_8px_30px_rgba(0,153,77,0.12)] transition-all duration-300 group border border-border"
+                    key={c}
+                    style={{
+                        background: "white",
+                        border: "1px solid var(--border)",
+                        borderRadius: "9px",
+                        padding: "10px 20px",
+                        fontFamily: "var(--f-head)",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "var(--muted)",
+                        transition: "all .18s",
+                        cursor: "default",
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "var(--green)";
+                        e.currentTarget.style.color = "var(--green)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "var(--border)";
+                        e.currentTarget.style.color = "var(--muted)";
+                    }}
                 >
-                    <span className="text-[13px] font-bold text-text-body/50 group-hover:text-primary transition-colors duration-300 text-center leading-tight font-body uppercase tracking-[0.05em]">
-                        {client}
-                    </span>
+                    {c}
                 </div>
             ))}
         </div>

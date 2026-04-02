@@ -14,7 +14,7 @@ import {
     Quote,
     ExternalLink,
 } from "lucide-react";
-import { ClientLogoGrid } from "@/components/home/ClientLogoStrip";
+import ClientLogoStrip from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 
 export const metadata: Metadata = {
@@ -378,20 +378,8 @@ export default async function CGAPPage() {
                     </div>
                 </section>
 
-                {/* Who You'll Work With */}
-                <section className="bg-white py-12">
-                    <div className="container-main">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl font-bold text-text-heading font-heading">
-                                Work with Leading <span className="italic-accent text-primary">Brands</span>
-                            </h2>
-                            <p className="mt-2 text-[13px] text-text-body/60 max-w-xl mx-auto font-body">
-                                CGAP graduates work directly with industry-leading clients alongside our senior consulting team.
-                            </p>
-                        </div>
-                        <ClientLogoGrid featured clientNames={clientNames} />
-                    </div>
-                </section>
+                {/* Who You'll Work With — scrolling marquee */}
+                <ClientLogoStrip clientNames={clientNames} />
 
                 {/* Final CTA */}
                 <section className="py-16 px-6">

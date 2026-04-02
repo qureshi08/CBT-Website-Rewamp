@@ -81,59 +81,62 @@ export default function StatsBar({ stats = defaultStats }: StatsBarProps) {
     const displayStats = stats.length > 0 ? stats : defaultStats;
 
     return (
-        <section className="bg-surface py-24 px-8" id="about" ref={ref}>
-            <div className="container-main w-full p-0">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section className="bg-surface section-padding" id="about" ref={ref}>
+            <div className="container-main">
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-12)", alignItems: "center" }}>
                     {/* Left Side - Text */}
-                    <div className="flex flex-col">
-                        <span className="section-tag animate-fade-in">Why CBT</span>
-                        <h2 className="section-heading mb-[4px] animate-fade-up animation-delay-100">
+                    <div className="reveal" style={{ display: "flex", flexDirection: "column" }}>
+                        <span className="section-tag animate-fade-in block" style={{ marginBottom: "var(--space-3)" }}>Why CBT</span>
+                        <h2 className="animate-fade-up animation-delay-100" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-3xl)", fontWeight: 700, color: "var(--color-text-heading)", lineHeight: 1.2 }}>
                             Built for businesses that want results, not reports
                         </h2>
 
-                        <div className="mt-10 flex flex-col gap-[0]">
-                            <div className="flex gap-4 animate-fade-up py-5 border-t border-b border-border">
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />
+                        <div className="animate-fade-up animation-delay-200" style={{ marginTop: "var(--space-8)", display: "flex", flexDirection: "column" }}>
+                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
+                                <div style={{ width: "6px", height: "6px", background: "var(--color-primary)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
                                 <div>
-                                    <div className="font-heading text-[1.1rem] font-bold text-text-heading mb-1">Outcome-first approach</div>
-                                    <p className="text-[13px] leading-[1.65] text-text-body">Every engagement starts with a clear business outcome in mind. We measure success by the impact on your organisation, not by deliverables.</p>
+                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Outcome-first approach</div>
+                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Every engagement starts with a clear business outcome in mind. We measure success by the impact on your organisation, not by deliverables.</p>
                                 </div>
                             </div>
-                            <div className="flex gap-4 animate-fade-up animation-delay-100 py-5 border-b border-border group">
-                                <div className="w-1.5 h-1.5 bg-border group-hover:bg-primary transition-colors duration-200 rounded-full mt-2 shrink-0" />
+                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderBottom: "1px solid var(--color-border)" }}>
+                                <div className="group-hover:bg-primary transition-colors duration-200" style={{ width: "6px", height: "6px", background: "var(--color-border)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
                                 <div>
-                                    <div className="font-heading text-[1.1rem] font-bold text-text-heading mb-1">Specialists, not generalists</div>
-                                    <p className="text-[13px] leading-[1.65] text-text-body">Our team brings deep domain expertise in data, cloud and AI — so you're always working with people who truly understand your technical landscape.</p>
+                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Specialists, not generalists</div>
+                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Our team brings deep domain expertise in data, cloud and AI — so you're always working with people who truly understand your technical landscape.</p>
                                 </div>
                             </div>
-                            <div className="flex gap-4 animate-fade-up animation-delay-200 py-5 border-b border-border group">
-                                <div className="w-1.5 h-1.5 bg-border group-hover:bg-primary transition-colors duration-200 rounded-full mt-2 shrink-0" />
+                            <div className="group" style={{ display: "flex", gap: "var(--space-4)", padding: "var(--space-5) 0", borderBottom: "1px solid var(--color-border)" }}>
+                                <div className="group-hover:bg-primary transition-colors duration-200" style={{ width: "6px", height: "6px", background: "var(--color-border)", borderRadius: "50%", marginTop: "8px", flexShrink: 0 }} />
                                 <div>
-                                    <div className="font-heading text-[1.1rem] font-bold text-text-heading mb-1">Approachable by design</div>
-                                    <p className="text-[13px] leading-[1.65] text-text-body">Complex technology, plain language. We cut through jargon to make sure every stakeholder — technical or not — is always fully informed and confident.</p>
+                                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text-heading)", marginBottom: "var(--space-1)" }}>Approachable by design</div>
+                                    <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-body)", lineHeight: 1.65 }}>Complex technology, plain language. We cut through jargon to make sure every stakeholder — technical or not — is always fully informed and confident.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Side - Stat Block */}
-                    <div className="bg-text-heading rounded-2xl p-10 text-white animate-fade-up animation-delay-100 relative overflow-hidden shadow-2xl before:absolute before:bottom-[-60px] before:right-[-60px] before:w-[240px] before:h-[240px] before:bg-[radial-gradient(circle,rgba(0,153,77,0.3)_0%,transparent_65%)] after:absolute after:top-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary">
-                        <div className="font-heading text-[3.5rem] font-bold leading-none tracking-[-0.04em] text-white mb-2 relative z-10">
+                    <div className="reveal reveal-delay-1 relative overflow-hidden" style={{ background: "var(--color-text-heading)", borderRadius: "12px", padding: "var(--space-10)", color: "white", boxShadow: "0 24px 50px rgba(0,0,0,0.15)" }}>
+                        <div style={{ position: "absolute", bottom: "-60px", right: "-60px", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,153,77,0.3) 0%, transparent 65%)" }} />
+                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "var(--color-primary)" }} />
+
+                        <div style={{ fontFamily: "var(--font-heading)", fontSize: "56px", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.04em", color: "white", marginBottom: "var(--space-2)", position: "relative", zIndex: 10 }}>
                             <AnimatedCounter target={12} suffix="+" isVisible={isVisible} />
                         </div>
-                        <div className="text-[13px] font-light text-white/60 leading-[1.5] mb-8 relative z-10">
+                        <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 300, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, marginBottom: "var(--space-8)", position: "relative", zIndex: 10 }}>
                             Years of combined experience in<br className="hidden sm:block" />data, cloud and AI consultancy
                         </div>
 
-                        <div className="flex flex-col gap-4 relative z-10">
+                        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", position: "relative", zIndex: 10 }}>
                             {displayStats.map((stat, i) => {
                                 const isFloat = stat.value % 1 !== 0;
                                 return (
-                                    <div key={stat.label} className="flex justify-between items-center pb-4 border-b border-white/10 last:border-b-0 last:pb-0">
-                                        <span className="text-[12px] text-white/50">
+                                    <div key={stat.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "var(--space-4)", borderBottom: "1px solid rgba(255,255,255,0.1)" }} className="last:border-b-0 last:pb-0">
+                                        <span style={{ fontFamily: "var(--font-body)", fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
                                             {stat.label}
                                         </span>
-                                        <span className="font-mono text-[12px] text-primary font-bold">
+                                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-primary)", fontWeight: "bold" }}>
                                             <AnimatedCounter target={stat.value} suffix={stat.suffix} isVisible={isVisible} isFloat={isFloat} />
                                         </span>
                                     </div>
