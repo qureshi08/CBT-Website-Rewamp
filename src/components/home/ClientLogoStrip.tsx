@@ -39,7 +39,7 @@ function MarqueeRail({
             {/* Label */}
             <p
                 style={{
-                    fontFamily: "var(--f-body)",
+                    fontFamily: "var(--font-body)",
                     fontSize: "10px",
                     fontWeight: 700,
                     letterSpacing: ".18em",
@@ -97,8 +97,8 @@ function MarqueeRail({
                             style={{
                                 display: "inline-flex",
                                 alignItems: "center",
-                                fontFamily: "var(--f-head)",
-                                fontSize: "13.5px",
+                                fontFamily: "var(--font-heading)",
+                                fontSize: "var(--text-sm)",
                                 fontWeight: 600,
                                 color: dark ? "rgba(255,255,255,.42)" : "rgba(0,0,0,.38)",
                                 letterSpacing: ".01em",
@@ -113,7 +113,7 @@ function MarqueeRail({
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.color = dark
                                     ? "rgba(255,255,255,.86)"
-                                    : "var(--green)";
+                                    : "var(--color-primary)";
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.color = dark
@@ -190,23 +190,23 @@ export function ClientLogoGrid({
                     key={c}
                     style={{
                         background: "white",
-                        border: "1px solid var(--border)",
+                        border: "1px solid var(--color-border)",
                         borderRadius: "9px",
                         padding: "10px 20px",
-                        fontFamily: "var(--f-head)",
-                        fontSize: "14px",
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "var(--text-sm)",
                         fontWeight: 600,
-                        color: "var(--muted)",
+                        color: "var(--color-text-muted)",
                         transition: "all .18s",
                         cursor: "default",
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "var(--green)";
-                        e.currentTarget.style.color = "var(--green)";
+                        e.currentTarget.style.borderColor = "var(--color-primary)";
+                        e.currentTarget.style.color = "var(--color-primary)";
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "var(--border)";
-                        e.currentTarget.style.color = "var(--muted)";
+                        e.currentTarget.style.borderColor = "var(--color-border)";
+                        e.currentTarget.style.color = "var(--color-text-muted)";
                     }}
                 >
                     {c}
