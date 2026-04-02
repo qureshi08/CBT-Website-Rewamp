@@ -47,15 +47,6 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
                             See Our Work
                         </Link>
                     </div>
-
-                    <div style={{ display: "flex", gap: "36px", marginTop: "40px" }} className="a-fadeUp-4">
-                        {[["30+", "Consultants"], ["50+", "Clients"], [`${batchCount}+`, "CGAP Cohorts"]].map(([n, l]) => (
-                            <div key={l}>
-                                <div style={{ fontFamily: "var(--f-head)", fontSize: "30px", fontWeight: 700, color: "var(--heading-c)" }}>{n}</div>
-                                <div style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)" }}>{l}</div>
-                            </div>
-                        ))}
-                    </div>
                 </div>
 
                 <div className="a-scaleIn" style={{ flexShrink: 0 }}>
@@ -70,7 +61,7 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
 export function PersonaCards() {
     const personas = [
         { href: "/customers", icon: "building" as const, title: "Customer", sub: "Work with us to transform your data capability and deliver measurable business value." },
-        { href: "/partners", icon: "handshake" as const, title: "Partner", sub: "Co-deliver engagements and grow through a structured collaboration with CBT." },
+        { href: "/partners", icon: "/handshake" as const, title: "Partner", sub: "Co-deliver engagements and grow through a structured collaboration with CBT." },
         { href: "/products", icon: "pieChart" as const, title: "Products", sub: "Power BI custom visuals and analytics tools built for data-driven teams." },
         { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "Graduate academy bridging academia and industry in data analytics consultancy." },
     ];
@@ -87,7 +78,7 @@ export function PersonaCards() {
                         <Link key={p.href} href={p.href} style={{ textDecoration: "none", display: "flex" }}>
                             <div className={`v2-pc v2-reveal v2-d${i + 1}`}>
                                 <div className="v2-pc-icon">
-                                    <Ic name={p.icon} size={20} stroke="var(--green)" />
+                                    <Ic name={p.icon as any} size={20} stroke="var(--green)" />
                                 </div>
                                 <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{p.title}</h3>
                                 <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6", marginBottom: "20px" }}>
