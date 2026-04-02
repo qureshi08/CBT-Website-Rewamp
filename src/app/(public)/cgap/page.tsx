@@ -60,11 +60,11 @@ export default async function CGAPPage() {
         (supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any)
     ]);
 
-    const clientNames = clientsData?.map(c => c.name);
-    const displayAlumni = dbAlumni?.length ? dbAlumni : fallbackAlumni;
-    const activeBatch = openBatches?.[0];
+    const clientNames = (clientsData as any[])?.map(c => c.name) || [];
+    const displayAlumni = (dbAlumni as any[])?.length ? (dbAlumni as any[]) : fallbackAlumni;
+    const activeBatch = (openBatches as any[])?.[0];
     const applicationUrl = activeBatch?.application_url || "https://cbt-recruitment-portal.vercel.app/";
-    const displayBatchCount = batchStat?.value || 12;
+    const displayBatchCount = (batchStat as any)?.value || 12;
 
     return (
         <main>

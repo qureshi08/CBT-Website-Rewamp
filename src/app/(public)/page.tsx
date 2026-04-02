@@ -31,10 +31,10 @@ export default async function HomePage() {
       supabase.from("testimonials" as any).select("*").eq("page", "Home").order("display_order", { ascending: true })
     ]);
 
-    clientNames = clientsData?.map(c => c.name);
-    batchCount = batchStat?.value ?? 12;
-    homepageStats = statsData?.filter(s => s.label !== "CGAP Batches") || [];
-    testimonialsData = testiData || [];
+    clientNames = (clientsData as any[])?.map(c => c.name);
+    batchCount = (batchStat as any)?.value ?? 12;
+    homepageStats = (statsData as any[])?.filter(s => s.label !== "CGAP Batches") || [];
+    testimonialsData = (testiData as any[]) || [];
   } catch (error) {
     console.error("HomePage data fetch error:", error);
   }
