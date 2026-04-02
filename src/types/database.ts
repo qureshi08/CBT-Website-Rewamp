@@ -350,6 +350,33 @@ export interface Database {
                 }
                 Relationships: []
             }
+            stats: {
+                Row: {
+                    id: string
+                    created_at: string
+                    label: string
+                    value: number
+                    suffix: string | null
+                    display_order: number
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    label: string
+                    value: number
+                    suffix?: string | null
+                    display_order?: number
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    label?: string
+                    value?: number
+                    suffix?: string | null
+                    display_order?: number
+                }
+                Relationships: []
+            }
         }
         Views: {
             [_ in never]: never

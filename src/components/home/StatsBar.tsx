@@ -59,7 +59,7 @@ function AnimatedCounter({
     );
 }
 
-export default function StatsBar({ stats = defaultStats }: StatsBarProps) {
+export default function StatsBar({ stats = [] }: StatsBarProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -78,7 +78,7 @@ export default function StatsBar({ stats = defaultStats }: StatsBarProps) {
         return () => observer.disconnect();
     }, []);
 
-    const displayStats = stats.length > 0 ? stats : defaultStats;
+    const displayStats = stats && stats.length > 0 ? stats : defaultStats;
 
     return (
         <section className="bg-surface section-padding" id="about" ref={ref}>

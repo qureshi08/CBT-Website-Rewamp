@@ -18,11 +18,11 @@ export async function adminCrud(
         const dbTable = supabaseAdmin.from(table as any);
 
         if (action === "insert") {
-            result = await dbTable.insert([data]);
+            result = await dbTable.insert([data]).select();
         } else if (action === "update") {
-            result = await dbTable.update(data).eq("id", id!);
+            result = await dbTable.update(data).eq("id", id!).select();
         } else if (action === "delete") {
-            result = await dbTable.delete().eq("id", id!);
+            result = await dbTable.delete().eq("id", id!).select();
         } else if (action === "read") {
             let query = dbTable.select("*");
             if (options?.filter) {
