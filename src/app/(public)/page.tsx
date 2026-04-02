@@ -46,8 +46,9 @@ export default async function HomePage() {
     }
 
     homepageStats = (statsData as any[])?.filter(s => {
-      const lbl = s.label?.trim().toLowerCase();
-      return lbl !== "cgap batches" && lbl !== "company experience";
+      const lbl = (s.label || "").trim().toLowerCase();
+      // Filter out CGAP Batches and the main Company Experience stat
+      return !lbl.includes("batches") && !lbl.includes("company experience");
     }) || [];
     testimonialsData = (testiData as any[]) || [];
   } catch (error) {
