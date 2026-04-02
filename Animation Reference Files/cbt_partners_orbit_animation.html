@@ -1,0 +1,417 @@
+
+<canvas id="cv" style="display:block;width:100%;height:500px;border-radius:12px;background:#080f10"></canvas>
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let W, H, t = 0, startTime = null;
+
+const C1 = '#00994D'; const C1L = '#00C060'; const C1D = '#007A3D';
+const C2 = '#3B82F6'; const C2L = '#60A5FA'; const C2D = '#1D4ED8';
+const GOLD = '#F59E0B'; const BG = '#080f10';
+
+function resize() {
+  const r = cv.getBoundingClientRect();
+  cv.width = r.width * devicePixelRatio;
+  cv.height = r.height * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  W = r.width; H = r.height;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function lerp(a,b,t){ return a+(b-a)*t; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function easeOut(t){ return 1-Math.pow(1-t,3); }
+function easeInOut(t){ return t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1; }
+function dist(ax,ay,bx,by){ return Math.sqrt((ax-bx)**2+(ay-by)**2); }
+
+// ── Phase timing (seconds) ──
+// 0-1.5: isolated orbits, field lines appear
+// 1.5-3.5: approach/spiral inward
+// 3.5-5.0: lock alignment, gears mesh
+// 5.0+:  steady orbit + data flow + output
+
+const PHASE = [0, 1.5, 3.5, 5.0];
+
+// Capability labels
+const CBT_CAPS  = ['Analytics','DWH','AI','BI','Training'];
+const PART_CAPS = ['Distribution','Tech Stack','Market','Scale','Network'];
+const JOINT_OUT = ['Joint Revenue','Faster Delivery','Wider Reach','Shared IP','More Value'];
+
+// Particle streams between orbs
+let streamParticles = [];
+class StreamParticle {
+  constructor(fromX,fromY,toX,toY,color,delay){
+    this.sx=fromX; this.sy=fromY;
+    this.ex=toX; this.ey=toY;
+    this.color=color;
+    this.t=0; this.delay=delay;
+    this.speed=0.008+Math.random()*0.012;
+    this.size=1.8+Math.random()*2;
+    this.alpha=0.5+Math.random()*0.5;
+    this.done=false;
+    this.trail=[];
+  }
+  update(){
+    if(this.t<this.delay){ this.t+=0.016; return; }
+    this.t+=this.speed;
+    if(this.t>=1+this.delay) this.done=true;
+  }
+  draw(){
+    const p=clamp(this.t-this.delay,0,1);
+    if(p<=0) return;
+    const e=easeInOut(p);
+    // Bezier arc between orbs
+    const mx=(this.sx+this.ex)/2, my=(this.sy+this.ey)/2 - 40;
+    const x=lerp(lerp(this.sx,mx,e),lerp(mx,this.ex,e),e);
+    const y=lerp(lerp(this.sy,my,e),lerp(my,this.ey,e),e);
+    this.trail.push({x,y});
+    if(this.trail.length>12) this.trail.shift();
+    if(this.trail.length>1){
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x,this.trail[0].y);
+      for(let i=1;i<this.trail.length;i++) ctx.lineTo(this.trail[i].x,this.trail[i].y);
+      ctx.strokeStyle=this.color;
+      ctx.lineWidth=this.size*0.5;
+      ctx.globalAlpha=this.alpha*0.3;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(x,y,this.size,0,Math.PI*2);
+    ctx.fillStyle=this.color;
+    ctx.globalAlpha=this.alpha*(1-p*0.4);
+    ctx.fill();
+    ctx.globalAlpha=1;
+  }
+}
+
+// Orbiting satellites around each node
+class Satellite {
+  constructor(cx,cy,r,speed,size,color,angle0){
+    this.cx=cx; this.cy=cy;
+    this.r=r; this.speed=speed;
+    this.size=size; this.color=color;
+    this.angle=angle0;
+    this.trail=[];
+  }
+  update(cx,cy){
+    this.cx=cx; this.cy=cy;
+    this.angle+=this.speed;
+    const x=this.cx+Math.cos(this.angle)*this.r;
+    const y=this.cy+Math.sin(this.angle)*this.r;
+    this.trail.push({x,y});
+    if(this.trail.length>20) this.trail.shift();
+  }
+  draw(alpha){
+    if(this.trail.length>1){
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x,this.trail[0].y);
+      for(let i=1;i<this.trail.length;i++) ctx.lineTo(this.trail[i].x,this.trail[i].y);
+      ctx.strokeStyle=this.color;
+      ctx.lineWidth=0.8;
+      ctx.globalAlpha=alpha*0.3;
+      ctx.stroke();
+    }
+    const x=this.cx+Math.cos(this.angle)*this.r;
+    const y=this.cy+Math.sin(this.angle)*this.r;
+    ctx.beginPath();
+    ctx.arc(x,y,this.size,0,Math.PI*2);
+    ctx.fillStyle=this.color;
+    ctx.globalAlpha=alpha*0.85;
+    ctx.fill();
+    ctx.globalAlpha=1;
+  }
+}
+
+// Gravity field rings
+function drawFieldRings(cx,cy,color,alpha,count,maxR,pulse){
+  for(let i=0;i<count;i++){
+    const r=maxR*(i+1)/count + pulse*8;
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=color;
+    ctx.lineWidth=0.5;
+    ctx.globalAlpha=alpha*(1-(i/count)*0.7);
+    ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+}
+
+function drawOrb(cx,cy,r,color,colorL,label,sublabel,alpha,pulse){
+  // Outer glow
+  ctx.beginPath();
+  ctx.arc(cx,cy,r+10+pulse*6,0,Math.PI*2);
+  ctx.strokeStyle=color;
+  ctx.lineWidth=1;
+  ctx.globalAlpha=alpha*0.15*pulse;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx,cy,r+4,0,Math.PI*2);
+  ctx.strokeStyle=colorL;
+  ctx.lineWidth=1.5;
+  ctx.globalAlpha=alpha*0.35;
+  ctx.stroke();
+  // Fill
+  ctx.beginPath();
+  ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle=BG;
+  ctx.globalAlpha=alpha;
+  ctx.fill();
+  ctx.strokeStyle=color;
+  ctx.lineWidth=2;
+  ctx.stroke();
+  // Label
+  ctx.fillStyle='#d1fae5';
+  ctx.font='600 12px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.globalAlpha=alpha;
+  ctx.fillText(label,cx,cy-5);
+  ctx.fillStyle=colorL;
+  ctx.font='400 9px DM Sans,sans-serif';
+  ctx.fillText(sublabel,cx,cy+8);
+  ctx.globalAlpha=1;
+  ctx.textBaseline='alphabetic';
+}
+
+function drawCapLabel(cx,cy,angle,r,text,color,alpha){
+  const x=cx+Math.cos(angle)*r;
+  const y=cy+Math.sin(angle)*r;
+  const w=62, h=18;
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle='#0a1a10';
+  ctx.strokeStyle=color;
+  ctx.lineWidth=0.7;
+  ctx.beginPath();
+  ctx.roundRect(x-w/2,y-h/2,w,h,3);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.font='400 9px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(text,x,y);
+  ctx.restore();
+}
+
+function drawConnectionArc(ax,ay,bx,by,color,alpha,progress){
+  const mx=(ax+bx)/2, my=(ay+by)/2 - H*0.12;
+  ctx.beginPath();
+  ctx.moveTo(ax,ay);
+  const steps=40;
+  for(let i=0;i<=steps*progress;i++){
+    const tt=i/steps;
+    const e=1-tt;
+    const x=e*e*ax+2*e*tt*mx+tt*tt*bx;
+    const y=e*e*ay+2*e*tt*my+tt*tt*by;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle=color;
+  ctx.lineWidth=1.2;
+  ctx.globalAlpha=alpha;
+  ctx.stroke();
+  ctx.globalAlpha=1;
+}
+
+function drawJointOutput(cx,cy,alpha){
+  if(alpha<=0) return;
+  const r=38;
+  // Outer ring
+  ctx.beginPath();
+  ctx.arc(cx,cy,r+10+3*Math.sin(t*2),0,Math.PI*2);
+  ctx.strokeStyle=GOLD;
+  ctx.lineWidth=1;
+  ctx.globalAlpha=alpha*0.2;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle=GOLD;
+  ctx.lineWidth=2;
+  ctx.fillStyle='#0f1a0c';
+  ctx.globalAlpha=alpha;
+  ctx.fill(); ctx.stroke();
+  // Star/spark inside
+  ctx.fillStyle=GOLD;
+  ctx.font='500 11px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('1+1=3',cx,cy-5);
+  ctx.fillStyle='rgba(245,158,11,0.6)';
+  ctx.font='400 8px DM Sans,sans-serif';
+  ctx.fillText('Joint Output',cx,cy+7);
+  ctx.globalAlpha=1;
+  ctx.textBaseline='alphabetic';
+
+  // Radial labels
+  JOINT_OUT.forEach((lbl,i)=>{
+    const a=(-Math.PI/2)+(i/JOINT_OUT.length)*Math.PI*2 + t*0.15;
+    drawCapLabel(cx,cy,a,78,lbl,GOLD,alpha*0.85);
+  });
+}
+
+// Init satellites
+let cbtSats=[], partSats=[];
+function initSats(cx,cy,color,arr){
+  arr.length=0;
+  [28,20,36].forEach((r,i)=>{
+    arr.push(new Satellite(cx,cy,r,0.025*(i%2===0?1:-1)*((i+1)*0.4+0.6),2.5-i*0.3,color,Math.random()*Math.PI*2));
+  });
+}
+
+let initted=false;
+
+function frame(ts){
+  if(!startTime) startTime=ts;
+  t=(ts-startTime)*0.001;
+
+  if(!initted){
+    initSats(0,0,C1,cbtSats);
+    initSats(0,0,C2,partSats);
+    initted=true;
+  }
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=BG;
+  ctx.fillRect(0,0,W,H);
+
+  const ph1=clamp((t-PHASE[0])/(PHASE[1]-PHASE[0]),0,1);
+  const ph2=clamp((t-PHASE[1])/(PHASE[2]-PHASE[1]),0,1);
+  const ph3=clamp((t-PHASE[2])/(PHASE[3]-PHASE[2]),0,1);
+  const ph4=clamp((t-PHASE[3]),0,999);
+
+  const e2=easeOut(ph2);
+  const e3=easeOut(ph3);
+
+  // Orb positions — start far apart, approach center
+  const spread = W*0.30;
+  const cx0 = W/2, cy0 = H/2;
+  // Phase2: approach
+  const approachFactor = e2;
+  const orbitR = lerp(spread, W*0.19, approachFactor);
+
+  // Phase3+: orbit each other around center
+  const orbitAngle = t * (0.4 + ph3*0.3);
+  const finalOrbitR = lerp(orbitR, W*0.17, e3);
+
+  let cbtX, cbtY, partX, partY;
+  if(t < PHASE[1]){
+    cbtX = cx0 - spread*(1-ph1*0.1);
+    cbtY = cy0 + Math.sin(t*0.8)*18;
+    partX = cx0 + spread*(1-ph1*0.1);
+    partY = cy0 + Math.sin(t*0.8+Math.PI)*18;
+  } else {
+    const angle = orbitAngle;
+    cbtX  = cx0 - Math.cos(angle)*finalOrbitR;
+    cbtY  = cy0 - Math.sin(angle)*finalOrbitR*0.45;
+    partX = cx0 + Math.cos(angle)*finalOrbitR;
+    partY = cy0 + Math.sin(angle)*finalOrbitR*0.45;
+  }
+
+  const pulse = 0.5+0.5*Math.abs(Math.sin(t*1.4));
+  const pulse2 = 0.5+0.5*Math.abs(Math.sin(t*1.4+1.2));
+
+  // ── Field rings ──
+  const fieldAlpha = clamp(ph1*2, 0, 0.35)*(1-ph2*0.6);
+  if(fieldAlpha>0){
+    drawFieldRings(cbtX, cbtY, C1, fieldAlpha, 4, 90, pulse);
+    drawFieldRings(partX, partY, C2, fieldAlpha, 4, 90, pulse2);
+  }
+
+  // ── Connection arc (phase2 approach) ──
+  const arcAlpha = clamp(ph2*3,0,0.5);
+  if(arcAlpha>0){
+    drawConnectionArc(cbtX,cbtY,partX,partY,'#3a7a50',arcAlpha*0.5,ph2);
+  }
+
+  // ── Phase 3: interlocking dashed ring between orbs ──
+  if(ph3>0){
+    const midX=(cbtX+partX)/2, midY=(cbtY+partY)/2;
+    const ringR=dist(cbtX,cbtY,partX,partY)*0.38;
+    ctx.beginPath();
+    ctx.arc(midX,midY,ringR,0,Math.PI*2*e3);
+    ctx.strokeStyle=GOLD;
+    ctx.lineWidth=1;
+    ctx.setLineDash([4,6]);
+    ctx.globalAlpha=e3*0.4;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha=1;
+  }
+
+  // ── Satellites ──
+  cbtSats.forEach(s=>{ s.update(cbtX,cbtY); s.draw(clamp(ph1*3,0,0.8)); });
+  partSats.forEach(s=>{ s.update(partX,partY); s.draw(clamp(ph1*3,0,0.8)); });
+
+  // ── Capability labels around orbs ──
+  const capAlpha=clamp(ph1*2-0.2,0,0.9)*(1-ph3*0.4);
+  CBT_CAPS.forEach((cap,i)=>{
+    const a=(i/CBT_CAPS.length)*Math.PI*2 - Math.PI/4 + t*0.04;
+    drawCapLabel(cbtX,cbtY,a,72,cap,C1,capAlpha);
+  });
+  PART_CAPS.forEach((cap,i)=>{
+    const a=(i/PART_CAPS.length)*Math.PI*2 + Math.PI/4 - t*0.04;
+    drawCapLabel(partX,partY,a,72,cap,C2,capAlpha);
+  });
+
+  // ── Draw orbs ──
+  drawOrb(cbtX,cbtY,28,C1,C1L,'CBT','Data & AI',1,pulse);
+  drawOrb(partX,partY,28,C2,C2L,'Partner','Your Org',1,pulse2);
+
+  // ── Stream particles (phase 2+) ──
+  if(ph2>0.3){
+    if(Math.random()<0.12){
+      const toRight=Math.random()>0.5;
+      streamParticles.push(new StreamParticle(
+        toRight?cbtX:partX, toRight?cbtY:partY,
+        toRight?partX:cbtX, toRight?partY:cbtY,
+        toRight?C1:C2, Math.random()*0.3
+      ));
+    }
+  }
+  streamParticles=streamParticles.filter(p=>!p.done);
+  streamParticles.forEach(p=>{ p.update(); p.draw(); });
+
+  // ── Joint output node (phase 3+) ──
+  const joAlpha=clamp(e3*2,0,1);
+  if(joAlpha>0){
+    const jx=(cbtX+partX)/2, jy=(cbtY+partY)/2 + (ph4>0 ? 0 : -10*(1-e3));
+    // Lines from orbs to joint
+    [cbtX,partX].forEach((ox,i)=>{
+      const oy=i===0?cbtY:partY;
+      ctx.beginPath();
+      ctx.moveTo(ox,oy);
+      ctx.lineTo(jx,jy);
+      ctx.strokeStyle=i===0?C1:C2;
+      ctx.lineWidth=1;
+      ctx.globalAlpha=joAlpha*0.4;
+      ctx.stroke();
+      ctx.globalAlpha=1;
+    });
+    drawJointOutput(jx,jy,joAlpha);
+  }
+
+  // ── Phase labels ──
+  const phaseLabels = ['Separate ecosystems','Detecting alignment…','Capabilities interlocking…','Delivering together'];
+  let lIdx=0;
+  if(t>PHASE[0]) lIdx=0;
+  if(t>PHASE[1]) lIdx=1;
+  if(t>PHASE[2]) lIdx=2;
+  if(t>PHASE[3]) lIdx=3;
+
+  ctx.fillStyle='#4aaa72';
+  ctx.font='400 11px DM Sans,sans-serif';
+  ctx.textAlign='left';
+  ctx.globalAlpha=0.65;
+  ctx.fillText(phaseLabels[lIdx], 16, H-12);
+
+  ctx.fillStyle='#2d5a3d';
+  ctx.font='400 10px JetBrains Mono,monospace';
+  ctx.textAlign='right';
+  ctx.globalAlpha=0.4;
+  ctx.fillText('convergentbt.com', W-16, H-12);
+  ctx.globalAlpha=1;
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

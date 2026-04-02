@@ -340,13 +340,10 @@ export function HeroIllustration() {
 
             ctx.clearRect(0, 0, W, H);
 
-            // Background – brand white
-            ctx.fillStyle = BG;
-            ctx.fillRect(0, 0, W, H);
-
-            // Soft surface tint in corners
-            const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, Math.max(W, H) * 0.7);
-            grad.addColorStop(0, "rgba(230,245,237,0.35)");
+            // Fully transparent — blends with hero background
+            // Soft central glow only
+            const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, Math.max(W, H) * 0.6);
+            grad.addColorStop(0, "rgba(230,245,237,0.25)");
             grad.addColorStop(1, "rgba(255,255,255,0)");
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, W, H);
@@ -444,21 +441,6 @@ export function HeroIllustration() {
                 packets.forEach(pk => { pk.update(); pk.draw(); });
             }
 
-            // Phase label – bottom-left
-            const labels = ["Raw data", "Converging…", "Structuring…", "Live Intelligence"];
-            ctx.fillStyle = GDARK;
-            ctx.font = `400 11px 'DM Sans', sans-serif`;
-            ctx.textAlign = "left";
-            ctx.globalAlpha = 0.55;
-            ctx.fillText(labels[Math.min(phase, 3)], 16, H - 14);
-
-            // Stream count – bottom-right
-            const active = particles.filter(p => !p.absorbed).length;
-            ctx.fillStyle = "#6B7280";
-            ctx.font = `400 10px 'JetBrains Mono', monospace`;
-            ctx.textAlign = "right";
-            ctx.globalAlpha = 0.45;
-            ctx.fillText(`${active} streams`, W - 14, H - 14);
             ctx.globalAlpha = 1;
 
             raf = requestAnimationFrame(draw);
@@ -484,10 +466,7 @@ export function HeroIllustration() {
                 display: "block",
                 width: "480px",
                 height: "420px",
-                borderRadius: "16px",
-                background: "#FFFFFF",
-                border: "1px solid #E2E8E4",
-                boxShadow: "0 4px 32px rgba(0,153,77,0.08)",
+                background: "transparent",
                 flexShrink: 0,
             }}
         />
