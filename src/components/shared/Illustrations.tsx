@@ -51,8 +51,7 @@ export function HeroIllustration() {
     );
 }
 
-// ─── CUSTOMERS: GETTING EXACTLY WHAT THEY WANT ───
-// Represents "Client Goals Achieved". A bridge to the desired outcome.
+// ─── CUSTOMERS: GETTING EXACTLY WHAT THEY WANT (USER APPROVED) ───
 export function CustomersIllustration() {
     return (
         <motion.svg
@@ -60,22 +59,16 @@ export function CustomersIllustration() {
             initial="hidden" animate="visible"
         >
             <Gradients />
-
-            {/* The Goal: A glowing corporate success node */}
             <motion.path
                 d="M260 60 L300 80 L280 120 L240 100 Z" fill="white" stroke="var(--green)" strokeWidth="2"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity }}
             />
             <motion.circle cx="270" cy="90" r="20" fill="url(#grad-glow)" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
             <text x="250" y="140" fontSize="10" fontWeight="800" fill="var(--green)">GOAL REACHED</text>
-
-            {/* The Bridge (CBT Solution) */}
             <motion.path
                 d="M60 180 Q 160 180 260 100" stroke="var(--green)" strokeWidth="4" fill="none" strokeDasharray="500" strokeDashoffset="500"
                 animate={{ strokeDashoffset: 0 }} transition={{ duration: 2.5, ease: "easeInOut" }}
             />
-
-            {/* The Customer Persona */}
             <g transform="translate(60, 210)">
                 <circle r="25" fill="white" stroke="var(--border)" strokeWidth="1.5" />
                 <path d="M-12 10 Q -12 -5 0 -5 Q 12 -5 12 10" fill="var(--border)" opacity="0.6" />
@@ -86,48 +79,92 @@ export function CustomersIllustration() {
     );
 }
 
-// ─── PARTNERS: SYNERGY FOR SUCCESS ───
-// Represents "Successful Connection & Scaling". Two units becoming more together.
+// ─── PARTNERS: THE NETWORK SUCCESS EXPLOSION (IMPROVED) ───
+// Represents "Partnering with CBT connects you to a Global Success Network".
 export function PartnersIllustration() {
     return (
         <motion.svg
-            width="340" height="260" viewBox="0 0 340 260" fill="none"
+            width="380" height="300" viewBox="0 0 380 300" fill="none"
             initial="hidden" animate="visible"
         >
             <Gradients />
 
-            {/* Partner Node (Left) */}
-            <motion.g transform="translate(80, 130)" animate={{ x: [0, 20, 0] }} transition={{ duration: 4, repeat: Infinity }}>
-                <rect x="-30" y="-30" width="60" height="60" rx="10" fill="white" stroke="var(--border)" strokeWidth="1.5" />
-                <path d="M-10 10 Q -10 -5 0 -5 Q 10 -5 10 10" fill="var(--border)" opacity="0.4" />
-                <circle cy="-10" r="8" fill="var(--border)" opacity="0.4" />
-                <text x="-25" y="45" fontSize="8" fontWeight="700" fill="var(--border)">PARTNER</text>
-            </motion.g>
+            {/* Background Network Mesh (Subtle Experts) */}
+            <g opacity="0.1">
+                <circle cx="50" cy="50" r="4" fill="var(--green)" />
+                <circle cx="330" cy="80" r="6" fill="var(--green)" />
+                <circle cx="300" cy="240" r="5" fill="var(--green)" />
+                <circle cx="80" cy="260" r="4" fill="var(--green)" />
+                <path d="M50 50 L330 80 L300 240 L80 260 Z" stroke="var(--green)" strokeWidth="0.5" strokeDasharray="4 4" />
+            </g>
 
-            {/* CBT Node (Right) */}
-            <motion.g transform="translate(260, 130)" animate={{ x: [0, -20, 0] }} transition={{ duration: 4, repeat: Infinity }}>
-                <rect x="-30" y="-30" width="60" height="60" rx="10" fill="white" stroke="var(--green)" strokeWidth="2" />
-                <path d="M-10 10 Q -10 -5 0 -5 Q 10 -5 10 10" fill="var(--green)" opacity="0.8" />
-                <circle cy="-10" r="8" fill="var(--green)" />
-                <text x="-20" y="45" fontSize="8" fontWeight="700" fill="var(--green)">CBT</text>
-            </motion.g>
+            {/* The Central CBT Hub Nexus */}
+            <g transform="translate(190, 150)">
+                <circle r="40" fill="white" stroke="var(--green)" strokeWidth="1.5" />
+                <motion.path
+                    d="M-20 0h40 M0 -20v40" stroke="var(--green)" strokeWidth="2"
+                    animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                />
+                {/* Connection Dock */}
+                <rect x="-45" y="-10" width="10" height="20" rx="2" fill="var(--green)" />
+            </g>
 
-            {/* The Connection "Success Pulse" */}
+            {/* The Partner Unit (Onboarding and Scaling) */}
             <motion.g
-                initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.5 }}
-                transition={{ delay: 2, repeat: Infinity, repeatDelay: 2, duration: 1.5 }}
-                style={{ transformOrigin: "170px 130px" }}
+                initial={{ x: 20 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 3, repeat: Infinity }}
             >
-                <circle cx="170" cy="130" r="40" fill="url(#grad-glow)" />
-                <motion.path d="M160 130 l7 7 l12 -12" stroke="var(--green)" strokeWidth="3" strokeLinecap="round" />
+                <g transform="translate(60, 150)">
+                    <rect x="-30" y="-30" width="60" height="60" rx="12" fill="white" stroke="var(--border)" strokeWidth="1.5" />
+                    {/* Partner Persona Silhouette */}
+                    <path d="M-10 12 Q -10 0 0 0 Q 10 0 10 12" fill="var(--border)" opacity="0.6" />
+                    <circle cy="-10" r="10" fill="var(--border)" opacity="0.6" />
+
+                    {/* Scaling Glow (Partner success) */}
+                    <motion.rect
+                        x="-30" y="-30" width="60" height="60" rx="12" fill="none" stroke="var(--green)" strokeWidth="2.5"
+                        animate={{ scale: [1, 1.25], opacity: [0, 0.4, 0] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                    />
+                </g>
             </motion.g>
 
-            {/* Result: Partner Node scaling up */}
-            <motion.rect
-                x="50" y="100" width="60" height="60" rx="10" fill="none" stroke="var(--green)" strokeWidth="2" strokeDasharray="4 4"
-                animate={{ scale: [1, 1.2, 1], opacity: [0, 0.5, 0] }}
-                transition={{ delay: 2, repeat: Infinity, duration: 2 }}
-            />
+            {/* Success "Experts" emerging from the Network */}
+            {[
+                { x: 280, y: 70, d: 2 }, { x: 310, y: 150, d: 2.4 }, { x: 280, y: 230, d: 2.8 }
+            ].map((node, i) => (
+                <motion.g
+                    key={i}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: node.d, duration: 0.8 }}
+                >
+                    <g transform={`translate(${node.x}, ${node.y})`}>
+                        <circle r="22" fill="white" stroke="var(--green)" strokeWidth="1" />
+                        <path d="M-8 8 Q -8 -2 0 -2 Q 8 -2 8 8" fill="var(--green)" opacity="0.7" />
+                        <circle cy="-6" r="6" fill="var(--green)" />
+
+                        {/* Connection Ray to CBT Central */}
+                        <motion.line
+                            x1="0" y1="0" x2={190 - node.x} y2={150 - node.y}
+                            stroke="var(--green)" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3"
+                            animate={{ opacity: [0.1, 0.4, 0.1] }} transition={{ duration: 3, repeat: Infinity }}
+                        />
+                    </g>
+                </motion.g>
+            ))}
+
+            {/* Central Success Text Tag */}
+            <motion.g
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }}
+                transform="translate(190, 220)"
+            >
+                <rect x="-60" width="120" height="24" rx="12" fill="var(--green-muted)" opacity="0.3" />
+                <text x="0" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="var(--green)" letterSpacing="0.05em">
+                    SCALED SUCCESS
+                </text>
+            </motion.g>
         </motion.svg>
     );
 }
@@ -170,8 +207,7 @@ export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
     );
 }
 
-// ─── CGAP: THE CAREER TRANSFORMATION ───
-// Represents "University Graduate -> CGAP -> Professional Consultant".
+// ─── CGAP: THE CAREER TRANSFORMATION (USER APPROVED) ───
 export function CGAPIllustration() {
     return (
         <motion.svg
@@ -179,44 +215,28 @@ export function CGAPIllustration() {
             initial="hidden" animate="visible"
         >
             <Gradients />
-
-            {/* Step 1: The University Graduate */}
             <g transform="translate(60, 150)">
                 <circle r="30" fill="white" stroke="var(--border)" strokeWidth="1" />
                 <path d="M-15 12 Q -15 0 0 0 Q 15 0 15 12" fill="var(--border)" opacity="0.4" />
                 <circle cy="-10" r="10" fill="var(--border)" opacity="0.4" />
-                {/* Graduation Cap */}
                 <path d="M-12 -18 l12 -6 l12 6 l-12 6z" fill="var(--green)" opacity="0.8" />
                 <text x="-25" y="55" fontSize="8" fontWeight="700" fill="var(--border)">GRADUATE</text>
             </g>
-
-            {/* Step 2: The CGAP Transformation Gateway (Company's Program) */}
             <g transform="translate(190, 150)">
-                <motion.rect
-                    x="-40" y="-40" width="80" height="80" rx="10" fill="var(--green-muted)" opacity="0.1" stroke="var(--green)" strokeWidth="1" strokeDasharray="5 5"
-                    animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                />
+                <motion.rect x="-40" y="-40" width="80" height="80" rx="10" fill="var(--green-muted)" opacity="0.1" stroke="var(--green)" strokeWidth="1" strokeDasharray="5 5" animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
                 <circle r="35" fill="white" stroke="var(--green)" strokeWidth="2" />
                 <text x="-20" y="5" fontSize="12" fontWeight="900" fill="var(--green)">CGAP</text>
                 <text x="-32" y="58" fontSize="8" fontWeight="800" fill="var(--green)" letterSpacing="0.05em">ACADEMY</text>
             </g>
-
-            {/* Step 3: Industry Professional Consultant */}
             <g transform="translate(320, 150)">
                 <motion.circle r="35" fill="var(--green)" opacity="0.1" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 2.5 }} />
                 <circle r="30" fill="white" stroke="var(--green)" strokeWidth="2" />
                 <path d="M-15 12 Q -15 0 0 0 Q 15 0 15 12" fill="var(--green)" />
                 <circle cy="-10" r="10" fill="var(--green)" />
-                {/* Briefcase/Badges */}
                 <rect x="5" y="-18" width="12" height="10" rx="2" fill="var(--green)" opacity="0.5" />
                 <text x="-25" y="55" fontSize="8" fontWeight="700" fill="var(--green)">CONSULTANT</text>
             </g>
-
-            {/* The Transformation Flow (Beams) */}
-            <motion.path
-                d="M90 150 H155 M225 150 H285" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeDasharray="300" strokeDashoffset="300"
-                animate={{ strokeDashoffset: 0 }} transition={{ duration: 2, delay: 0.5 }}
-            />
+            <motion.path d="M90 150 H155 M225 150 H285" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeDasharray="300" strokeDashoffset="300" animate={{ strokeDashoffset: 0 }} transition={{ duration: 2, delay: 0.5 }} />
         </motion.svg>
     );
 }
