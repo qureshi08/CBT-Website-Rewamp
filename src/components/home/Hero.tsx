@@ -21,8 +21,8 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
     useScrollReveal();
 
     return (
-        <section style={{ paddingTop: "116px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,var(--color-primary-muted) 100%)" }}>
-            <div className="v2-wrap home-hero-grid">
+        <section className="hero-grid-texture" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
+            <div className="v2-wrap home-hero-grid" style={{ position: "relative", zIndex: 1, width: "100%" }}>
                 <div>
                     <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
                         <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--color-primary)", display: "inline-block", animation: "pulse 2s infinite" }} />
@@ -32,7 +32,7 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
                     <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
                         Enabling Business to<br />
                         Harness Data and{" "}
-                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Deliver Value</em>
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>deliver value</em>
                     </h1>
 
                     <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-lg)", fontWeight: 300, color: "var(--color-text-body)", lineHeight: 1.7, maxWidth: "480px", marginTop: "13px" }}>
