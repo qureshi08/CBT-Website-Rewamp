@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Star, BarChart3 } from "lucide-react";
 import PersonaBridge from "@/components/shared/PersonaBridge";
-import { useScrollReveal } from "@/components/home/Hero";
+import ClientReveal from "@/components/shared/ClientReveal";
 import { ProductIllustration } from "@/components/shared/Illustrations";
 import ProductFilter from "@/components/products/ProductFilter";
 
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default function ProductsPage() {
-    useScrollReveal();
     return (
         <main className="font-body">
+            <ClientReveal />
             {/* Hero */}
             <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>

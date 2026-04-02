@@ -14,7 +14,7 @@ import {
 import { IndustryLeadersStrip, TechPartnersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 import PartnerForm from "@/components/partners/PartnerForm";
-import { useScrollReveal } from "@/components/home/Hero";
+import ClientReveal from "@/components/shared/ClientReveal";
 import { PartnersIllustration } from "@/components/shared/Illustrations";
 import { createClient } from "@/lib/supabase/server";
 
@@ -68,7 +68,6 @@ const fallbackTestimonials = [
 
 export default async function PartnersPage() {
     const supabase = await createClient();
-    useScrollReveal();
 
     // Fetch all data in parallel
     const [
@@ -105,6 +104,7 @@ export default async function PartnersPage() {
 
     return (
         <main>
+            <ClientReveal />
             {/* Hero */}
             <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>

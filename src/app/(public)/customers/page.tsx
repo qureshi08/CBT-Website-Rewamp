@@ -15,6 +15,7 @@ import { CustomersIllustration } from "@/components/shared/Illustrations";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
 import { createClient } from "@/lib/supabase/server";
+import ClientReveal from "@/components/shared/ClientReveal";
 
 export const metadata: Metadata = {
     title: "Our Customers | CBT — Convergent Business Technologies",
@@ -84,7 +85,6 @@ const fallbackCaseStudies = [
 
 export default async function CustomersPage() {
     const supabase = await createClient();
-    useScrollReveal();
 
     // Fetch clients
     const { data: clientsData } = await supabase
@@ -107,6 +107,7 @@ export default async function CustomersPage() {
 
     return (
         <main>
+            <ClientReveal />
             {/* Hero */}
             <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>

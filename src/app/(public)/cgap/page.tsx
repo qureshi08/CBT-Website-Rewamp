@@ -9,409 +9,168 @@ import {
     BarChart3,
     BrainCircuit,
     Briefcase,
-    Calendar,
     CheckCircle2,
     Quote,
     ExternalLink,
 } from "lucide-react";
-import ClientLogoStrip from "@/components/home/ClientLogoStrip";
+import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import PersonaBridge from "@/components/shared/PersonaBridge";
+import ClientReveal from "@/components/shared/ClientReveal";
+import { CGAPIllustration } from "@/components/shared/Illustrations";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-    title:
-        "CGAP — Convergent Graduate Academy Program | Launch Your Data Career",
-    description:
-        "Join CGAP, a 6-month paid training program bridging academia and industry in Data Analytics. Mentored by seasoned consultants with multiple successful batches.",
+    title: "CGAP — Convergent Graduate Academy Program | Launch Your Data Career",
+    description: "Join CGAP, a 6-month paid training program bridging academia and industry in Data Analytics. Mentored by seasoned consultants.",
 };
 
 const curriculum = [
-    {
-        icon: Database,
-        title: "Data Engineering",
-        description: "SQL, ETL pipelines, data warehouse design, data modelling",
-        month: "Month 1-2",
-    },
-    {
-        icon: BarChart3,
-        title: "Business Intelligence",
-        description: "Power BI, DAX, dashboard design, report automation",
-        month: "Month 2-3",
-    },
-    {
-        icon: BrainCircuit,
-        title: "Analytics & Data Science",
-        description: "Statistics, Python, machine learning fundamentals, forecasting",
-        month: "Month 3-4",
-    },
-    {
-        icon: Briefcase,
-        title: "Consulting Skills",
-        description:
-            "Client communication, requirements gathering, project delivery, documentation",
-        month: "Month 4-5",
-    },
-    {
-        icon: Users,
-        title: "Client Engagement",
-        description:
-            "Live project work with real CBT clients under senior consultant supervision",
-        month: "Month 5-6",
-    },
+    { icon: Database, title: "Data Engineering", desc: "SQL, ETL pipelines, data warehouse design, data modelling", month: "Month 1-2" },
+    { icon: BarChart3, title: "Business Intelligence", desc: "Power BI, DAX, dashboard design, report automation", month: "Month 2-3" },
+    { icon: BrainCircuit, title: "Analytics & Data Science", desc: "Statistics, Python, ML fundamentals, forecasting", month: "Month 3-4" },
+    { icon: Briefcase, title: "Consulting Skills", desc: "Client communication, project delivery, documentation", month: "Month 4-5" },
+    { icon: Users, title: "Client Engagement", desc: "Live project work with real CBT clients supervised by seniors", month: "Month 5-6" },
 ];
 
-const alumni = [
-    {
-        name: "Sarah Ahmed",
-        cohort: "Batch 10",
-        role: "BI Consultant",
-        company: "CBT",
-        quote:
-            "CGAP gave me the practical skills and confidence that university alone couldn't. Within 3 months of graduating, I was leading dashboards for a major FMCG client.",
-    },
-    {
-        name: "Ali Hassan",
-        cohort: "Batch 11",
-        role: "Data Engineer",
-        company: "CBT",
-        quote:
-            "The hands-on approach is what sets CGAP apart. You're working with real data and real clients from week one. No toy datasets.",
-    },
-    {
-        name: "Fatima Malik",
-        cohort: "Batch 9",
-        role: "Analytics Consultant",
-        company: "Tech Solutions Ltd",
-        quote:
-            "The mentors at CGAP are genuinely invested in your growth. I learned more in 6 months than I did in 4 years of university.",
-    },
+const fallbackAlumni = [
+    { name: "Sarah Ahmed", cohort: "Batch 10", role: "BI Consultant", company: "CBT", quote: "CGAP gave me the practical skills and confidence that university alone couldn't." },
+    { name: "Ali Hassan", cohort: "Batch 11", role: "Data Engineer", company: "CBT", quote: "The hands-on approach is what sets CGAP apart. You're working with real data." },
+    { name: "Fatima Malik", cohort: "Batch 9", role: "Analytics Consultant", company: "Tech Solutions Ltd", quote: "The mentors at CGAP are genuinely invested in your growth." },
 ];
 
 const eligibility = [
-    "Bachelor's degree in Computer Science, Statistics, Mathematics, Engineering, Economics, or related fields",
+    "Bachelor's degree in CS, Stats, Math, Engineering, or Economics",
     "Fresh graduates or up to 2 years of experience",
     "Strong analytical thinking and problem-solving skills",
-    "Proficiency in English (written and verbal)",
-    "Willingness to commit to 6 months of intensive training",
     "Based in Pakistan (Islamabad/Rawalpindi preferred)",
-];
-
-import { createClient } from "@/lib/supabase/server";
-
-const fallbackAlumni = [
-    {
-        name: "Sarah Ahmed",
-        cohort: "Batch 10",
-        role: "BI Consultant",
-        company: "CBT",
-        quote:
-            "CGAP gave me the practical skills and confidence that university alone couldn't. Within 3 months of graduating, I was leading dashboards for a major FMCG client.",
-    },
-    {
-        name: "Ali Hassan",
-        cohort: "Batch 11",
-        role: "Data Engineer",
-        company: "CBT",
-        quote:
-            "The hands-on approach is what sets CGAP apart. You're working with real data and real clients from week one. No toy datasets.",
-    },
-    {
-        name: "Fatima Malik",
-        cohort: "Batch 9",
-        role: "Analytics Consultant",
-        company: "Tech Solutions Ltd",
-        quote:
-            "The curriculum is intense but rewarding. The focus on both technical skills like SQL/Power BI and soft skills like client management is exactly what I needed.",
-    },
 ];
 
 export default async function CGAPPage() {
     const supabase = await createClient();
 
-    // Fetch clients for the strip
-    const { data: clientsData } = await supabase
-        .from("clients")
-        .select("name")
-        .eq("is_featured", true)
-        .order("display_order", { ascending: true });
+    const [
+        { data: clientsData },
+        { data: dbAlumni },
+        { data: openBatches },
+        { count: batchCount }
+    ] = await Promise.all([
+        supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
+        supabase.from("cgap_alumni").select("*").order("display_order", { ascending: true }),
+        supabase.from("cgap_cohorts").select("*").eq("status", "open").order("cohort_number", { ascending: false }).limit(1),
+        supabase.from("cgap_cohorts").select("*", { count: "exact", head: true })
+    ]);
 
-    const clientNames = clientsData?.map((c) => c.name);
-
-    // Fetch alumni
-    const { data: dbAlumni } = await supabase
-        .from("cgap_alumni")
-        .select("*")
-        .order("display_order", { ascending: true });
-
+    const clientNames = clientsData?.map(c => c.name);
     const displayAlumni = dbAlumni?.length ? dbAlumni : fallbackAlumni;
-
-    // Fetch latest open batch
-    const { data: openBatches } = await supabase
-        .from("cgap_cohorts")
-        .select("*")
-        .eq("status", "open")
-        .order("cohort_number", { ascending: false })
-        .limit(1);
-
     const activeBatch = openBatches?.[0];
-    const applicationUrl = activeBatch?.application_url || "/contact";
-
-    // Fetch total batch count for stats
-    const { count: batchCount } = await supabase
-        .from("cgap_cohorts")
-        .select("*", { count: "exact", head: true });
-
+    const applicationUrl = activeBatch?.application_url || "https://cbt-recruitment-portal.vercel.app/";
     const displayBatchCount = batchCount || 0;
 
     return (
-        <>
-            <div className="font-body">
-                {/* Hero */}
-                <section className="bg-white pt-20 md:pt-24 relative overflow-hidden">
-                    {/* Background decorative element */}
-                    <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2 -z-10" />
+        <main>
+            <ClientReveal />
 
-                    <div className="container-main py-12 md:py-16 relative z-10">
-                        <div className="grid lg:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <div className="flex items-center gap-2 mb-5">
-                                    <GraduationCap size={16} className="text-primary" />
-                                    <span className="uppercase-label text-primary">
-                                        Graduate Program
-                                    </span>
-                                </div>
-                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-heading leading-[1.15] font-heading tracking-tight mb-5">
-                                    Bridging Academia <br /> & <span className="italic-accent text-primary">Industry.</span>
-                                </h1>
-                                <p className="mt-5 text-base md:text-lg text-text-body/80 leading-relaxed max-w-xl font-normal">
-                                    CGAP is a 6-month intensive training program designed to turn
-                                    top graduate talent into world-class data consultants.
-                                </p>
-                                <div className="flex flex-col sm:flex-row items-center gap-5 mt-8">
-                                    <a
-                                        href={applicationUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-primary min-w-[180px] shadow-lg shadow-primary/5"
-                                    >
-                                        Apply Now
-                                        <ExternalLink size={14} />
-                                    </a>
-                                    <div className="text-center sm:text-left">
-                                        <a href="#curriculum" className="btn-ghost text-sm inline-flex items-center gap-2">
-                                            View Curriculum
-                                            <ArrowRight size={14} />
-                                        </a>
+            {/* Hero */}
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
+                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+                    <div>
+                        <div className="v2-lbl v2-reveal">Graduate Program</div>
+                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 54px)", marginBottom: "18px" }}>
+                            Bridging Academia <br /> & <span className="italic-accent text-primary">Industry.</span>
+                        </h1>
+                        <p className="v2-sub v2-reveal" style={{ maxWidth: "560px" }}>
+                            CGAP is a 6-month intensive training program designed to turn top graduate talent into world-class data consultants.
+                        </p>
+                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
+                            <a href={applicationUrl} target="_blank" className="v2-btn v2-btn-p">Apply Now <ExternalLink size={16} stroke="white" /></a>
+                            <a href="#curriculum" className="v2-btn v2-btn-s">View Curriculum</a>
+                        </div>
+                    </div>
+                    <div className="v2-reveal a-scaleIn">
+                        <CGAPIllustration />
+                    </div>
+                </div>
+            </section>
+
+            {/* Curriculum */}
+            <section className="bg-white py-16" id="curriculum">
+                <div className="v2-wrap">
+                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <span className="v2-lbl v2-reveal">Roadmap</span>
+                        <h2 className="v2-h2 v2-reveal">A Comprehensive Data Stack Curriculum</h2>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: "16px", alignItems: "stretch" }}>
+                        {curriculum.map((item, i) => (
+                            <div key={item.title} className={`v2-stile v2-reveal v2-d${i + 1}`} style={{ padding: "24px" }}>
+                                <div className="v2-lbl" style={{ fontSize: "9px", marginBottom: "12px", opacity: 0.6 }}>{item.month}</div>
+                                <div className="v2-stile-icon" style={{ width: "36px", height: "36px" }}><item.icon size={18} /></div>
+                                <h3 className="v2-h3" style={{ fontSize: "15px", marginBottom: "8px" }}>{item.title}</h3>
+                                <p style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)", lineHeight: "1.5" }}>{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Ideal Candidate & Alumni */}
+            <section className="bg-surface py-20">
+                <div className="v2-wrap">
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px" }}>
+                        <div>
+                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "24px" }}>The Ideal <span className="italic-accent text-primary">Candidate</span></h2>
+                            <div style={{ display: "grid", gap: "12px" }}>
+                                {eligibility.map(item => (
+                                    <div key={item} className="v2-reveal v2-card" style={{ padding: "16px 20px", display: "flex", gap: "12px", alignItems: "center" }}>
+                                        <CheckCircle2 size={16} style={{ color: "var(--green)", flexShrink: 0 }} />
+                                        <span style={{ fontFamily: "var(--f-body)", fontSize: "14px", fontWeight: 500 }}>{item}</span>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-
-                            <div className="relative">
-                                <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl" />
-                                <div className="relative z-10 aspect-[4/3] rounded-xl overflow-hidden border border-border/40 shadow-lg">
-                                    <img
-                                        src="/images/cgap.png"
-                                        alt="CGAP Learning Environment"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-
-                                <div className="absolute -bottom-4 -left-4 grid grid-cols-2 gap-3 z-20">
-                                    {[
-                                        { number: "6", label: "Month Program" },
-                                        { number: `${displayBatchCount}+`, label: "Batches Run" },
-                                    ].map((stat) => (
-                                        <div
-                                            key={stat.label}
-                                            className="bg-white shadow-lg rounded-lg p-4 text-center border border-border/40 min-w-[100px]"
-                                        >
-                                            <div className="text-xl font-bold text-primary font-heading">
-                                                {stat.number}
+                        </div>
+                        <div>
+                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "24px" }}>What Our <span className="italic-accent text-primary">Alumni</span> Say</h2>
+                            <div style={{ display: "grid", gap: "16px" }}>
+                                {displayAlumni.map((alum: any, i) => (
+                                    <div key={alum.name} className={`v2-card v2-reveal v2-d${i + 1}`} style={{ padding: "24px" }}>
+                                        <Quote size={20} style={{ color: "var(--green)", opacity: 0.2, marginBottom: "12px" }} />
+                                        <p style={{ fontFamily: "var(--f-body)", fontStyle: "italic", fontSize: "13.5px", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "16px" }}>&ldquo;{alum.quote}&rdquo;</p>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "9px" }}>{alum.name[0]}</div>
+                                            <div>
+                                                <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "11px" }}>{alum.name}</div>
+                                                <div style={{ fontFamily: "var(--f-body)", fontSize: "9px", color: "var(--muted)" }}>{alum.role} • {alum.cohort}</div>
                                             </div>
-                                            <div className="uppercase-label text-[9px] text-text-muted mt-1">
-                                                {stat.label}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* About Section */}
-                <section className="bg-surface py-16 relative overflow-hidden">
-                    <div className="container-main">
-                        <div className="max-w-4xl mx-auto text-center md:text-left">
-                            <div className="mb-10">
-                                <span className="uppercase-label text-primary mb-4 inline-block border-b border-primary/30 pb-1">
-                                    The Academy
-                                </span>
-                                <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading">
-                                    The CGAP <span className="italic-accent text-primary">Curriculum</span>
-                                </h2>
-                            </div>
-
-                            <div className="grid md:grid-cols-2 gap-10 text-sm md:text-base text-text-body/70 leading-relaxed font-body">
-                                <div className="space-y-4">
-                                    <p>
-                                        <strong className="text-text-heading font-semibold">CGAP</strong> (Convergent Graduate Academy Program) is our flagship development initiative. We transform high-potential graduates into industry-ready data professionals.
-                                    </p>
-                                    <p>
-                                        Through 6 months of rigorous, hands-on training, you&apos;ll move past theory and into the complex reality of enterprise data consulting.
-                                    </p>
-                                </div>
-                                <div className="space-y-4">
-                                    <p>
-                                        Participants receive a <strong className="text-text-heading font-semibold">paid stipend</strong> from day one and work on real client projects alongside senior consultants.
-                                    </p>
-                                    <p>
-                                        After graduation, high performers are invited to join <strong className="text-text-heading font-semibold">CBT as permanent consultants</strong>, launching a career path.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Curriculum */}
-                <section className="bg-white py-16" id="curriculum">
-                    <div className="container-main">
-                        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
-                            <div className="max-w-2xl">
-                                <span className="uppercase-label text-primary mb-2 block">
-                                    The Roadmap
-                                </span>
-                                <h2 className="text-2xl md:text-3xl font-bold text-text-heading font-heading leading-tight">
-                                    A Comprehensive <span className="italic-accent text-primary">Data Stack</span> Curriculum
-                                </h2>
-                            </div>
-                            <div className="pb-1 hidden md:block">
-                                <CheckCircle2 size={32} className="text-primary opacity-20" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                            {curriculum.map((item, index) => {
-                                const Icon = item.icon;
-                                return (
-                                    <div
-                                        key={item.title}
-                                        className="group card border border-border/40 p-5 flex flex-col"
-                                    >
-                                        <span className="uppercase-label text-primary opacity-60 mb-4 text-[10px]">
-                                            {item.month}
-                                        </span>
-                                        <div className="w-9 h-9 rounded-lg bg-primary-muted flex items-center justify-center text-primary mb-5 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                            <Icon size={18} />
-                                        </div>
-                                        <h3 className="text-base font-bold text-text-heading mb-2 font-heading group-hover:text-primary transition-colors">
-                                            {item.title}
-                                        </h3>
-                                        <p className="text-[13px] text-text-body/70 leading-relaxed flex-grow font-body">
-                                            {item.description}
-                                        </p>
-                                        <div className="mt-5 pt-4 border-t border-border/20 uppercase-label opacity-40 text-[9px]">
-                                            Module 0{index + 1}
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Requirements & Alumni */}
-                <section className="bg-surface py-16 border-y border-border/50">
-                    <div className="container-main">
-                        <div className="grid lg:grid-cols-2 gap-12 items-start">
-                            {/* Requirements */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-text-heading mb-6 font-heading">
-                                    The Ideal <span className="italic-accent text-primary">Candidate</span>
-                                </h2>
-                                <div className="space-y-2">
-                                    {eligibility.map((item) => (
-                                        <div key={item} className="flex items-start gap-3 p-3.5 rounded-lg bg-white/50 border border-transparent hover:border-primary/20 hover:bg-white transition-all">
-                                            <CheckCircle2
-                                                size={16}
-                                                className="text-primary shrink-0 mt-0.5"
-                                            />
-                                            <span className="text-[13px] text-text-body/80 leading-relaxed font-body font-medium">{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Alumni Showcase */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-text-heading mb-6 font-heading text-center lg:text-left">
-                                    What Our <span className="italic-accent text-primary">Alumni</span> Say
-                                </h2>
-                                <div className="space-y-4">
-                                    {displayAlumni.map((alum: any) => (
-                                        <div
-                                            key={alum.name}
-                                            className="bg-white rounded-lg p-5 border border-border/40 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow"
-                                        >
-                                            <Quote size={24} className="absolute -top-2 -right-2 text-primary/5 group-hover:text-primary/10 transition-colors" />
-                                            <p className="text-[13px] text-text-body font-medium leading-relaxed mb-5 italic relative z-10 font-body">
-                                                &ldquo;{alum.quote}&rdquo;
-                                            </p>
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-7 h-7 rounded-full bg-primary-muted flex items-center justify-center text-primary font-bold text-[10px]">
-                                                    {alum.name[0]}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold text-text-heading text-[11px] font-heading">
-                                                        {alum.name}
-                                                    </div>
-                                                    <div className="uppercase-label text-[8px] text-text-muted tracking-widest mt-0.5">
-                                                        {alum.role} • {alum.cohort || alum.batch}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* Who You'll Work With — scrolling marquee */}
-                <ClientLogoStrip clientNames={clientNames} />
+            <IndustryLeadersStrip clientNames={clientNames} />
 
-                {/* Final CTA */}
-                <section className="py-16 px-6">
-                    <div className="container-main rounded-[24px] bg-text-heading overflow-hidden relative shadow-xl">
-                        {/* Decorative patterns */}
-                        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 skew-x-[-20deg] translate-x-1/2" />
-
-                        <div className="relative z-10 py-12 md:py-16 px-8 text-center text-white">
-                            <GraduationCap size={40} className="text-primary/20 mx-auto mb-5" />
-                            <h2 className="text-2xl md:text-4xl font-bold mb-5 font-heading tracking-tight leading-tight">
-                                Ready to Launch Your <br className="hidden md:block" /> <span className="italic-accent text-primary">Data Career?</span>
-                            </h2>
-                            <p className="text-white/60 mb-6 max-w-xl mx-auto text-sm leading-relaxed font-body">
-                                Applications for the next batch are now open. Join a group of high-potential individuals and start your journey into data consulting.
-                            </p>
-                            <div className="flex flex-col items-center gap-6">
-                                <a
-                                    href={applicationUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-primary"
-                                >
-                                    Submit Application
-                                    <ExternalLink size={16} />
-                                </a>
-                            </div>
-                        </div>
+            {/* Final CTA */}
+            <section style={{ padding: "64px 24px" }}>
+                <div className="v2-wrap" style={{ background: "var(--heading-c)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", top: 0, right: 0, width: "50%", height: "100%", background: "rgba(0,153,77,0.05)", transform: "skewX(-20deg) translateX(50%)" }} />
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                        <GraduationCap size={40} style={{ color: "var(--green)", opacity: 0.2, margin: "0 auto 20px" }} />
+                        <h2 className="v2-h2" style={{ color: "white", fontSize: "32px", marginBottom: "18px" }}>
+                            Ready to Launch Your <br /> <em style={{ fontStyle: "italic", color: "var(--green)" }}>Data Career?</em>
+                        </h2>
+                        <p style={{ fontFamily: "var(--f-body)", color: "rgba(255,255,255,0.6)", maxWidth: "560px", margin: "0 auto 32px" }}>
+                            Applications for the next batch are now open. Start your journey into data consulting.
+                        </p>
+                        <a href={applicationUrl} target="_blank" className="v2-btn v2-btn-p">
+                            Submit Application <ArrowRight size={16} stroke="white" />
+                        </a>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <PersonaBridge exclude="cgap" />
-            </div>
-        </>
+            <PersonaBridge exclude="cgap" />
+        </main>
     );
 }
