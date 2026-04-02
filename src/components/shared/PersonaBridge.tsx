@@ -12,8 +12,8 @@ const personas = [
 export default function PersonaBridge({ exclude }: { exclude?: string }) {
     const items = personas.filter(p => p.key !== exclude);
     return (
-        <div className="v2-bridge" style={{ margin: "48px 24px 0" }}>
-            <div className="v2-wrap" style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap", maxWidth: 1200 }}>
+        <div className="v2-bridge">
+            <div className="v2-wrap" style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
                 <span style={{ fontFamily: "var(--f-body)", fontSize: "13px", fontWeight: 500, color: "var(--muted)", marginRight: "6px" }}>
                     Also explore:
                 </span>

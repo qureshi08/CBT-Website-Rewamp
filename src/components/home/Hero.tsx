@@ -17,9 +17,11 @@ export function useScrollReveal() {
 }
 
 // ─── Hero Section ───
-export default function Hero() {
+export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
+    useScrollReveal();
+
     return (
-        <section style={{ paddingTop: "106px", paddingBottom: "72px", padding: "106px 24px 72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
+        <section style={{ paddingTop: "116px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
             <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
                 <div>
                     <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--green-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
@@ -47,7 +49,7 @@ export default function Hero() {
                     </div>
 
                     <div style={{ display: "flex", gap: "36px", marginTop: "40px" }} className="a-fadeUp-4">
-                        {[["30+", "Consultants"], ["50+", "Clients"], ["12+", "CGAP Cohorts"]].map(([n, l]) => (
+                        {[["30+", "Consultants"], ["50+", "Clients"], [`${batchCount}+`, "CGAP Cohorts"]].map(([n, l]) => (
                             <div key={l}>
                                 <div style={{ fontFamily: "var(--f-head)", fontSize: "30px", fontWeight: 700, color: "var(--heading-c)" }}>{n}</div>
                                 <div style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)" }}>{l}</div>

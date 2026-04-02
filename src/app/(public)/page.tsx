@@ -30,7 +30,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero />
+      <Hero batchCount={batchCount} />
       <PersonaCards />
       <ClientLogoStrip clientNames={clientNames} />
       <ServicesGrid />

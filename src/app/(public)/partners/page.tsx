@@ -106,7 +106,7 @@ export default async function PartnersPage() {
         <main>
             <ClientReveal />
             {/* Hero */}
-            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", background: "var(--surface)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
                     <div>
                         <div className="v2-lbl v2-reveal">Partner Ecosystem</div>
@@ -213,7 +213,7 @@ export default async function PartnersPage() {
             </section>
 
             {/* Form */}
-            <section id="partner-form" style={{ padding: "64px 24px" }}>
+            <section id="partner-form" className="v2-section">
                 <div className="v2-wrap" style={{ background: "var(--surface)", borderRadius: "32px", padding: "64px 32px", position: "relative", overflow: "hidden" }}>
                     <div style={{ textAlign: "center", marginBottom: "48px" }}>
                         <h2 className="v2-h2">Arrange a Discovery Call</h2>

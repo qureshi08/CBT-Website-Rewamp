@@ -17,7 +17,7 @@ export default function ProductsPage() {
         <main className="font-body">
             <ClientReveal />
             {/* Hero */}
-            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "var(--surface)" }}>
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", background: "var(--surface)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
                     <div>
                         <div className="v2-lbl v2-reveal">Enterprise Tools & Visuals</div>
@@ -86,7 +86,7 @@ export default function ProductsPage() {
             </section>
 
             {/* Custom Banner */}
-            <section style={{ padding: "64px 24px" }}>
+            <section className="v2-section">
                 <div className="v2-wrap" style={{ background: "white", border: "1px solid var(--border)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", top: 0, right: 0, width: "100%", height: "100%", background: "var(--green-muted)", opacity: 0.2, pointerEvents: "none" }} />
                     <div style={{ position: "relative", zIndex: 1 }}>

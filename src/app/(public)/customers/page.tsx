@@ -109,7 +109,7 @@ export default async function CustomersPage() {
         <main>
             <ClientReveal />
             {/* Hero */}
-            <section style={{ paddingTop: "120px", paddingBottom: "72px", padding: "120px 24px 72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
+            <section style={{ paddingTop: "120px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
                 <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
                     <div>
                         <div className="v2-lbl v2-reveal">Success Stories</div>
@@ -195,7 +195,7 @@ export default async function CustomersPage() {
             </section>
 
             {/* Final CTA */}
-            <section style={{ padding: "64px 24px" }}>
+            <section className="v2-section">
                 <div className="v2-wrap" style={{ background: "var(--heading-c)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", top: 0, right: 0, width: "50%", height: "100%", background: "rgba(0,153,77,0.05)", transform: "skewX(-20deg) translateX(50%)" }} />
                     <div style={{ position: "relative", zIndex: 1 }}>
