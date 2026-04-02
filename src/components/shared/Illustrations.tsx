@@ -1,191 +1,237 @@
 "use client";
-// Animated SVG illustrations — pure geometric SVGs, no emojis, no clip-art
+import { motion } from "framer-motion";
 
-// Hero: animated data dashboard
+// ─── HERO: THE NEURAL DATA NETWORK ───
+// Represents "Harnessing Data and Delivering Value"
 export function HeroIllustration() {
     return (
-        <svg width="300" height="220" viewBox="0 0 300 220" fill="none" style={{ flexShrink: 0 }}>
-            <rect x="28" y="28" width="244" height="164" rx="14" fill="#0C1A10" opacity=".06" />
-            <rect x="22" y="22" width="244" height="164" rx="14" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-            <rect x="22" y="22" width="244" height="36" rx="14" fill="#F7F8F7" />
-            <rect x="22" y="44" width="244" height="14" fill="#F7F8F7" />
-            <circle cx="42" cy="40" r="5" fill="#EF4444" opacity=".5" />
-            <circle cx="58" cy="40" r="5" fill="#F59E0B" opacity=".5" />
-            <circle cx="74" cy="40" r="5" fill="#00994D" opacity=".5" />
-            <rect x="96" y="34" width="80" height="10" rx="3" fill="#E2E8E4" />
-            {/* Bars — animated */}
-            <rect x="44" y="102" width="24" height="62" rx="4" fill="#00994D" opacity=".85"
-                style={{ transformOrigin: "44px 164px", animation: "barGrow .7s .1s cubic-bezier(.22,1,.36,1) both" }} />
-            <rect x="78" y="82" width="24" height="82" rx="4" fill="#00994D" opacity=".65"
-                style={{ transformOrigin: "78px 164px", animation: "barGrow .7s .2s cubic-bezier(.22,1,.36,1) both" }} />
-            <rect x="112" y="118" width="24" height="46" rx="4" fill="#00994D" opacity=".45"
-                style={{ transformOrigin: "112px 164px", animation: "barGrow .7s .3s cubic-bezier(.22,1,.36,1) both" }} />
-            <rect x="146" y="72" width="24" height="92" rx="4" fill="#00994D" opacity=".9"
-                style={{ transformOrigin: "146px 164px", animation: "barGrow .7s .4s cubic-bezier(.22,1,.36,1) both" }} />
-            <rect x="180" y="94" width="24" height="70" rx="4" fill="#00994D" opacity=".6"
-                style={{ transformOrigin: "180px 164px", animation: "barGrow .7s .5s cubic-bezier(.22,1,.36,1) both" }} />
-            <rect x="214" y="60" width="24" height="104" rx="4" fill="#00994D" opacity=".75"
-                style={{ transformOrigin: "214px 164px", animation: "barGrow .7s .6s cubic-bezier(.22,1,.36,1) both" }} />
-            {/* Trend line */}
-            <polyline points="56,130 90,112 124,128 158,90 192,106 226,72"
-                stroke="#00C060" strokeWidth="2.5" fill="none" strokeLinecap="round"
-                strokeDasharray="400"
-                style={{ animation: "drawLine 1.2s .7s ease forwards", strokeDashoffset: 400 }} />
-            <circle cx="226" cy="72" r="5" fill="#00C060"
-                style={{ animation: "fadeIn .3s 1.8s ease both", opacity: 0 }} />
-            {/* Floating +24.6% card */}
-            <g style={{ animation: "float 3.8s ease-in-out infinite" }}>
-                <rect x="190" y="6" width="98" height="44" rx="8" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-                <rect x="202" y="16" width="30" height="6" rx="2" fill="#E2E8E4" />
-                <text x="202" y="40" fontFamily="DM Sans,sans-serif" fontSize="13" fontWeight="700" fill="#00994D">+24.6%</text>
-            </g>
-            {/* Floating info pill */}
-            <g style={{ animation: "floatB 4.2s 1s ease-in-out infinite" }}>
-                <rect x="2" y="80" width="76" height="30" rx="8" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-                <circle cx="16" cy="95" r="6" fill="#E6F5ED" />
-                <rect x="28" y="89" width="40" height="5" rx="2" fill="#E2E8E4" />
-                <rect x="28" y="97" width="28" height="4" rx="2" fill="#E6F5ED" />
-            </g>
-        </svg>
+        <motion.svg
+            width="320" height="240" viewBox="0 0 320 240" fill="none"
+            initial="hidden" animate="visible"
+        >
+            {/* Core Hub */}
+            <motion.circle
+                cx="160" cy="120" r="40" stroke="var(--green)" strokeWidth="1.5" fill="var(--green-muted)"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <circle cx="160" cy="120" r="28" fill="var(--green)" opacity="0.15" />
+
+            {/* Floating Data Nodes */}
+            {[
+                { x: 60, y: 60, r: 8 }, { x: 260, y: 80, r: 12 },
+                { x: 220, y: 190, r: 10 }, { x: 80, y: 180, r: 14 }
+            ].map((node, i) => (
+                <g key={i}>
+                    <motion.circle
+                        cx={node.x} cy={node.y} r={node.r} fill="white" stroke="var(--border)" strokeWidth="1"
+                        animate={{ y: [0, -10, 0] }}
+                        transition={{ duration: 3 + i, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.line
+                        x1={node.x} y1={node.y} x2={160} y2={120} stroke="var(--green)" strokeWidth="1" strokeDasharray="4 4"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 0.2 }}
+                        transition={{ duration: 1.5, delay: i * 0.2 }}
+                    />
+                    {/* Flowing particles */}
+                    <motion.circle
+                        r="3" fill="var(--green)"
+                        animate={{
+                            cx: [node.x, 160],
+                            cy: [node.y, 120],
+                            opacity: [0, 1, 0]
+                        }}
+                        transition={{ duration: 2, delay: i * 0.5, repeat: Infinity, ease: "linear" }}
+                    />
+                </g>
+            ))}
+
+            {/* Central Brain Symbol */}
+            <motion.path
+                d="M150 115a10 10 0 0110-10 10 10 0 0110 10v10a10 10 0 01-10 10 10 10 0 01-10-10z"
+                stroke="var(--green)" strokeWidth="2"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            />
+        </motion.svg>
     );
 }
 
-// CGAP illustration — 3 graduate silhouettes connected to CBT hub
+// ─── CGAP: THE SUCCESS PATHWAY ───
+// Represents "Bridging Academia & Industry"
 export function CGAPIllustration() {
     return (
-        <svg width="260" height="190" viewBox="0 0 260 190" fill="none" style={{ flexShrink: 0 }}>
-            <path d="M50 140 Q130 80 210 140" stroke="#E6F5ED" strokeWidth="28" fill="none" strokeLinecap="round" />
-            <path d="M50 140 Q130 80 210 140" stroke="#00994D" strokeWidth="2" fill="none"
-                strokeDasharray="300" style={{ animation: "drawLine 1.4s .5s ease forwards", strokeDashoffset: 300 }} />
-            <g style={{ animation: "fadeUp .5s .2s ease both", opacity: 0 }}>
-                <circle cx="50" cy="90" r="22" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.5" />
-                <circle cx="50" cy="84" r="8" fill="#00994D" opacity=".7" />
-                <path d="M34 106 Q50 96 66 106" stroke="#00994D" strokeWidth="1.5" fill="none" />
-                <rect x="32" y="118" width="36" height="14" rx="5" fill="#007A3D" opacity=".8" />
-                <rect x="36" y="122" width="28" height="6" rx="2" fill="white" opacity=".5" />
+        <motion.svg
+            width="280" height="200" viewBox="0 0 280 200" fill="none"
+            initial="hidden" animate="visible"
+        >
+            {/* The Bridge Arc */}
+            <motion.path
+                d="M40 160 Q140 60 240 160" stroke="var(--green)" strokeWidth="2" strokeDasharray="6 4" opacity="0.2"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2 }}
+            />
+
+            {/* Academic Stack (Books) */}
+            <g transform="translate(30, 140)">
+                <motion.rect x="0" y="0" width="40" height="10" rx="2" fill="var(--border)" initial={{ x: -20 }} animate={{ x: 0 }} />
+                <motion.rect x="5" y="-12" width="30" height="10" rx="2" fill="var(--border)" opacity="0.6" initial={{ x: -25 }} animate={{ x: 5 }} transition={{ delay: 0.2 }} />
+                <motion.rect x="2" y="-24" width="36" height="10" rx="2" fill="var(--green-muted)" initial={{ x: -30 }} animate={{ x: 2 }} transition={{ delay: 0.4 }} />
             </g>
-            <g style={{ animation: "fadeUp .5s .38s ease both", opacity: 0 }}>
-                <circle cx="130" cy="72" r="26" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.5" />
-                <circle cx="130" cy="65" r="9" fill="#00994D" opacity=".85" />
-                <path d="M112 88 Q130 77 148 88" stroke="#00994D" strokeWidth="1.5" fill="none" />
-                <rect x="112" y="102" width="36" height="14" rx="5" fill="#00994D" />
-                <rect x="116" y="106" width="28" height="6" rx="2" fill="white" opacity=".5" />
+
+            {/* The Transform Point */}
+            <motion.circle
+                cx="140" cy="100" r="24" fill="white" stroke="var(--green)" strokeWidth="1.5"
+                animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Infinity }}
+            />
+            <motion.path d="M132 108l8-8 8 8" stroke="var(--green)" strokeWidth="2" />
+
+            {/* Industrial Result (Consultancy) */}
+            <g transform="translate(210, 130)">
+                {[15, 30, 22].map((h, i) => (
+                    <motion.rect
+                        key={i} x={i * 12} y={30 - h} width="8" height={h} rx="2" fill="var(--green)"
+                        initial={{ height: 0 }} animate={{ height: h }} transition={{ delay: 1 + i * 0.1 }}
+                    />
+                ))}
             </g>
-            <g style={{ animation: "fadeUp .5s .54s ease both", opacity: 0 }}>
-                <circle cx="210" cy="90" r="22" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.5" />
-                <circle cx="210" cy="84" r="8" fill="#00994D" opacity=".7" />
-                <path d="M194 106 Q210 96 226 106" stroke="#00994D" strokeWidth="1.5" fill="none" />
-                <rect x="192" y="118" width="36" height="14" rx="5" fill="#007A3D" opacity=".8" />
-                <rect x="196" y="122" width="28" height="6" rx="2" fill="white" opacity=".5" />
-            </g>
-            <g style={{ animation: "scaleIn .5s .7s ease both", opacity: 0 }}>
-                <circle cx="130" cy="158" r="22" fill="#00994D" />
-                <text x="130" y="163" textAnchor="middle" fontFamily="DM Sans,sans-serif" fontSize="11" fontWeight="700" fill="white">CBT</text>
-            </g>
-            <line x1="50" y1="140" x2="112" y2="154" stroke="#00994D" strokeWidth="1" strokeDasharray="4 3" opacity=".5" />
-            <line x1="210" y1="140" x2="148" y2="154" stroke="#00994D" strokeWidth="1" strokeDasharray="4 3" opacity=".5" />
-        </svg>
+
+            {/* Graduation Cap (Floating) */}
+            <motion.g
+                animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+                <path d="M120 70l20-8 20 8-20 8z" fill="var(--green)" />
+                <path d="M125 72v8a15 15 0 0030 0v-8" fill="var(--green)" opacity="0.3" />
+            </motion.g>
+        </motion.svg>
     );
 }
 
-// Products: mini BI dashboard
+// ─── PRODUCTS: PRECISION ENGINEERING ───
+// Represents "Power BI Custom Visuals"
 export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
     return (
-        <svg width="200" height="138" viewBox="0 0 200 138" fill="none"
-            style={{ animation: "float 3.4s ease-in-out infinite", flexShrink: 0 }}>
-            <rect x="1" y="1" width="198" height="136" rx="10" fill="white" stroke="#E2E8E4" strokeWidth="1.5" />
-            <rect x="1" y="1" width="198" height="30" rx="10" fill="#F7F8F7" />
-            <rect x="1" y="21" width="198" height="10" fill="#F7F8F7" />
-            <circle cx="16" cy="16" r="5" fill="#EF4444" opacity=".45" />
-            <circle cx="28" cy="16" r="5" fill="#F59E0B" opacity=".45" />
-            <circle cx="40" cy="16" r="5" fill="#00994D" opacity=".45" />
-            <rect x="60" y="11" width="80" height="10" rx="3" fill="#E2E8E4" />
-            {[
-                { x: 20, h: 52, o: 0.9 }, { x: 44, h: 38, o: 0.65 }, { x: 68, h: 60, o: 0.8 },
-                { x: 92, h: 30, o: 0.5 }, { x: 116, h: 50, o: 0.75 }, { x: 140, h: 66, o: 0.9 }, { x: 164, h: 42, o: 0.6 }
-            ].map((bar, i) => (
-                <rect key={i} x={bar.x} y={104 - bar.h} width={18} height={bar.h} rx="3" fill={color} opacity={bar.o} />
-            ))}
-            <polyline points="29,78 53,90 77,72 101,96 125,80 149,60 173,74"
-                stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
-            {[0, 1, 2].map(i => (
-                <line key={i} x1="12" y1={44 + i * 24} x2="188" y2={44 + i * 24} stroke="#E2E8E4" strokeWidth=".8" />
-            ))}
-        </svg>
+        <motion.svg
+            width="240" height="180" viewBox="0 0 240 180" fill="none"
+            initial="hidden" animate="visible"
+        >
+            {/* The Precision Frame */}
+            <motion.rect
+                x="40" y="40" width="160" height="100" rx="8" stroke="var(--border)" strokeWidth="1.5"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            />
+
+            {/* Exploded Pie Chart */}
+            <g transform="translate(120, 90)">
+                <motion.path
+                    d="M0 0 L-20 -35 A40 40 0 0 1 20 -35 Z" fill={color} opacity="0.9"
+                    animate={{ x: [-5, -12, -5], y: [-5, -12, -5] }} transition={{ duration: 4, repeat: Infinity }}
+                />
+                <motion.path
+                    d="M0 0 L25 -30 A40 40 0 0 1 35 15 Z" fill={color} opacity="0.6"
+                    animate={{ x: [5, 10, 5], y: [-5, -8, -5] }} transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+                />
+                <motion.circle r="40" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="2 2" />
+            </g>
+
+            {/* Grid Overlay */}
+            <motion.path
+                d="M50 120h140 M50 100h140 M50 80h140" stroke="var(--border)" strokeWidth="0.5" opacity="0.3"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.8 }}
+            />
+
+            {/* Code Brackets */}
+            <motion.text
+                x="50" y="60" fontFamily="monospace" fontSize="8" fill="var(--green)"
+                initial={{ opacity: 0 }} animate={{ opacity: 0.4 }} transition={{ delay: 1.2 }}
+            >
+                {"<Visual />"}
+            </motion.text>
+        </motion.svg>
     );
 }
 
-// Customers: Enterprise Growth & Global Presence
-export function CustomersIllustration() {
-    return (
-        <svg width="280" height="200" viewBox="0 0 280 200" fill="none" style={{ flexShrink: 0 }}>
-            {/* Global Grid Background */}
-            <path d="M40 160h200M40 120h200M40 80h200M40 40h200M80 40v120M120 40v120M160 40v120M200 40v120"
-                stroke="#E2E8E4" strokeWidth="0.5" strokeDasharray="3 3" />
-
-            {/* Central Enterprise Node */}
-            <g style={{ animation: "float 4s ease-in-out infinite" }}>
-                <rect x="110" y="70" width="60" height="60" rx="12" fill="white" stroke="#00994D" strokeWidth="1.5" />
-                <path d="M125 100l5-5 5 5M145 100l-5-5-5 5" stroke="#00994D" strokeWidth="1.5" strokeLinecap="round" />
-            </g>
-
-            {/* Orbiting client nodes */}
-            <circle cx="50" cy="60" r="6" fill="#E6F5ED" stroke="#00994D" strokeWidth="1"
-                style={{ animation: "pulse 2.5s infinite" }} />
-            <circle cx="230" cy="80" r="8" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.2"
-                style={{ animation: "pulse 3s infinite" }} />
-            <circle cx="60" cy="150" r="5" fill="#E6F5ED" stroke="#00994D" strokeWidth="1"
-                style={{ animation: "pulse 2.8s infinite" }} />
-            <circle cx="210" cy="140" r="7" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.2"
-                style={{ animation: "pulse 3.2s infinite" }} />
-
-            {/* Connecting lines */}
-            <line x1="56" y1="65" x2="110" y2="90" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3"
-                style={{ animation: "drawLine 1s 0.2s ease forwards", strokeDashoffset: 100 }} />
-            <line x1="222" y1="85" x2="170" y2="105" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" />
-            <line x1="68" y1="145" x2="115" y2="125" stroke="#00994D" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" />
-
-            {/* Success Bar */}
-            <g style={{ animation: "floatB 3.5s 0.5s ease-in-out infinite" }}>
-                <rect x="170" y="30" width="80" height="32" rx="8" fill="white" stroke="#E2E8E4" strokeWidth="1" />
-                <rect x="182" y="43" width="30" height="5" rx="2" fill="#00994D" opacity="0.4" />
-                <path d="M220 46l4-4 4 4" stroke="#00994D" strokeWidth="1.5" strokeLinecap="round" />
-            </g>
-        </svg>
-    );
-}
-
-// Partners: Interlocking Synergy
+// ─── PARTNERS: STRATEGIC INTERLOCK ───
+// Represents "Technology & Delivery Partnership"
 export function PartnersIllustration() {
     return (
-        <svg width="240" height="180" viewBox="0 0 240 180" fill="none" style={{ flexShrink: 0 }}>
-            {/* Background Hex Pattern */}
-            <path d="M20 40l15-8 15 8v16l-15 8-15-8z M190 120l15-8 15 8v16l-15 8-15-8z"
-                stroke="#E2E8E4" strokeWidth="1" strokeDasharray="2 2" />
+        <motion.svg
+            width="260" height="200" viewBox="0 0 260 200" fill="none"
+            initial="hidden" animate="visible"
+        >
+            {/* Left Hub (Technology) */}
+            <motion.g animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
+                <circle cx="80" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+                {[0, 90, 180, 270].map(deg => (
+                    <circle key={deg} cx={80 + 40 * Math.cos(deg * Math.PI / 180)} cy={100 + 40 * Math.sin(deg * Math.PI / 180)} r="4" fill="var(--green)" />
+                ))}
+            </motion.g>
 
-            {/* Two Interlocking Hexagons/Cubes */}
-            <g style={{ animation: "float 4s ease-in-out infinite" }}>
-                <path d="M80 60l30-16 30 16v32l-30 16-30-16z" fill="white" stroke="#00994D" strokeWidth="1.5" />
-                <path d="M110 44v32l-30-16 M110 76l30-16" stroke="#00994D" strokeWidth="1" opacity="0.3" />
+            {/* Right Hub (CBT Delivery) */}
+            <motion.g animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
+                <circle cx="180" cy="100" r="40" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+                {[45, 135, 225, 315].map(deg => (
+                    <rect key={deg} x={180 + 40 * Math.cos(deg * Math.PI / 180) - 3} y={100 + 40 * Math.sin(deg * Math.PI / 180) - 3} width="6" height="6" fill="var(--green)" opacity="0.6" />
+                ))}
+            </motion.g>
+
+            {/* Central Interlock */}
+            <motion.rect
+                x="110" y="85" width="40" height="30" rx="15" fill="white" stroke="var(--green)" strokeWidth="1.5"
+                animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}
+            />
+            <motion.path
+                d="M120 100l20 0" stroke="var(--green)" strokeWidth="2" strokeLinecap="round"
+                animate={{ x: [-2, 2, -2] }} transition={{ duration: 1, repeat: Infinity }}
+            />
+        </motion.svg>
+    );
+}
+
+// ─── CUSTOMERS: SCALABLE GROWTH ───
+// Represents "Enterprise Data Strategy & Success"
+export function CustomersIllustration() {
+    return (
+        <motion.svg
+            width="300" height="220" viewBox="0 0 300 220" fill="none"
+            initial="hidden" animate="visible"
+        >
+            {/* The Foundation Grid */}
+            <path d="M40 180h220" stroke="var(--border)" strokeWidth="2" />
+
+            {/* Growing Buildings (Enterprise Blocks) */}
+            {[
+                { x: 60, h: 40, d: 0.2 }, { x: 90, h: 70, d: 0.4 },
+                { x: 120, h: 110, d: 0.6 }, { x: 150, h: 60, d: 0.8 },
+                { x: 180, h: 140, d: 1.0 }, { x: 210, h: 100, d: 1.2 }
+            ].map((b, i) => (
+                <motion.rect
+                    key={i} x={b.x} y={180 - b.h} width="22" height={b.h} rx="4" fill="var(--green)" opacity={0.2 + (i * 0.15)}
+                    initial={{ height: 0, y: 180 }}
+                    animate={{ height: b.h, y: 180 - b.h }}
+                    transition={{ duration: 1.5, delay: b.d, ease: "easeOut" }}
+                />
+            ))}
+
+            {/* Success Trendline Over Buildings */}
+            <motion.path
+                d="M71 140 L101 110 L131 70 L161 120 L191 40 L221 80"
+                stroke="var(--green)" strokeWidth="2.5" fill="none" strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2, delay: 1.5 }}
+            />
+
+            {/* Floating Achievement Node */}
+            <motion.g
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 3, type: "spring" }}
+            >
+                <circle cx="191" cy="40" r="6" fill="var(--green)" />
+                <circle cx="191" cy="40" r="12" stroke="var(--green)" strokeWidth="1" strokeDasharray="4 2" />
             </g>
-
-            <g style={{ animation: "floatB 4s 0.5s ease-in-out infinite" }}>
-                <path d="M130 90l30-16 30 16v32l-30 16-30-16z" fill="#E6F5ED" stroke="#00994D" strokeWidth="1.5" opacity="0.8" />
-                <path d="M160 74v32l-30-16 M160 106l30-16" stroke="#00994D" strokeWidth="1" opacity="0.4" />
-            </g>
-
-            {/* Flowing data particles */}
-            <circle r="3" fill="#00C060">
-                <animateMotion path="M110 90 Q130 90 150 90" dur="2s" repeatCount="indefinite" />
-            </circle>
-            <circle r="2.5" fill="#00994D" opacity="0.6">
-                <animateMotion path="M110 110 Q140 100 170 100" dur="2.5s" begin="0.5s" repeatCount="indefinite" />
-            </circle>
-
-            {/* Floating Connection Tag */}
-            <rect x="20" y="100" width="70" height="24" rx="12" fill="white" stroke="#E2E8E4" strokeWidth="1"
-                style={{ animation: "scaleIn 0.5s 1s ease both", opacity: 0 }} />
-            <text x="35" y="115" fontFamily="DM Sans" fontSize="9" fontWeight="700" fill="#00994D">SYNCED</text>
-        </svg>
+        </motion.svg>
     );
 }
