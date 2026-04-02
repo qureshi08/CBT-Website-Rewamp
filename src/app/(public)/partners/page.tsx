@@ -150,33 +150,26 @@ export default async function PartnersPage() {
             </section>
 
             {/* Why Partner */}
-            <section className="bg-surface py-16">
+            <section className="bg-surface py-20">
                 <div className="v2-wrap">
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
-                        <div>
-                            <span className="v2-lbl v2-reveal">The Advantage</span>
-                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "20px" }}>Why Global Leaders Partner with CBT?</h2>
-                            <p className="v2-sub v2-reveal" style={{ marginBottom: "32px" }}>We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack.</p>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-                                {valueProps.map(prop => (
-                                    <div key={prop.title}>
-                                        <div style={{ color: "var(--green)", marginBottom: "8px" }}><prop.icon size={24} /></div>
-                                        <h3 className="v2-h3" style={{ fontSize: "15px", marginBottom: "4px" }}>{prop.title}</h3>
-                                        <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "var(--muted)", lineHeight: "1.5" }}>{prop.description}</p>
-                                    </div>
-                                ))}
+                    <div style={{ textAlign: "center", maxWidth: "800px", margin: "0 auto 56px" }}>
+                        <span className="v2-lbl v2-reveal">The Advantage</span>
+                        <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(28px, 4vw, 36px)", marginBottom: "20px" }}>Why Global Leaders Partner with CBT?</h2>
+                        <p className="v2-sub v2-reveal">We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack and deliver enterprise-grade results.</p>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px" }}>
+                        {valueProps.map((prop, i) => (
+                            <div key={prop.title} className={`v2-reveal v2-d${i + 1}`} style={{ textAlign: "center" }}>
+                                <div style={{ color: "var(--green)", marginBottom: "16px", display: "flex", justifyContent: "center" }}>
+                                    <prop.icon size={32} />
+                                </div>
+                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{prop.title}</h3>
+                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>
+                                    {prop.description}
+                                </p>
                             </div>
-                        </div>
-                        <div className="v2-reveal v2-card" style={{ padding: "40px" }}>
-                            <div style={{ display: "grid", gap: "32px" }}>
-                                {[[displayClientCount + "+", "Enterprise Clients"], ["30+", "Data Specialists"], [displayBatchCount + "+", "CGAP Batches"]].map(([n, l]) => (
-                                    <div key={l} style={{ borderBottom: "1px solid var(--border)", paddingBottom: "20px" }}>
-                                        <div style={{ color: "var(--green)", fontSize: "32px", fontWeight: 700 }}>{n}</div>
-                                        <div className="v2-lbl" style={{ marginBottom: 0 }}>{l}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
