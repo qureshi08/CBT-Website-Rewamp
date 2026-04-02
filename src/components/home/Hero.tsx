@@ -21,21 +21,21 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
     useScrollReveal();
 
     return (
-        <section style={{ paddingTop: "116px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
-            <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+        <section style={{ paddingTop: "116px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,var(--color-primary-muted) 100%)" }}>
+            <div className="v2-wrap home-hero-grid">
                 <div>
-                    <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--green-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
-                        <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--green)", display: "inline-block", animation: "pulse 2s infinite" }} />
-                        <span style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", fontWeight: 500, color: "var(--green)" }}>Data, Cloud &amp; AI Consultancy</span>
+                    <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
+                        <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--color-primary)", display: "inline-block", animation: "pulse 2s infinite" }} />
+                        <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--color-primary)" }}>Data, Cloud &amp; AI Consultancy</span>
                     </div>
 
-                    <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(34px,4.5vw,54px)", marginBottom: "18px" }}>
+                    <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
                         Enabling Business to<br />
                         Harness Data and{" "}
-                        <em style={{ fontStyle: "italic", color: "var(--green)" }}>Deliver Value</em>
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Deliver Value</em>
                     </h1>
 
-                    <p className="v2-sub a-fadeUp-3" style={{ fontSize: "17px", maxWidth: "480px" }}>
+                    <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-lg)", fontWeight: 300, color: "var(--color-text-body)", lineHeight: 1.7, maxWidth: "480px", marginTop: "13px" }}>
                         Strategic agile development experts. We help companies create software that rapidly scales businesses and delights users.
                     </p>
 
@@ -49,7 +49,7 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
                     </div>
                 </div>
 
-                <div className="a-scaleIn" style={{ flexShrink: 0 }}>
+                <div className="a-scaleIn home-hero-illustration" style={{ flexShrink: 0 }}>
                     <HeroIllustration />
                 </div>
             </div>
@@ -67,25 +67,25 @@ export function PersonaCards() {
     ];
 
     return (
-        <section className="v2-section-s" style={{ background: "var(--surface)" }}>
+        <section className="v2-section-s" style={{ background: "var(--color-surface)" }}>
             <div className="v2-wrap">
                 <div style={{ textAlign: "center", marginBottom: "32px" }}>
                     <p className="v2-lbl v2-reveal">Choose your journey</p>
-                    <h2 className="v2-h2 v2-reveal" style={{ fontSize: "30px" }}>Who are you?</h2>
+                    <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(1.6rem, 2.5vw, 2rem)" }}>Who are you?</h2>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px", alignItems: "stretch" }}>
+                <div className="home-persona-grid">
                     {personas.map((p, i) => (
                         <Link key={p.href} href={p.href} style={{ textDecoration: "none", display: "flex" }}>
                             <div className={`v2-pc v2-reveal v2-d${i + 1}`}>
                                 <div className="v2-pc-icon">
-                                    <Ic name={p.icon as any} size={20} stroke="var(--green)" />
+                                    <Ic name={p.icon as any} size={20} stroke="var(--color-primary)" />
                                 </div>
-                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{p.title}</h3>
-                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6", marginBottom: "20px" }}>
+                                <h3 className="v2-h3" style={{ fontSize: "var(--text-lg)", marginBottom: "8px" }}>{p.title}</h3>
+                                <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: "1.6", marginBottom: "20px" }}>
                                     {p.sub}
                                 </p>
-                                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--f-body)", fontSize: "13.5px", fontWeight: 600, color: "var(--green)", marginTop: "auto" }}>
-                                    Explore <Ic name="arrowRight" size={14} stroke="var(--green)" />
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--color-primary)", marginTop: "auto" }}>
+                                    Explore <Ic name="arrowRight" size={14} stroke="var(--color-primary)" />
                                 </div>
                             </div>
                         </Link>
