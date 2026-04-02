@@ -8,50 +8,126 @@ const Gradients = () => (
             <stop offset="0%" stopColor="var(--green)" stopOpacity="1" />
             <stop offset="100%" stopColor="#006633" stopOpacity="1" />
         </linearGradient>
-        <radialGradient id="grad-glow" cx="50%" cy="50%" r="50%">
+        <radialGradient id="grad-glow-center" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="var(--green)" stopOpacity="0.4" />
             <stop offset="100%" stopColor="var(--green)" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="beam-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="var(--green)" stopOpacity="0" />
+            <stop offset="50%" stopColor="var(--green)" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="var(--green)" stopOpacity="0" />
+        </linearGradient>
+        <pattern id="circuits" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 10 10 L 0 10 M 30 40 L 30 30 L 40 30" fill="none" stroke="var(--green)" strokeWidth="0.5" opacity="0.1" />
+            <circle cx="10" cy="10" r="1.5" fill="var(--green)" opacity="0.1" />
+            <circle cx="30" cy="30" r="1.5" fill="var(--green)" opacity="0.1" />
+        </pattern>
     </defs>
 );
 
-// ─── HOME: THE INTELLIGENCE HUB (USER APPROVED) ───
+// ─── HOME: THE ADVANCED INTELLIGENCE HUB (MAX HIGH-FIDELITY) ───
+// Represents the "Neural Core" of CBT's Data, Cloud & AI Expertise.
 export function HeroIllustration() {
     return (
         <motion.svg
-            width="400" height="320" viewBox="0 0 400 320" fill="none"
+            width="500" height="420" viewBox="0 0 500 420" fill="none"
             initial="hidden" animate="visible"
+            className="overflow-visible"
         >
             <Gradients />
-            <g transform="translate(200, 180)">
-                <motion.path
-                    d="M-120 0 L0 60 L120 0 L0 -60 Z" fill="white" stroke="var(--border)" strokeWidth="1"
-                    initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
+
+            {/* Background Circuit Mesh */}
+            <rect width="500" height="420" fill="url(#circuits)" />
+
+            {/* Orbital Rings - The outer intelligence layers */}
+            <g transform="translate(250, 210)">
+                {[160, 190].map((r, i) => (
+                    <motion.circle
+                        key={i} r={r} stroke="var(--green)" strokeWidth="0.8" strokeDasharray="10 20" opacity="0.1"
+                        animate={{ rotate: 360 * (i % 2 === 0 ? 1 : -1) }}
+                        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                    />
+                ))}
+            </g>
+
+            {/* The Central "Data Sun" / Neural Core */}
+            <g transform="translate(250, 210)">
+                <motion.circle
+                    r="80" fill="url(#grad-glow-center)"
+                    animate={{ scale: [0.9, 1.2, 0.9], opacity: [0.2, 0.4, 0.2] }}
+                    transition={{ duration: 5, repeat: Infinity }}
                 />
-                <motion.path d="M-120 5 L0 65 L120 5 L0 -55 Z" fill="var(--green-muted)" opacity="0.1" />
-                {[-40, -80, -120].map((y, i) => (
+
+                {/* Geodesic Inner Hub (Rotating Prism) */}
+                <motion.g
+                    animate={{ rotateY: 360 }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                >
+                    <motion.path
+                        d="M0 -60 L50 -20 L50 20 L0 60 L-50 20 L-50 -20 Z"
+                        fill="white" stroke="var(--green)" strokeWidth="2" opacity="0.9"
+                        animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }}
+                    />
+                    <path d="M0 -60 v120 M-50 -20 L50 20 M-50 20 L50 -20" stroke="var(--green)" strokeWidth="0.5" opacity="0.4" />
+                    <motion.circle
+                        r="12" fill="var(--green)"
+                        animate={{ scale: [1, 1.5, 1], filter: ["blur(0px)", "blur(4px)", "blur(0px)"] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                    />
+                </motion.g>
+
+                {/* Satellite Feature Nodes (Cloud, Data, AI) */}
+                {[0, 120, 240].map((angle, i) => (
                     <motion.g
                         key={i}
-                        animate={{ y: [y, y - 10, y] }}
-                        transition={{ duration: 4, delay: i * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
                     >
-                        <path d="M-80 0 L0 40 L80 0 L0 -40 Z" fill="white" stroke="var(--green)" strokeWidth="0.5" opacity={0.2 + (i * 0.2)} />
-                        <text x="-30" y="5" fontSize="8" fontWeight="700" fill="var(--green)" opacity="0.4">
-                            {i === 0 ? "BIG DATA" : i === 1 ? "CLOUD INFRA" : "AI ENGINE"}
-                        </text>
+                        <g transform={`translate(${110 * Math.cos(angle * Math.PI / 180)}, ${110 * Math.sin(angle * Math.PI / 180)})`}>
+                            <motion.rect
+                                x="-20" y="-20" width="40" height="40" rx="8" fill="white" stroke="var(--green)" strokeWidth="1.5"
+                                animate={{ rotate: -360 }} transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
+                            />
+                            <text x="0" y="4" textAnchor="middle" fontSize="6.5" fontWeight="900" fill="var(--green)" letterSpacing="0.05em">
+                                {i === 0 ? "CLOUD" : i === 1 ? "DATA" : "AI LAB"}
+                            </text>
+
+                            {/* Constant Connection Line to Core */}
+                            <line x1="0" y1="0" x2={-110 * Math.cos(angle * Math.PI / 180)} y2={-110 * Math.sin(angle * Math.PI / 180)} stroke="var(--green)" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.15" />
+                        </g>
                     </motion.g>
                 ))}
-                <motion.circle
-                    cy="0" r="40" fill="url(#radial-glow)"
-                    animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0.2, 0.6] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                />
             </g>
+
+            {/* High-Speed Data Beams (Rapid Success) */}
+            {[0, 45, 135, 180, 225, 315].map((angle, i) => (
+                <motion.g key={i} transform={`rotate(${angle}, 250, 210)`}>
+                    <motion.rect
+                        width="80" height="2" x="140" fill="url(#beam-grad)"
+                        animate={{ x: [140, 300] }}
+                        transition={{ duration: 2, delay: i * 0.4, repeat: Infinity, ease: "easeIn" }}
+                    />
+                </motion.g>
+            ))}
+
+            {/* Code Shards (Floating around the periphery) */}
+            {[1, 2, 3, 4, 5].map((shard, i) => (
+                <motion.path
+                    key={i} d="M0 0 L15 5 L5 15 Z" fill="var(--green)" opacity="0.15"
+                    animate={{
+                        x: [250 + 180 * Math.cos(i), 250 + 220 * Math.cos(i)],
+                        y: [210 + 180 * Math.sin(i), 210 + 220 * Math.sin(i)],
+                        rotate: [0, 360],
+                        opacity: [0.1, 0.3, 0.1]
+                    }}
+                    transition={{ duration: 10, delay: i * 2, repeat: Infinity }}
+                />
+            ))}
         </motion.svg>
     );
 }
 
-// ─── CUSTOMERS: GETTING EXACTLY WHAT THEY WANT (USER APPROVED) ───
+// ─── CUSTOMERS (USER APPROVED) ───
 export function CustomersIllustration() {
     return (
         <motion.svg
@@ -59,16 +135,10 @@ export function CustomersIllustration() {
             initial="hidden" animate="visible"
         >
             <Gradients />
-            <motion.path
-                d="M260 60 L300 80 L280 120 L240 100 Z" fill="white" stroke="var(--green)" strokeWidth="2"
-                animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity }}
-            />
-            <motion.circle cx="270" cy="90" r="20" fill="url(#grad-glow)" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
+            <motion.path d="M260 60 L300 80 L280 120 L240 100 Z" fill="white" stroke="var(--green)" strokeWidth="2" animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity }} />
+            <motion.circle cx="270" cy="90" r="20" fill="url(#grad-glow-center)" opacity="0.3" animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 2, repeat: Infinity }} />
             <text x="250" y="140" fontSize="10" fontWeight="800" fill="var(--green)">GOAL REACHED</text>
-            <motion.path
-                d="M60 180 Q 160 180 260 100" stroke="var(--green)" strokeWidth="4" fill="none" strokeDasharray="500" strokeDashoffset="500"
-                animate={{ strokeDashoffset: 0 }} transition={{ duration: 2.5, ease: "easeInOut" }}
-            />
+            <motion.path d="M60 180 Q 160 180 260 100" stroke="var(--green)" strokeWidth="4" fill="none" strokeDasharray="500" strokeDashoffset="500" animate={{ strokeDashoffset: 0 }} transition={{ duration: 2.5, ease: "easeInOut" }} />
             <g transform="translate(60, 210)">
                 <circle r="25" fill="white" stroke="var(--border)" strokeWidth="1.5" />
                 <path d="M-12 10 Q -12 -5 0 -5 Q 12 -5 12 10" fill="var(--border)" opacity="0.6" />
@@ -79,8 +149,7 @@ export function CustomersIllustration() {
     );
 }
 
-// ─── PARTNERS: THE NETWORK SUCCESS EXPLOSION (IMPROVED) ───
-// Represents "Partnering with CBT connects you to a Global Success Network".
+// ─── PARTNERS (USER APPROVED) ───
 export function PartnersIllustration() {
     return (
         <motion.svg
@@ -88,8 +157,6 @@ export function PartnersIllustration() {
             initial="hidden" animate="visible"
         >
             <Gradients />
-
-            {/* Background Network Mesh (Subtle Experts) */}
             <g opacity="0.1">
                 <circle cx="50" cy="50" r="4" fill="var(--green)" />
                 <circle cx="330" cy="80" r="6" fill="var(--green)" />
@@ -97,79 +164,38 @@ export function PartnersIllustration() {
                 <circle cx="80" cy="260" r="4" fill="var(--green)" />
                 <path d="M50 50 L330 80 L300 240 L80 260 Z" stroke="var(--green)" strokeWidth="0.5" strokeDasharray="4 4" />
             </g>
-
-            {/* The Central CBT Hub Nexus */}
             <g transform="translate(190, 150)">
                 <circle r="40" fill="white" stroke="var(--green)" strokeWidth="1.5" />
-                <motion.path
-                    d="M-20 0h40 M0 -20v40" stroke="var(--green)" strokeWidth="2"
-                    animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                />
-                {/* Connection Dock */}
+                <motion.path d="M-20 0h40 M0 -20v40" stroke="var(--green)" strokeWidth="2" animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                 <rect x="-45" y="-10" width="10" height="20" rx="2" fill="var(--green)" />
             </g>
-
-            {/* The Partner Unit (Onboarding and Scaling) */}
-            <motion.g
-                initial={{ x: 20 }}
-                animate={{ x: 0 }}
-                transition={{ duration: 3, repeat: Infinity }}
-            >
+            <motion.g initial={{ x: 20 }} animate={{ x: 0 }} transition={{ duration: 3, repeat: Infinity }}>
                 <g transform="translate(60, 150)">
                     <rect x="-30" y="-30" width="60" height="60" rx="12" fill="white" stroke="var(--border)" strokeWidth="1.5" />
-                    {/* Partner Persona Silhouette */}
                     <path d="M-10 12 Q -10 0 0 0 Q 10 0 10 12" fill="var(--border)" opacity="0.6" />
                     <circle cy="-10" r="10" fill="var(--border)" opacity="0.6" />
-
-                    {/* Scaling Glow (Partner success) */}
-                    <motion.rect
-                        x="-30" y="-30" width="60" height="60" rx="12" fill="none" stroke="var(--green)" strokeWidth="2.5"
-                        animate={{ scale: [1, 1.25], opacity: [0, 0.4, 0] }}
-                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-                    />
+                    <motion.rect x="-30" y="-30" width="60" height="60" rx="12" fill="none" stroke="var(--green)" strokeWidth="2.5" animate={{ scale: [1, 1.25], opacity: [0, 0.4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
                 </g>
             </motion.g>
-
-            {/* Success "Experts" emerging from the Network */}
-            {[
-                { x: 280, y: 70, d: 2 }, { x: 310, y: 150, d: 2.4 }, { x: 280, y: 230, d: 2.8 }
-            ].map((node, i) => (
-                <motion.g
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: node.d, duration: 0.8 }}
-                >
+            {[{ x: 280, y: 70, d: 2 }, { x: 310, y: 150, d: 2.4 }, { x: 280, y: 230, d: 2.8 }].map((node, i) => (
+                <motion.g key={i} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: node.d, duration: 0.8 }}>
                     <g transform={`translate(${node.x}, ${node.y})`}>
                         <circle r="22" fill="white" stroke="var(--green)" strokeWidth="1" />
                         <path d="M-8 8 Q -8 -2 0 -2 Q 8 -2 8 8" fill="var(--green)" opacity="0.7" />
                         <circle cy="-6" r="6" fill="var(--green)" />
-
-                        {/* Connection Ray to CBT Central */}
-                        <motion.line
-                            x1="0" y1="0" x2={190 - node.x} y2={150 - node.y}
-                            stroke="var(--green)" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3"
-                            animate={{ opacity: [0.1, 0.4, 0.1] }} transition={{ duration: 3, repeat: Infinity }}
-                        />
+                        <motion.line x1="0" y1="0" x2={190 - node.x} y2={150 - node.y} stroke="var(--green)" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" animate={{ opacity: [0.1, 0.4, 0.1] }} transition={{ duration: 3, repeat: Infinity }} />
                     </g>
                 </motion.g>
             ))}
-
-            {/* Central Success Text Tag */}
-            <motion.g
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }}
-                transform="translate(190, 220)"
-            >
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} transform="translate(190, 220)">
                 <rect x="-60" width="120" height="24" rx="12" fill="var(--green-muted)" opacity="0.3" />
-                <text x="0" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="var(--green)" letterSpacing="0.05em">
-                    SCALED SUCCESS
-                </text>
+                <text x="0" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="var(--green)" letterSpacing="0.05em">SCALED SUCCESS</text>
             </motion.g>
         </motion.svg>
     );
 }
 
-// ─── PRODUCTS: THE PROFESSIONAL SUITE (USER APPROVED) ───
+// ─── PRODUCTS (USER APPROVED) ───
 export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
     return (
         <motion.svg
@@ -207,7 +233,7 @@ export function ProductIllustration({ color = "#00994D" }: { color?: string }) {
     );
 }
 
-// ─── CGAP: THE CAREER TRANSFORMATION (USER APPROVED) ───
+// ─── CGAP (USER APPROVED) ───
 export function CGAPIllustration() {
     return (
         <motion.svg
