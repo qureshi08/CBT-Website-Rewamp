@@ -13,10 +13,10 @@
 
     --color-white: #FFFFFF;
     --color-surface: #F7F8F7;
-    --color-border: #E4E6E3;
-    --color-text-muted: #8A9099;
-    --color-text-body: #4B5563;
-    --color-text-heading: #0F1514;
+    --color-border: #E2E8E4;
+    --color-text-muted: #6B7280;
+    --color-text-body: #374151;
+    --color-text-heading: #111827;
 
     --color-success: #00994D;
     --color-warning: #F59E0B;
@@ -68,8 +68,8 @@
     --container-wide: 1440px;
     --container-prose: 720px;
     --container-px: 24px;
-    --section-py: 80px;
-    --section-py-lg: 100px;
+    --section-py: var(--space-20);
+    --section-py-lg: var(--space-24);
 
     /* ─── RADII ─── (from reference) */
     --radius: 10px;
@@ -150,7 +150,7 @@
     font-family: var(--font-body);
     color: var(--color-text-body);
     background: var(--color-white);
-    line-height: 1.6;
+    line-height: 1.65;
     font-size: 15px;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -350,11 +350,11 @@
     color: var(--color-white);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 14px;
-    padding: 10px 24px;
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-8);
     border-radius: 6px;
     border: 2px solid transparent;
-    transition: background 0.2s var(--ease), transform 0.15s;
+    transition: background var(--transition-base), transform var(--transition-fast);
     cursor: pointer;
     gap: 10px;
   }
@@ -364,26 +364,27 @@
     transform: translateY(-1px);
   }
 
-  /* Secondary: text link with bottom border */
+  /* Secondary: outlined button */
   .btn-secondary {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-text-body);
-    padding: 8px 2px;
-    border: none;
-    border-bottom: 1px solid var(--color-border);
+    justify-content: center;
     background: transparent;
-    transition: color 0.2s, border-color 0.2s;
+    color: var(--color-primary);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-8);
+    border-radius: 6px;
+    border: 2px solid var(--color-primary);
+    transition: background var(--transition-base), transform var(--transition-fast);
     cursor: pointer;
-    gap: 6px;
+    gap: 10px;
   }
 
   .btn-secondary:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
+    transform: translateY(-1px);
   }
 
   /* Ghost / text link */
@@ -418,8 +419,8 @@
   }
 
   .card:hover {
-    box-shadow: 0 12px 40px rgba(0, 153, 77, 0.09);
-    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 153, 77, 0.12);
+    transform: translateY(-2px);
   }
 
   /* ─── FORMS ─── */
@@ -427,9 +428,9 @@
     width: 100%;
     border: 1px solid var(--color-border);
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: var(--space-3) var(--space-4);
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: var(--text-base);
     background: var(--color-white);
     color: var(--color-text-body);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -459,7 +460,7 @@
 
   .uppercase-label {
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     font-size: 11px;
     font-weight: 600;
     color: var(--color-text-muted);
@@ -496,7 +497,7 @@
   /* ─── ACCENTS ─── */
   .pull-quote {
     background: var(--color-primary-muted);
-    border-left: 4px solid var(--color-primary);
+    border-left: 3px solid var(--color-primary);
     padding: var(--space-8);
     border-radius: 0 12px 12px 0;
   }
@@ -785,20 +786,20 @@
 
 /* ─── V2 DESIGN TOKENS (short names for JSX inline styles) ─── */
 :root {
-  --green: #00994D;
-  --green-light: #00C060;
-  --green-dark: #007A3D;
-  --green-muted: #E6F5ED;
-  --white: #FFFFFF;
-  --surface: #F7F8F7;
-  --border: #E2E8E4;
-  --muted: #6B7280;
-  --body-c: #374151;
-  --heading-c: #111827;
+  --green: var(--color-primary);
+  --green-light: var(--color-primary-light);
+  --green-dark: var(--color-primary-dark);
+  --green-muted: var(--color-primary-muted);
+  --white: var(--color-white);
+  --surface: var(--color-surface);
+  --border: var(--color-border);
+  --muted: var(--color-text-muted);
+  --body-c: var(--color-text-body);
+  --heading-c: var(--color-text-heading);
   --dark: #0C1A10;
-  --f-head: 'Playfair Display', Georgia, serif;
-  --f-body: 'DM Sans', sans-serif;
-  --f-mono: 'JetBrains Mono', monospace;
+  --f-head: var(--font-heading);
+  --f-body: var(--font-body);
+  --f-mono: var(--font-mono);
   --ease-v2: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -871,8 +872,8 @@
   gap: 7px;
   font-family: var(--f-body);
   font-weight: 600;
-  font-size: 14.5px;
-  padding: 11px 26px;
+  font-size: var(--text-base);
+  padding: var(--space-3) var(--space-8);
   border-radius: 6px;
   cursor: pointer;
   border: 2px solid transparent;
@@ -926,8 +927,8 @@
 }
 
 .v2-card:hover {
-  box-shadow: 0 8px 26px rgba(0, 153, 77, .11);
-  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 153, 77, 0.12);
+  transform: translateY(-2px);
 }
 
 /* ─── V2 PERSONA CARD ─── */
@@ -1040,9 +1041,9 @@
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 10px 13px;
+  padding: var(--space-3) var(--space-4);
   font-family: var(--f-body);
-  font-size: 14.5px;
+  font-size: var(--text-base);
   color: var(--body-c);
   background: white;
   outline: none;
@@ -1051,7 +1052,7 @@
 
 .v2-input:focus {
   border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(0, 153, 77, .11);
+  box-shadow: 0 0 0 3px rgba(0, 153, 77, 0.15);
 }
 
 .v2-lbl-f {
@@ -1212,7 +1213,7 @@
 
 .v2-nl {
   font-family: var(--f-body);
-  font-size: 13.5px;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: var(--muted);
   padding: 6px 13px;
