@@ -10,6 +10,8 @@ interface StatItem {
 
 interface StatsBarProps {
     stats?: StatItem[];
+    experienceValue?: number;
+    experienceLabel?: string;
 }
 
 const defaultStats: StatItem[] = [
@@ -59,7 +61,11 @@ function AnimatedCounter({
     );
 }
 
-export default function StatsBar({ stats = [] }: StatsBarProps) {
+export default function StatsBar({
+    stats = [],
+    experienceValue = 12,
+    experienceLabel = "Years of combined experience in data, cloud and AI consultancy"
+}: StatsBarProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -122,10 +128,10 @@ export default function StatsBar({ stats = [] }: StatsBarProps) {
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "var(--color-primary)" }} />
 
                         <div style={{ fontFamily: "var(--font-heading)", fontSize: "56px", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.04em", color: "white", marginBottom: "var(--space-2)", position: "relative", zIndex: 10 }}>
-                            <AnimatedCounter target={12} suffix="+" isVisible={isVisible} />
+                            <AnimatedCounter target={experienceValue} suffix="+" isVisible={isVisible} />
                         </div>
                         <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 300, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, marginBottom: "var(--space-8)", position: "relative", zIndex: 10 }}>
-                            Years of combined experience in<br className="hidden sm:block" />data, cloud and AI consultancy
+                            {experienceLabel}
                         </div>
 
                         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", position: "relative", zIndex: 10 }}>

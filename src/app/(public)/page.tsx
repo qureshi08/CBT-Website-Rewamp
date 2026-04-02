@@ -16,6 +16,8 @@ export default async function HomePage() {
   let batchCount = 12;
   let homepageStats: any[] = [];
   let testimonialsData: any[] = [];
+  let experienceValue = 12;
+  let experienceLabel = "Years of combined experience in data, cloud and AI consultancy";
 
   try {
     const supabase = await createClient();
@@ -33,7 +35,20 @@ export default async function HomePage() {
 
     clientNames = (clientsData as any[])?.map(c => c.name);
     batchCount = (batchStat as any)?.value ?? 12;
-    homepageStats = (statsData as any[])?.filter(s => s.label !== "CGAP Batches") || [];
+
+    // Extract special stats
+    const expStat = (statsData as any[])?.find(s =>
+      s.label.trim().toLowerCase() === "company experience"
+    );
+    if (expStat) {
+      experienceValue = expStat.value;
+      experienceLabel = expStat.suffix;
+    }
+
+    homepageStats = (statsData as any[])?.filter(s => {
+      const lbl = s.label?.trim().toLowerCase();
+      return lbl !== "cgap batches" && lbl !== "company experience";
+    }) || [];
     testimonialsData = (testiData as any[]) || [];
   } catch (error) {
     console.error("HomePage data fetch error:", error);
@@ -45,7 +60,11 @@ export default async function HomePage() {
       <PersonaCards />
       <ClientLogoStrip clientNames={clientNames} />
       <div id="stats">
-        <StatsBar stats={homepageStats} />
+        <StatsBar
+          stats={homepageStats}
+          experienceValue={experienceValue}
+          experienceLabel={experienceLabel}
+        />
       </div>
       <ServicesGrid />
       <CGAPTeaser batchCount={batchCount} />
