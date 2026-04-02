@@ -13,10 +13,10 @@
 
     --color-white: #FFFFFF;
     --color-surface: #F7F8F7;
-    --color-border: #E4E6E3;
-    --color-text-muted: #8A9099;
-    --color-text-body: #4B5563;
-    --color-text-heading: #0F1514;
+    --color-border: #E2E8E4;
+    --color-text-muted: #6B7280;
+    --color-text-body: #374151;
+    --color-text-heading: #111827;
 
     --color-success: #00994D;
     --color-warning: #F59E0B;
@@ -68,8 +68,8 @@
     --container-wide: 1440px;
     --container-prose: 720px;
     --container-px: 24px;
-    --section-py: 80px;
-    --section-py-lg: 100px;
+    --section-py: var(--space-20);
+    --section-py-lg: var(--space-24);
 
     /* ─── RADII ─── (from reference) */
     --radius: 10px;
@@ -90,50 +90,6 @@
     --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(28px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes lineGrow {
-    from {
-      transform: scaleX(0);
-    }
-
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.4;
-    }
-  }
-
   *,
   *::before,
   *::after {
@@ -151,7 +107,7 @@
     color: var(--color-text-body);
     background: var(--color-white);
     line-height: 1.6;
-    font-size: 15px;
+    font-size: var(--text-base);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
@@ -350,8 +306,8 @@
     color: var(--color-white);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 14px;
-    padding: 10px 24px;
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-8);
     border-radius: 6px;
     border: 2px solid transparent;
     transition: background 0.2s var(--ease), transform 0.15s;
@@ -364,26 +320,27 @@
     transform: translateY(-1px);
   }
 
-  /* Secondary: text link with bottom border */
+  /* Secondary: outlined button */
   .btn-secondary {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-text-body);
-    padding: 8px 2px;
-    border: none;
-    border-bottom: 1px solid var(--color-border);
+    justify-content: center;
     background: transparent;
-    transition: color 0.2s, border-color 0.2s;
+    color: var(--color-primary);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-8);
+    border-radius: 6px;
+    border: 2px solid var(--color-primary);
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.15s;
     cursor: pointer;
-    gap: 6px;
+    gap: 10px;
   }
 
   .btn-secondary:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
+    transform: translateY(-1px);
   }
 
   /* Ghost / text link */
@@ -394,7 +351,7 @@
     color: var(--color-text-body);
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--text-base);
     border: none;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -555,8 +512,8 @@
     color: var(--color-primary);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 14px;
-    padding: 10px 24px;
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-8);
     border-radius: 6px;
     border: 2px solid var(--color-primary);
     transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.15s;
