@@ -1,34 +1,101 @@
 "use client";
 import { useScrollReveal } from "@/components/home/Hero";
 import Ic from "@/components/shared/Icons";
+import Link from "next/link";
 
 const services = [
-    { icon: "search" as const, title: "Analytical Maturity Assessment", desc: "Benchmark capability and roadmap the path forward." },
-    { icon: "database" as const, title: "Enterprise DWH Implementation", desc: "Scalable data warehouse architecture and delivery." },
-    { icon: "trendUp" as const, title: "Business Analytics", desc: "Dashboards and self-service analytics that drive decisions." },
-    { icon: "brain" as const, title: "Decision Sciences", desc: "Statistical modelling, forecasting, prescriptive analytics." },
-    { icon: "settings" as const, title: "AnalyticOps", desc: "Operationalise your analytics function end to end." },
-    { icon: "bookOpen" as const, title: "Training & Development", desc: "Hands-on data analytics upskilling for your teams." },
+    {
+        num: "01",
+        icon: "search" as const,
+        title: "Data Strategy & Engineering",
+        desc: "From raw data to reliable insight. We design, build and govern data infrastructure that scales with your organisation — pipelines, warehouses, and governance frameworks included.",
+    },
+    {
+        num: "02",
+        icon: "database" as const,
+        title: "Cloud Migration & Architecture",
+        desc: "We plan and execute cloud migrations that minimise disruption and maximise performance — whether you're moving to AWS, Azure, or GCP, or optimising what's already there.",
+    },
+    {
+        num: "03",
+        icon: "brain" as const,
+        title: "AI Adoption & Integration",
+        desc: "Practical AI — not hype. We help businesses identify where AI creates real value, then build and integrate the solutions that deliver it, from LLM tooling to predictive analytics.",
+    },
 ];
 
 export default function ServicesGrid() {
     useScrollReveal();
     return (
-        <section className="v2-section">
-            <div className="v2-wrap">
-                <div style={{ marginBottom: "36px" }}>
-                    <p className="v2-lbl v2-reveal">What We Do</p>
-                    <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)", maxWidth: "440px" }}>Delivering great solutions, end-to-end</h2>
-                    <p className="v2-reveal" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", fontWeight: 300, color: "var(--color-text-body)", lineHeight: 1.7, maxWidth: "500px", marginTop: "13px" }}>
-                        Cross-functional teams of architects, developers, cloud experts and analysts. Engagement models from dedicated delivery to executive advisory.
-                    </p>
+        <section style={{ padding: "100px 32px", background: "var(--color-white)" }}>
+            <div style={{ maxWidth: "1160px", margin: "0 auto" }}>
+                {/* Section header with border-bottom separator */}
+                <div className="section-header-bar v2-reveal" style={{ borderBottom: "none", paddingBottom: 0 }}>
+                    <div>
+                        <span style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                            color: "var(--color-primary)",
+                            marginBottom: "14px",
+                            display: "block",
+                        }}>What we do</span>
+                        <h2 style={{
+                            fontFamily: "var(--font-heading)",
+                            fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+                            fontWeight: 700,
+                            color: "var(--color-text-heading)",
+                            lineHeight: 1.2,
+                            letterSpacing: "-0.02em",
+                            marginBottom: "16px",
+                        }}>End-to-end expertise,<br />from pipeline to product</h2>
+                        <p style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: "16px",
+                            fontWeight: 300,
+                            lineHeight: 1.7,
+                            color: "var(--color-text-body)",
+                            maxWidth: "520px",
+                        }}>Three core practice areas — each one designed to move your business forward with clarity and confidence.</p>
+                    </div>
+                    <Link href="/contact" style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "var(--color-text-body)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "13px 4px",
+                        borderBottom: "1px solid var(--color-border)",
+                        transition: "color 0.2s, border-color 0.2s",
+                        textDecoration: "none",
+                        flexShrink: 0,
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "var(--color-primary)";
+                        e.currentTarget.style.borderColor = "var(--color-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "var(--color-text-body)";
+                        e.currentTarget.style.borderColor = "var(--color-border)";
+                    }}
+                    >All services <span style={{ fontSize: "16px", transition: "transform 0.2s" }}>→</span></Link>
                 </div>
-                <div className="home-services-grid">
-                    {services.map((s, i) => (
-                        <div key={s.title} className={`v2-stile v2-reveal v2-d${(i % 3) + 1}`}>
-                            <div className="v2-stile-icon"><Ic name={s.icon} size={18} stroke="var(--color-primary)" /></div>
-                            <h3 className="v2-h3" style={{ fontSize: "var(--text-base)", marginBottom: "8px" }}>{s.title}</h3>
-                            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: "1.6" }}>{s.desc}</p>
+
+                {/* Bordered grid */}
+                <div className="services-grid-bordered v2-reveal">
+                    {services.map((s) => (
+                        <div key={s.title} className="service-card">
+                            <span className="service-num">{s.num}</span>
+                            <div className="service-icon-wrap">
+                                <Ic name={s.icon} size={20} stroke="var(--color-primary)" />
+                            </div>
+                            <div className="service-title">{s.title}</div>
+                            <p className="service-desc">{s.desc}</p>
+                            <span className="service-link">Learn more <span>→</span></span>
                         </div>
                     ))}
                 </div>

@@ -2,6 +2,7 @@ import Hero, { PersonaCards } from "@/components/home/Hero";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import ClientLogoStrip from "@/components/home/ClientLogoStrip";
 import CGAPTeaser from "@/components/home/CGAPTeaser";
+import CtaBand from "@/components/home/CtaBand";
 import StatsBar from "@/components/home/StatsBar";
 import Testimonials from "@/components/home/Testimonials";
 import { createClient } from "@/lib/supabase/server";
@@ -72,6 +73,7 @@ export default async function HomePage() {
       <div id="testimonials">
         <Testimonials testimonials={testimonialsData} />
       </div>
+      <CtaBand />
     </>
   );
 }
