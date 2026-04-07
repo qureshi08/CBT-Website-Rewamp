@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Ic from "@/components/shared/Icons";
+import Image from "next/image";
 
 export default function CGAPTeaser({ batchCount = 12 }: { batchCount?: number }) {
     return (
@@ -16,24 +16,14 @@ export default function CGAPTeaser({ batchCount = 12 }: { batchCount?: number })
 
             <div className="v2-wrap home-cgap-grid" style={{ position: "relative", zIndex: 1 }}>
                 <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
-                        <div style={{
-                            width: "38px",
-                            height: "38px",
-                            background: "var(--color-primary)",
-                            borderRadius: "7px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}>
-                            <Ic name="graduation" size={18} stroke="white" />
-                        </div>
-                        <span style={{
-                            fontFamily: "var(--font-heading)",
-                            fontSize: "var(--text-xl)",
-                            fontWeight: 700,
-                            color: "white",
-                        }}>CGAP</span>
+                    <div style={{ marginBottom: "46px" }}>
+                        <Image
+                            src="/cgap logos/CGAP - Logo Dark BG.png"
+                            alt="CGAP Logo"
+                            width={180}
+                            height={50}
+                            style={{ objectFit: "contain", objectPosition: "left" }}
+                        />
                     </div>
                     <h2 style={{
                         fontFamily: "var(--font-heading)",
@@ -43,7 +33,7 @@ export default function CGAPTeaser({ batchCount = 12 }: { batchCount?: number })
                         lineHeight: 1.2,
                         letterSpacing: "-0.02em",
                         marginBottom: "16px",
-                    }}>Convergent Graduate Academy Program</h2>
+                    }}><span style={{ color: "var(--color-primary)" }}>Convergent</span> <em style={{ fontStyle: "normal" }}>Graduate Academy Program</em></h2>
                     <p style={{
                         fontFamily: "var(--font-body)",
                         fontSize: "15px",
