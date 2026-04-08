@@ -11,11 +11,8 @@ export default function Footer() {
                 <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "48px" }}>
                     {/* Brand */}
                     <div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                            <div style={{ width: "32px", height: "32px", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                <img src="/logo.png" alt="CBT Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                            </div>
-                            <span style={{ fontFamily: "var(--f-head)", fontSize: "17px", fontWeight: 700, color: "white" }}>Convergent</span>
+                        <div style={{ marginBottom: "16px" }}>
+                            <img src="/cbt logos/CBT Logo - Dark BG.svg" alt="Convergent Business Technologies" style={{ height: "40px", width: "auto", opacity: 0.7 }} />
                         </div>
                         <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "rgba(255,255,255,.45)", lineHeight: "1.7", maxWidth: "300px" }}>
                             Strategic agile development experts helping companies harness data and deliver business value.
