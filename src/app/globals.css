@@ -937,6 +937,11 @@
   transform: translateY(-3px);
 }
 
+.v2-card-static:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+  transform: none;
+}
+
 /* ─── V2 PERSONA CARD ─── */
 .v2-pc {
   background: white;
@@ -1256,16 +1261,19 @@
   font-size: 13.5px;
   font-weight: 600;
   color: white;
-  background: var(--green);
-  border: none;
-  border-radius: 6px;
+  background: var(--heading-c);
+  border: 2px solid transparent;
+  border-radius: 7px;
   padding: 8px 18px;
   cursor: pointer;
-  transition: background .15s, transform .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s var(--ease-v2), transform 0.15s;
 }
 
 .v2-nav-cta:hover {
-  background: var(--green-dark);
+  background: var(--green);
   transform: translateY(-1px);
 }
 
@@ -1496,6 +1504,14 @@
   overflow: hidden;
 }
 
+.services-grid-bordered--5col {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.services-grid-bordered > *:empty {
+  background: var(--color-white);
+}
+
 .service-card {
   background: var(--color-white);
   padding: 40px 36px;
@@ -1622,6 +1638,16 @@
   .services-grid-bordered {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .services-grid-bordered--5col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .services-grid-bordered--5col {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1650,12 +1676,33 @@
   .home-cgap-grid {
     grid-template-columns: 1fr;
     gap: 24px;
+    text-align: center;
+  }
+
+  .home-cgap-grid > div:first-child > div:first-child {
+    display: flex;
+    justify-content: center;
+  }
+
+  .home-cgap-grid > div:first-child p {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-cgap-grid > div:last-child {
+    align-items: center;
   }
 
   /* CTA band responsive */
   .cta-band .cta-inner-grid {
     grid-template-columns: 1fr;
     gap: 32px;
+    text-align: center;
+  }
+
+  .cta-band .cta-inner-grid > div:last-child {
+    align-items: center;
   }
 
   .v2-section {

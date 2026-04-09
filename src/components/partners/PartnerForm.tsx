@@ -189,7 +189,7 @@ export default function PartnerForm() {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn-primary w-full md:w-auto min-w-[220px] py-4 disabled:opacity-60"
+                    className="hero-btn-primary w-full md:w-auto min-w-[220px] justify-center disabled:opacity-60"
                 >
                     {isSubmitting ? "Sending..." : "Arrange a Call"}
                     {!isSubmitting && <ArrowRight size={18} />}
