@@ -68,14 +68,14 @@ export default function ProductFilter() {
     }
 
     return (
-        <div className="space-y-16 font-body">
+        <div className="space-y-8 md:space-y-16 font-body">
             {/* Filter Tabs */}
             <div className="flex flex-wrap justify-center gap-3 md:gap-4 pb-4 border-b border-border/40">
                 {industries.map((ind) => (
                     <button
                         key={ind}
                         onClick={() => setActiveIndustry(ind)}
-                        className={`px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeIndustry === ind
+                        className={`px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeIndustry === ind
                             ? "bg-primary text-white shadow-xl shadow-primary/10 scale-105"
                             : "bg-white text-text-muted border border-border/60 hover:border-primary/30 hover:bg-surface"
                             }`}
@@ -86,14 +86,14 @@ export default function ProductFilter() {
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
                 {filteredProducts.map((product) => (
                     <div
                         key={product.slug}
-                        className="bg-white rounded-3xl border border-border/40 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group flex flex-col h-full"
+                        className="bg-white rounded-3xl border border-border/40 overflow-hidden shadow-sm flex flex-col h-full"
                     >
                         {/* Product Visual Mock */}
-                        <div className="aspect-[16/11] bg-surface relative overflow-hidden flex items-center justify-center p-8 group-hover:bg-primary-muted transition-colors duration-500">
+                        <div className="aspect-[16/11] bg-surface relative overflow-hidden flex items-center justify-center p-8">
                             <div className="relative w-full h-full bg-white rounded-xl shadow-2xl border border-border/20 flex flex-col p-4 overflow-hidden">
                                 <div className="flex items-center gap-2 mb-4">
                                     <div className="w-2 h-2 rounded-full bg-primary/40" />
@@ -115,13 +115,13 @@ export default function ProductFilter() {
                             </span>
                         </div>
 
-                        <div className="p-8 flex flex-col flex-grow">
+                        <div className="p-5 sm:p-8 flex flex-col flex-grow">
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="w-5 h-[1px] bg-primary" />
                                 <span className="uppercase-label text-primary">{product.category}</span>
                             </div>
 
-                            <h3 className="text-2xl font-bold text-text-heading mb-4 font-heading group-hover:text-primary transition-colors duration-300">
+                            <h3 className="text-2xl font-bold text-text-heading mb-4 font-heading">
                                 {product.name}
                             </h3>
 
@@ -145,17 +145,17 @@ export default function ProductFilter() {
                                     href={product.appsource_url || "#"}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="btn-primary w-full py-3 text-sm"
+                                    className="hero-btn-primary"
+                                    style={{ display: "flex", width: "100%", justifyContent: "center" }}
                                 >
-                                    Get on AppSource
-                                    <ExternalLink size={14} />
+                                    Get on AppSource <span><ExternalLink size={14} /></span>
                                 </a>
                                 <Link
                                     href={`/contact?subject=Demo: ${product.name}`}
                                     className="btn-ghost justify-center text-sm font-bold"
                                 >
                                     Request a Demo
-                                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                    <ArrowRight size={14} />
                                 </Link>
                             </div>
                         </div>

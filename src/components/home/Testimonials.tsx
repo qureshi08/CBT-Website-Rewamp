@@ -1,5 +1,7 @@
 "use client";
 
+import { Quote } from "lucide-react";
+
 interface TestimonialItem {
     quote: string;
     author: string;
@@ -39,8 +41,7 @@ export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
     return (
         <section className="section-padding" style={{ background: "var(--color-white)" }} id="case-studies">
             <div className="v2-wrap">
-                {/* Section header with border-bottom separator */}
-                <div className="section-header-bar">
+                <div className="section-header-bar" style={{ borderBottom: "none", marginBottom: "46px", paddingBottom: "0" }}>
                     <div>
                         <span style={{
                             fontFamily: "var(--font-body)",
@@ -66,92 +67,47 @@ export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
                 </div>
 
                 <div className="testimonials-grid">
-                    {list.map((t, i) => {
-                        return (
-                            <div key={i} style={{
-                                background: "var(--color-surface)",
-                                border: "1px solid var(--color-border)",
-                                borderRadius: "16px",
-                                padding: "36px",
-                                position: "relative",
-                                transition: "box-shadow 0.25s, transform 0.25s",
-                                cursor: "default",
-                                display: "flex",
-                                flexDirection: "column",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,153,77,0.09)";
-                                e.currentTarget.style.transform = "translateY(-3px)";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.boxShadow = "none";
-                                e.currentTarget.style.transform = "translateY(0)";
-                            }}
-                            >
-                                {/* Quote mark */}
+                    {list.map((t, i) => (
+                        <div key={i} className="v2-card v2-card-static" style={{ display: "flex", flexDirection: "column" }}>
+                            <Quote size={20} style={{ color: "var(--color-primary)", opacity: 0.2, marginBottom: "16px" }} />
+                            <p style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "1rem",
+                                lineHeight: 1.65,
+                                color: "var(--color-text-body)",
+                                marginBottom: "20px",
+                            }}>
+                                &ldquo;{t.quote}&rdquo;
+                            </p>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "auto" }}>
                                 <div style={{
-                                    fontSize: "48px",
-                                    lineHeight: 1,
-                                    fontFamily: "var(--font-heading)",
+                                    width: "38px",
+                                    height: "38px",
+                                    borderRadius: "50%",
+                                    background: "var(--color-primary-muted)",
                                     color: "var(--color-primary)",
-                                    opacity: 0.25,
-                                    position: "absolute",
-                                    top: "24px",
-                                    right: "28px",
-                                }}>&ldquo;</div>
-
-                                {/* Quote text */}
-                                <p style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontWeight: 700,
+                                    fontSize: "11px",
                                     fontFamily: "var(--font-body)",
-                                    fontSize: "1rem",
-                                    lineHeight: 1.65,
-                                    color: "var(--color-text-body)",
-                                    marginBottom: "28px",
-                                    paddingRight: "var(--space-8)",
+                                    flexShrink: 0,
+                                    overflow: "hidden",
                                 }}>
-                                    {t.quote}
-                                </p>
-
-                                {/* Author */}
-                                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "auto" }}>
-                                    <div style={{
-                                        width: "38px",
-                                        height: "38px",
-                                        borderRadius: "50%",
-                                        background: "var(--color-primary-muted)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        fontSize: "13px",
-                                        fontWeight: 700,
-                                        fontFamily: "var(--font-body)",
-                                        color: "var(--color-primary)",
-                                        flexShrink: 0,
-                                        overflow: "hidden",
-                                    }}>
-                                        {t.avatar_url ? (
-                                            <img src={t.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
-                                        ) : (
-                                            t.author.split(' ').map(n => n[0]).join('')
-                                        )}
-                                    </div>
-                                    <div>
-                                        <div style={{
-                                            fontFamily: "var(--font-heading)",
-                                            fontSize: "14px",
-                                            fontWeight: 700,
-                                            color: "var(--color-text-heading)",
-                                        }}>{t.author}</div>
-                                        <div style={{
-                                            fontFamily: "var(--font-body)",
-                                            fontSize: "12px",
-                                            color: "var(--color-text-muted)",
-                                        }}>{t.role}, {t.company}</div>
-                                    </div>
+                                    {t.avatar_url ? (
+                                        <img src={t.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
+                                    ) : (
+                                        t.author[0]
+                                    )}
+                                </div>
+                                <div>
+                                    <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "14px", color: "var(--color-text-heading)" }}>{t.author}</div>
+                                    <div style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-text-muted)", textTransform: "uppercase" }}>{t.role}, {t.company}</div>
                                 </div>
                             </div>
-                        );
-                    })}
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

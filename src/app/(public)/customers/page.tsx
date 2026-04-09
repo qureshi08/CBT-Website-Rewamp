@@ -10,10 +10,8 @@ import {
     BookOpen,
     FileText,
 } from "lucide-react";
-import { useScrollReveal } from "@/components/home/Hero";
 import { CustomersIllustration } from "@/components/shared/Illustrations";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
-import PersonaBridge from "@/components/shared/PersonaBridge";
 import { createClient } from "@/lib/supabase/server";
 import ClientReveal from "@/components/shared/ClientReveal";
 
@@ -109,27 +107,30 @@ export default async function CustomersPage() {
         <main>
             <ClientReveal />
             {/* Hero */}
-            <section style={{ paddingTop: "120px", paddingBottom: "72px", background: "linear-gradient(158deg,#fff 58%,#e6f5ed 100%)" }}>
-                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+            <section className="hero-grid-texture" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
+                <div className="v2-wrap home-hero-grid" style={{ position: "relative", zIndex: 1, width: "100%" }}>
                     <div>
-                        <div className="v2-lbl v2-reveal">Success Stories</div>
-                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 50px)", marginBottom: "18px" }}>
+                        <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
+                            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--color-primary)", display: "inline-block", animation: "pulse 2s infinite" }} />
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--color-primary)" }}>Success Stories</span>
+                        </div>
+                        <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
                             Enterprise Solutions <br />
-                            <em style={{ fontStyle: "italic", color: "var(--green)" }}>Delivered with Precision</em>
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Delivered with Precision</em>
                         </h1>
-                        <p className="v2-sub v2-reveal" style={{ maxWidth: "520px" }}>
+                        <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "460px", marginTop: "13px" }}>
                             From global banking to retail giants, we help organisations turn their data into competitive advantage through delivery excellence.
                         </p>
-                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
-                            <Link href="/contact" className="v2-btn v2-btn-p">
-                                Start a Conversation <ArrowRight size={16} stroke="white" />
+                        <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
+                            <Link href="/contact" className="hero-btn-primary">
+                                Start a Conversation <span>→</span>
                             </Link>
-                            <a href="#works" className="v2-btn v2-btn-s">
-                                View Case Studies
+                            <a href="#works" className="hero-btn-secondary">
+                                View Case Studies <span className="hero-btn-arrow">→</span>
                             </a>
                         </div>
                     </div>
-                    <div className="v2-reveal a-scaleIn">
+                    <div className="a-scaleIn home-hero-illustration" style={{ flexShrink: 0 }}>
                         <CustomersIllustration />
                     </div>
                 </div>
@@ -143,19 +144,21 @@ export default async function CustomersPage() {
                 <div className="v2-wrap">
                     <div style={{ textAlign: "center", marginBottom: "48px" }}>
                         <span className="v2-lbl v2-reveal">Expertise</span>
-                        <h2 className="v2-h2 v2-reveal">Services We Deliver</h2>
+                        <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)" }}>Services We Deliver</h2>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
+                    <div className="services-grid-bordered v2-reveal">
                         {services.map((service, i) => {
                             const Icon = service.icon;
+                            const num = String(i + 1).padStart(2, "0");
                             return (
-                                <div key={service.title} className={`v2-stile v2-reveal v2-d${(i % 3) + 1}`}>
-                                    <div className="v2-stile-icon"><Icon size={20} /></div>
-                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>{service.title}</h3>
-                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>
-                                        {service.description}
-                                    </p>
+                                <div key={service.title} className="service-card">
+                                    <span className="service-num">{num}</span>
+                                    <div className="service-icon-wrap">
+                                        <Icon size={20} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                    </div>
+                                    <div className="service-title">{service.title}</div>
+                                    <p className="service-desc">{service.description}</p>
                                 </div>
                             );
                         })}
@@ -166,10 +169,26 @@ export default async function CustomersPage() {
             {/* Case Studies */}
             <section className="bg-surface py-16 relative overflow-hidden" id="works">
                 <div className="v2-wrap">
-                    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "48px" }}>
+                    <div className="section-header-bar v2-reveal" style={{ borderBottom: "none", paddingBottom: 0, marginBottom: "48px" }}>
                         <div>
-                            <span className="v2-lbl v2-reveal">Impact</span>
-                            <h2 className="v2-h2 v2-reveal">Our Work in Action</h2>
+                            <span style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "11px",
+                                fontWeight: 600,
+                                letterSpacing: "0.1em",
+                                textTransform: "uppercase",
+                                color: "var(--color-primary)",
+                                marginBottom: "14px",
+                                display: "block",
+                            }}>Impact</span>
+                            <h2 style={{
+                                fontFamily: "var(--font-heading)",
+                                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+                                fontWeight: 700,
+                                color: "var(--color-text-heading)",
+                                lineHeight: 1.2,
+                                letterSpacing: "-0.02em",
+                            }}>Our Work in Action</h2>
                         </div>
                     </div>
 
@@ -195,24 +214,23 @@ export default async function CustomersPage() {
             </section>
 
             {/* Final CTA */}
-            <section className="v2-section">
-                <div className="v2-wrap" style={{ background: "var(--heading-c)", borderRadius: "24px", padding: "64px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-                    <div style={{ position: "absolute", top: 0, right: 0, width: "50%", height: "100%", background: "rgba(0,153,77,0.05)", transform: "skewX(-20deg) translateX(50%)" }} />
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                        <h2 className="v2-h2" style={{ color: "white", fontSize: "32px", marginBottom: "18px" }}>
-                            Ready to Transform Your <br /> <em style={{ fontStyle: "italic", color: "var(--green)" }}>Data Capability?</em>
+            <section className="cta-band">
+                <div className="v2-wrap cta-inner-grid">
+                    <div>
+                        <h2 className="cta-heading">
+                            Ready to Transform Your <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Data Capability?</em>
                         </h2>
-                        <p style={{ fontFamily: "var(--f-body)", color: "rgba(255,255,255,0.6)", maxWidth: "560px", margin: "0 auto 32px" }}>
+                        <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
                             Tell us about your challenge. We&apos;ll show you how data can solve it.
                         </p>
-                        <Link href="/contact" className="v2-btn v2-btn-p">
-                            Start a Conversation <ArrowRight size={16} stroke="white" />
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
+                        <Link href="/contact" className="btn-cta-white" style={{ fontFamily: "var(--font-body)" }}>
+                            Start a conversation →
                         </Link>
                     </div>
                 </div>
             </section>
-
-            <PersonaBridge exclude="customers" />
         </main>
     );
 }

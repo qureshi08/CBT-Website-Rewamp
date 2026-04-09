@@ -12,7 +12,6 @@ import {
     Quote,
 } from "lucide-react";
 import { IndustryLeadersStrip, TechPartnersStrip } from "@/components/home/ClientLogoStrip";
-import PersonaBridge from "@/components/shared/PersonaBridge";
 import PartnerForm from "@/components/partners/PartnerForm";
 import ClientReveal from "@/components/shared/ClientReveal";
 import { PartnersIllustration } from "@/components/shared/Illustrations";
@@ -106,22 +105,29 @@ export default async function PartnersPage() {
         <main>
             <ClientReveal />
             {/* Hero */}
-            <section style={{ paddingTop: "120px", paddingBottom: "72px", background: "var(--surface)" }}>
-                <div className="v2-wrap" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "56px", alignItems: "center" }}>
+            <section className="hero-grid-texture" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
+                <div className="v2-wrap home-hero-grid" style={{ position: "relative", zIndex: 1, width: "100%" }}>
                     <div>
-                        <div className="v2-lbl v2-reveal">Partner Ecosystem</div>
-                        <h1 className="v2-h1 v2-reveal" style={{ fontSize: "clamp(34px, 4.5vw, 50px)", marginBottom: "18px" }}>
-                            Deliver Superior Value, <br /> <span className="italic-accent text-primary">Together.</span>
+                        <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
+                            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--color-primary)", display: "inline-block", animation: "pulse 2s infinite" }} />
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--color-primary)" }}>Partner Ecosystem</span>
+                        </div>
+                        <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
+                            Deliver Superior Value, <br /> <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Together.</em>
                         </h1>
-                        <p className="v2-sub v2-reveal" style={{ maxWidth: "560px" }}>
+                        <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "460px", marginTop: "13px" }}>
                             Technology. Delivery. Referral. Three ways to partner with CBT and unlock enterprise-grade data opportunities for your clients.
                         </p>
-                        <div className="v2-reveal" style={{ display: "flex", gap: "12px", marginTop: "28px" }}>
-                            <a href="#partner-form" className="v2-btn v2-btn-p">Arrange a Call <ArrowRight size={16} stroke="white" /></a>
-                            <a href="#models" className="v2-btn v2-btn-s">Explore Models</a>
+                        <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
+                            <a href="#partner-form" className="hero-btn-primary">
+                                Arrange a Call <span>→</span>
+                            </a>
+                            <a href="#models" className="hero-btn-secondary">
+                                Explore Models <span className="hero-btn-arrow">→</span>
+                            </a>
                         </div>
                     </div>
-                    <div className="v2-reveal a-scaleIn">
+                    <div className="a-scaleIn home-hero-illustration" style={{ flexShrink: 0 }}>
                         <PartnersIllustration />
                     </div>
                 </div>
@@ -132,16 +138,20 @@ export default async function PartnersPage() {
                 <div className="v2-wrap">
                     <div style={{ textAlign: "center", marginBottom: "48px" }}>
                         <span className="v2-lbl v2-reveal">Co-Innovation</span>
-                        <h2 className="v2-h2 v2-reveal">Partnership Models</h2>
+                        <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}>Partnership Models</h2>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", alignItems: "stretch" }}>
+                    <div className="services-grid-bordered v2-reveal">
                         {partnershipTypes.map((type, i) => {
                             const Icon = type.icon;
+                            const num = String(i + 1).padStart(2, "0");
                             return (
-                                <div key={type.title} className={`v2-pc v2-reveal v2-d${(i % 3) + 1}`} style={{ textAlign: "center", alignItems: "center" }}>
-                                    <div className="v2-pc-icon"><Icon size={20} /></div>
-                                    <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{type.title}</h3>
-                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>{type.desc}</p>
+                                <div key={type.title} className="service-card">
+                                    <span className="service-num">{num}</span>
+                                    <div className="service-icon-wrap">
+                                        <Icon size={20} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                    </div>
+                                    <div className="service-title">{type.title}</div>
+                                    <p className="service-desc">{type.desc}</p>
                                 </div>
                             );
                         })}
@@ -150,7 +160,7 @@ export default async function PartnersPage() {
             </section>
 
             {/* Why Partner */}
-            <section className="bg-surface py-20">
+            <section className="bg-white py-20">
                 <div className="v2-wrap">
                     <div style={{ textAlign: "center", maxWidth: "800px", margin: "0 auto 56px" }}>
                         <span className="v2-lbl v2-reveal">The Advantage</span>
@@ -158,7 +168,7 @@ export default async function PartnersPage() {
                         <p className="v2-sub v2-reveal">We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack and deliver enterprise-grade results.</p>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px" }}>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                         {valueProps.map((prop, i) => (
                             <div key={prop.title} className={`v2-reveal v2-d${i + 1}`} style={{ textAlign: "center" }}>
                                 <div style={{ color: "var(--green)", marginBottom: "16px", display: "flex", justifyContent: "center" }}>
@@ -179,20 +189,38 @@ export default async function PartnersPage() {
             <TechPartnersStrip />
 
             {/* Testimonials */}
-            <section className="bg-surface py-16">
+            <section className="bg-white py-16">
                 <div className="v2-wrap">
-                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
-                        <span className="v2-lbl v2-reveal">Strategic Alliance</span>
-                        <h2 className="v2-h2 v2-reveal">What Our Partners Say</h2>
+                    <div className="section-header-bar v2-reveal" style={{ borderBottom: "none", paddingBottom: 0, marginBottom: "48px" }}>
+                        <div>
+                            <span style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "11px",
+                                fontWeight: 600,
+                                letterSpacing: "0.1em",
+                                textTransform: "uppercase",
+                                color: "var(--color-primary)",
+                                marginBottom: "14px",
+                                display: "block",
+                            }}>Strategic Alliance</span>
+                            <h2 style={{
+                                fontFamily: "var(--font-heading)",
+                                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+                                fontWeight: 700,
+                                color: "var(--color-text-heading)",
+                                lineHeight: 1.2,
+                                letterSpacing: "-0.02em",
+                            }}>What Our Partners Say</h2>
+                        </div>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                         {testimonials.map((t: any, i) => (
-                            <div key={t.author} className={`v2-card v2-reveal v2-d${(i % 3) + 1}`}>
+                            <div key={t.author} className={`v2-card v2-card-static v2-reveal v2-d${(i % 3) + 1}`} style={{ display: "flex", flexDirection: "column" }}>
                                 <Quote size={20} style={{ color: "var(--green)", opacity: 0.2, marginBottom: "16px" }} />
-                                <p style={{ fontFamily: "var(--f-head)", fontStyle: "italic", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "20px" }}>
+                                <p style={{ fontFamily: "var(--f-body)", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "20px" }}>
                                     &ldquo;{t.quote}&rdquo;
                                 </p>
-                                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "auto" }}>
                                     <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontWeight: 700, fontSize: "10px" }}>
                                         {t.avatar_url ? (
                                             <img src={t.avatar_url} className="w-full h-full object-cover" alt="" />
@@ -201,7 +229,7 @@ export default async function PartnersPage() {
                                         )}
                                     </div>
                                     <div>
-                                        <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "12px" }}>{t.author}</div>
+                                        <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "14px" }}>{t.author}</div>
                                         <div style={{ fontFamily: "var(--f-body)", fontSize: "10px", color: "var(--muted)", textTransform: "uppercase" }}>{t.company}</div>
                                     </div>
                                 </div>
@@ -212,10 +240,17 @@ export default async function PartnersPage() {
             </section>
 
             {/* Form */}
-            <section id="partner-form" className="v2-section">
-                <div className="v2-wrap" style={{ background: "var(--surface)", borderRadius: "32px", padding: "64px 32px", position: "relative", overflow: "hidden" }}>
+            <section id="partner-form" className="v2-section" style={{ background: "var(--surface)" }}>
+                <div className="v2-wrap" style={{ padding: "64px 32px", position: "relative" }}>
                     <div style={{ textAlign: "center", marginBottom: "48px" }}>
-                        <h2 className="v2-h2">Arrange a Discovery Call</h2>
+                        <h2 style={{
+                                fontFamily: "var(--font-heading)",
+                                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+                                fontWeight: 700,
+                                color: "var(--color-text-heading)",
+                                lineHeight: 1.2,
+                                letterSpacing: "-0.02em",
+                            }}>Arrange a Discovery Call</h2>
                         <p className="v2-sub" style={{ maxWidth: "560px", margin: "10px auto 0" }}>Start a conversation about how we can deliver more value together. Response within 24 hours.</p>
                     </div>
                     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
@@ -223,8 +258,6 @@ export default async function PartnersPage() {
                     </div>
                 </div>
             </section>
-
-            <PersonaBridge exclude="partners" />
         </main>
     );
 }
