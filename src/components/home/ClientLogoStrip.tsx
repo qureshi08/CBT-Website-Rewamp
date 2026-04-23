@@ -6,6 +6,9 @@ const CLIENTS = [
     "MBC", "SPAR", "Bunge", "Shelfr", "Olayan",
 ];
 
+// Fallback only — the live list is fetched from the `partners` Supabase table
+// and passed into TechPartnersStrip via the `partnerNames` prop. This array
+// renders when the query returns empty (e.g. before any rows have been seeded).
 const TECH_PARTNERS = [
     "WeCrunch", "NuSoft", "KPMG",
     "Tabadlab", "Enable Success", "Red Buffer",
