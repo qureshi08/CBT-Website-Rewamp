@@ -4,18 +4,21 @@ import { useScrollReveal } from "@/components/home/Hero";
 
 const cases = [
     {
+        slug: "loyalty-margin-uplift",
         industry: "Retail",
         outcome: "+32% margin",
         client: "Loyalty model, P&G",
         desc: "Rebuilt the loyalty decisioning stack on Fabric — redemption uplift drove a 32% margin improvement in the pilot category.",
     },
     {
+        slug: "ecl-48-hours",
         industry: "Banking",
         outcome: "ECL in 48h",
         client: "KPMG collaboration",
         desc: "IFRS 9 expected credit loss modelling, bank-ready and audit-traceable. From raw data to regulator-shaped output in 48 hours.",
     },
     {
+        slug: "realtime-bi-40x",
         industry: "Telecom",
         outcome: "40× faster",
         client: "Real-time BI",
@@ -64,7 +67,12 @@ export default function CaseStudiesFeatured() {
 
                 <div className="services-grid-bordered v2-reveal">
                     {cases.map((c) => (
-                        <div key={c.industry + c.outcome} className="service-card">
+                        <Link
+                            key={c.slug}
+                            href={`/case-studies/${c.slug}`}
+                            className="service-card"
+                            style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}
+                        >
                             <span className="service-num">{c.industry}</span>
                             <div style={{
                                 fontFamily: "var(--font-heading)",
@@ -86,7 +94,7 @@ export default function CaseStudiesFeatured() {
                             }}>{c.client}</div>
                             <p className="service-desc">{c.desc}</p>
                             <span className="service-link">Read more <span>→</span></span>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

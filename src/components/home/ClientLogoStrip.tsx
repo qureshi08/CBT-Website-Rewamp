@@ -7,8 +7,8 @@ const CLIENTS = [
 ];
 
 const TECH_PARTNERS = [
-    "WeCrunch", "Microsoft", "Tech Alliance", "Strategic Partner",
-    "Partner Co.", "Databricks", "Snowflake", "Power BI",
+    "WeCrunch", "NuSoft", "KPMG",
+    "Tabadlab", "Enable Success", "Red Buffer",
 ];
 
 // ─── Shared scrolling rail component ───
@@ -164,12 +164,17 @@ export function IndustryLeadersStrip({
     );
 }
 
-// ─── Named export: Technology Partners (dark — matches other strips) ───
-export function TechPartnersStrip() {
+// ─── Named export: Strategic Alliances (dark — matches other strips) ───
+export function TechPartnersStrip({
+    partnerNames,
+}: {
+    partnerNames?: string[];
+}) {
+    const names = partnerNames?.length ? partnerNames : TECH_PARTNERS;
     return (
         <MarqueeRail
-            items={TECH_PARTNERS}
-            label="Our Technology Partners"
+            items={names}
+            label="Our Strategic Alliances"
             speed={28}
             dark={true}
         />

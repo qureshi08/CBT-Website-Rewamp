@@ -4,18 +4,18 @@ import { useScrollReveal } from "@/components/home/Hero";
 const items = [
     {
         num: "01",
-        title: "Partners in your success",
-        desc: "Not body shopping. We own the outcome — shared risk, shared upside, senior team end to end.",
+        title: "Partners, not vendors",
+        desc: "We own the outcome alongside you. Shared risk, shared upside, senior team from scoping to handover — no hiding behind the statement of work when things get hard.",
     },
     {
         num: "02",
-        title: "Direct communication",
-        desc: "Weekly senior contact. No account-management layer, no silent weeks. You always know where the engagement stands.",
+        title: "Direct, senior, every week",
+        desc: "You speak with the people doing the work, not an account layer. Weekly senior contact means problems surface early, decisions happen fast, and nothing quietly drifts off course.",
     },
     {
         num: "03",
-        title: "A talent model that compounds",
-        desc: "The CGAP pipeline — Georgia Tech sponsored, nine-month programme. We don't backfill with contractors.",
+        title: "Our own people, trained to our standard",
+        desc: "Every consultant joins through CGAP, our nine-month Georgia Tech sponsored programme. No contractors, no backfills, no agencies — the quality of the work is the quality of our people, and we control both.",
     },
 ];
 
@@ -82,7 +82,7 @@ export default function Differentiators() {
                             maxWidth: "440px",
                         }}
                     >
-                        Three principles that shape every engagement, from first call to final handover.
+                        A 100% client success rate — every engagement delivered, every client we've worked with would work with us again. Here's how we get there.
                     </p>
                 </div>
 

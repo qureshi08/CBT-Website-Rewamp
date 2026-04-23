@@ -54,12 +54,15 @@ All design tokens are in `src/app/globals.css`. **Never hardcode colors or spaci
 ```
 
 ### Utility Classes (pre-built in globals.css)
-- `.btn-primary` / `.btn-secondary` — CTA buttons
-- `.card` — Standard card with hover shadow
+- `.btn-primary` / `.btn-secondary` / `.btn-ghost` / `.btn-outline` — CTA buttons
+- `.hero-btn-primary` / `.hero-btn-secondary` — hero-weight CTAs
+- `.btn-cta-white` / `.btn-cta-ghost` — buttons used inside `.cta-band` (green strip)
+- `.card` — Standard card with hover shadow (only use on clickable cards — non-clickable cards must not hover)
 - `.section-heading` / `.section-sub` / `.section-tag` — Section typography
-- `.container-main` — `max-width: 1200px`, centered
+- `.section-padding` / `.section-padding-lg` — Vertical rhythm tokens (80px / 96px)
+- `.container-main` / `.v2-wrap` — `max-width: 1200px`, centered (use `.v2-wrap` inside new sections; both are interchangeable)
 - `.cta-band` — Full-width green CTA strip
-- `.fade-up` — Scroll-reveal animation class
+- `.v2-reveal` — Scroll-reveal animation class. Starts at `opacity: 0`; requires a client-side observer. Drop `<ClientReveal />` (from `components/shared/ClientReveal.tsx`) into any Server Component page that uses it, otherwise elements stay invisible.
 
 Full reference: `design-guidelines.md` | Interactive preview: `style-guide.jsx`
 
@@ -70,50 +73,63 @@ Full reference: `design-guidelines.md` | Interactive preview: `style-guide.jsx`
 ```
 src/
   app/
-    (public)/           ← Public-facing pages (Navbar + Footer layout)
-      page.tsx          ← Home
-      customers/        ← Case studies / client showcase
-      partners/         ← Partnership enquiry
-      products/         ← Product catalogue
-      cgap/             ← CGAP graduate program
-      contact/          ← Contact form
-      layout.tsx        ← Wraps all public pages with Navbar + Footer
-    admin/              ← Admin portal (authenticated)
-      page.tsx          ← Dashboard
-      clients/          ← Manage clients
-      case-studies/     ← Manage case studies
-      products/         ← Manage products
-      partners/         ← Manage partner logos
-      batches/          ← Manage CGAP cohorts
-      stats/            ← Manage homepage stats
+    (public)/                    ← Public-facing pages (Navbar + Footer layout)
+      page.tsx                   ← Home
+      services/                  ← Capabilities (strategy / foundations / intelligence)
+      case-studies/              ← Index + [slug] detail pages
+      industries/[slug]/         ← Per-industry landing pages (retail, banking, telecom, …)
+      products/                  ← Product catalogue
+      products/ecl-calculator/   ← Hero SKU detail page (IFRS 9 ECL)
+      partners/                  ← Partnership enquiry
+      about/                     ← About CBT
+      cgap/                      ← CGAP graduate program
+      contact/                   ← Contact form
+      layout.tsx                 ← Wraps all public pages with Navbar + Footer
+    admin/                       ← Admin portal (authenticated)
+      page.tsx                   ← Dashboard
+      clients/                   ← Manage clients
+      case-studies/              ← Manage case studies
+      industries/                ← Manage industry landing pages
+      services/                  ← Manage /services capabilities
+      products/                  ← Manage products
+      partners/                  ← Manage partner logos
+      testimonials/              ← Manage testimonials
+      batches/                   ← Manage CGAP cohorts
+      alumni/                    ← Manage CGAP alumni
+      stats/                     ← Manage homepage stats
       layout.tsx
     api/
-      contact/route.ts  ← Contact form submissions → Resend email
-      partner/route.ts  ← Partner enquiries → Resend email
-    layout.tsx          ← Root layout (Google Fonts, metadata)
-    globals.css         ← ALL CSS tokens + utility classes
+      contact/route.ts           ← Contact form submissions → Resend email
+      partner/route.ts           ← Partner enquiries → Resend email
+    layout.tsx                   ← Root layout (Google Fonts, metadata)
+    globals.css                  ← ALL CSS tokens + utility classes
 
   components/
-    home/               ← Hero, ServicesGrid, StatsBar, Testimonials, ClientLogoStrip, CGAPTeaser
-    layout/             ← Navbar, Footer
-    contact/            ← ContactForm
-    partners/           ← PartnerForm
-    products/           ← ProductFilter
-    shared/             ← SectionHeader, PersonaBridge
-    ui/                 ← Modal, ImageUpload (reusable primitives)
+    home/                        ← Hero, ServicesGrid, CaseStudiesFeatured, Differentiators,
+                                   CredentialsBar, Testimonials, ClientLogoStrip, StatsBar,
+                                   CGAPTeaser, CtaBand
+    services/                    ← CapabilityTile, ToolsStrip, EngagementCard,
+                                   PrinciplesStrip, ServicesFAQ (used by /services)
+    layout/                      ← Navbar, Footer
+    contact/                     ← ContactForm
+    partners/                    ← PartnerForm
+    products/                    ← ProductFilter
+    shared/                      ← SectionHeader, PersonaBridge, Icons, Illustrations,
+                                   ClientReveal, ScrollRevealInit
+    ui/                          ← Modal, ImageUpload (reusable primitives)
 
   lib/
     actions/
-      admin-actions.ts  ← Generic CRUD server actions for admin portal
-      storage-actions.ts← Supabase Storage file upload
+      admin-actions.ts           ← Generic CRUD server actions for admin portal
+      storage-actions.ts         ← Supabase Storage file upload
     supabase/
-      client.ts         ← Browser Supabase client
-      server.ts         ← Server Supabase client (with cookies)
-      admin.ts          ← Service-role admin client
-    resend.ts           ← Resend email client
+      client.ts                  ← Browser Supabase client
+      server.ts                  ← Server Supabase client (with cookies)
+      admin.ts                   ← Service-role admin client
+    resend.ts                    ← Resend email client
 
   types/
-    database.ts         ← Full TypeScript types for all Supabase tables
+    database.ts                  ← Full TypeScript types for all Supabase tables
 ```
 
 ---
@@ -123,9 +139,11 @@ src/
 | Table | Purpose |
 |---|---|
 | `clients` | Client logos + info for logo strip / case studies |
-| `case_studies` | Case study content |
-| `testimonials` | Homepage/page testimonials |
-| `products` | Product catalogue |
+| `case_studies` | Case study content (linked to `industries` via `industry_slug`) |
+| `industries` | Industry landing pages (`/industries/[slug]`) — retail, banking, telecom, … |
+| `services` | Capabilities shown on `/services` (strategy / foundations / intelligence) |
+| `testimonials` | Homepage/page testimonials (scoped by `page` column) |
+| `products` | Product catalogue (categories incl. ECL Calculator hero SKU) |
 | `partners` | Partner logos |
 | `stats` | Dynamic homepage stat counters |
 | `cgap_cohorts` | CGAP program batch info |
@@ -140,9 +158,14 @@ src/
 | Route | Page | Audience |
 |---|---|---|
 | `/` | Home | All |
-| `/customers` | Customers / Case Studies | SME + Enterprise |
-| `/partners` | Partner Enquiry | Potential partners |
-| `/products` | Product Catalogue | All clients |
+| `/services` | Capabilities (Data, Cloud & AI — end to end) | Enterprise + SME |
+| `/case-studies` | Case studies index | SME + Enterprise |
+| `/case-studies/[slug]` | Case study detail | SME + Enterprise |
+| `/industries/[slug]` | Industry landing (retail, banking, telecom, …) | Enterprise + SME |
+| `/products` | Product catalogue | All clients |
+| `/products/ecl-calculator` | ECL Calculator detail (hero SKU) | Banks / lenders |
+| `/partners` | Partner enquiry | Potential partners |
+| `/about` | About CBT | All |
 | `/cgap` | CGAP Graduate Program | Graduates |
 | `/contact` | Contact | All |
 | `/admin` | Admin Dashboard | Internal |
@@ -172,11 +195,14 @@ RESEND_TO_EMAIL=
 ## Code Conventions
 
 - **RSC-first**: Pages are Server Components by default. Add `'use client'` only when needed (event handlers, hooks, animations).
+- **Scroll reveal on Server Component pages**: Any page that uses `.v2-reveal` must mount `<ClientReveal />` once (see `components/shared/ClientReveal.tsx`). Without it, revealed elements stay at `opacity: 0`.
 - **No hardcoded colors/spacing**: Always use CSS variables from `globals.css`.
 - **Component naming**: PascalCase files, kebab-case CSS classes.
 - **Mobile-first CSS**: Base styles for mobile, `min-width` media queries to scale up.
-- **Tailwind + CSS Variables together**: Tailwind for layout/flex/grid/margin, CSS vars for brand tokens.
-- **Icons**: Lucide React only. `size={20}` or `size={24}`, `strokeWidth={1.5}`.
+- **Styling approach**: Mostly vanilla CSS in `globals.css` using CSS variables, plus inline React styles for one-off layout. Tailwind is available but used sparingly — prefer the utility classes already in `globals.css` before adding Tailwind.
+- **Hover effects**: Only apply hover to interactive elements (links, buttons, cards wrapped in `<Link>`, form inputs). Content cards that aren't clickable must not have hover states — it misleads the user. If a card looks clickable, either wrap it in a `<Link>` or strip the hover.
+- **Section headers**: Big capability-page sections use the homepage heading scale — `clamp(2.4rem, 4vw, 3.4rem)`, `line-height: 1.1`, `letter-spacing: -0.02em`, `margin-bottom: 20px`. Sub copy uses `17.5px / fw 300 / lh 1.7`. Sections have `padding: 120px 0` desktop, `80px 0` at ≤640px. The `.services-section-*` family already encodes this.
+- **Icons**: Lucide React or the custom `Icons.tsx` set (`components/shared/Icons.tsx`). `size={20}` or `size={24}`, `strokeWidth={1.5}`.
 - **Accessibility**: Semantic HTML, WCAG AA contrast, keyboard nav, descriptive alt text.
 - **Form pattern**: React Hook Form + Zod schema + server action or API route.
 
@@ -198,4 +224,4 @@ See `docs/FEATURE_LOG.md` for what has been built and current status.
 
 ---
 
-*Last updated: 2026-04-01*
+*Last updated: 2026-04-23*

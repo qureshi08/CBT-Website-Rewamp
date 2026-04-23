@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-type NavChild = { href: string; label: string; note?: string };
+type NavChild = { href: string; label: string; note?: string; image?: string };
 type NavLink = {
     href: string;
     label: string;
@@ -26,16 +26,15 @@ const LINKS: NavLink[] = [
         ],
     },
     {
-        href: "/industries/retail",
-        label: "Industries",
+        href: "/case-studies",
+        label: "Case Studies",
         children: [
-            { href: "/industries/retail", label: "Retail" },
-            { href: "/industries/telecom", label: "Telecom" },
-            { href: "/industries/banking", label: "Banking" },
+            { href: "/industries/retail",     label: "Retail" },
+            { href: "/industries/telecom",    label: "Telecom" },
+            { href: "/industries/banking",    label: "Banking" },
             { href: "/industries/government", label: "Government" },
         ],
     },
-    { href: "/case-studies", label: "Case Studies" },
     {
         href: "/products",
         label: "Products",
@@ -46,7 +45,13 @@ const LINKS: NavLink[] = [
         ],
     },
     { href: "/partners", label: "Partners" },
-    { href: "/cgap", label: "CGAP" },
+    {
+        href: "/cgap",
+        label: "Careers",
+        children: [
+            { href: "/cgap", label: "CGAP", image: "/cgap logos/CGAP - Logo Light BG.svg" },
+        ],
+    },
     { href: "/about", label: "About" },
 ];
 
@@ -138,7 +143,10 @@ export default function Navbar() {
                                                         className="v2-dd-item"
                                                         role="menuitem"
                                                     >
-                                                        <span>{c.label}</span>
+                                                        {c.image
+                                                            ? <img src={c.image} alt={c.label} style={{ height: "20px", width: "auto" }} />
+                                                            : <span>{c.label}</span>
+                                                        }
                                                         {c.note && <span className="v2-dd-note">{c.note}</span>}
                                                     </Link>
                                                 ))}
@@ -206,7 +214,10 @@ export default function Navbar() {
                                                     className="v2-mobile-sublink"
                                                     onClick={() => setMenuOpen(false)}
                                                 >
-                                                    {c.label}
+                                                    {c.image
+                                                        ? <img src={c.image} alt={c.label} style={{ height: "18px", width: "auto" }} />
+                                                        : c.label
+                                                    }
                                                     {c.note && <span className="v2-mobile-subnote">{c.note}</span>}
                                                 </Link>
                                             ))}

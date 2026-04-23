@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Ic from "@/components/shared/Icons";
+import ClientReveal from "@/components/shared/ClientReveal";
 
 export const metadata: Metadata = {
     title: "About | Convergent Business Technologies",
@@ -36,22 +37,49 @@ const VALUES = [
 ];
 
 const PARTNERS = [
-    { name: "Microsoft", note: "Solutions partner" },
-    { name: "Snowflake", note: "Select partner" },
-    { name: "KPMG", note: "Banking alliance" },
-    { name: "OpenAI", note: "Applied AI" },
+    {
+        name: "WeCrunch",
+        note: "Data & analytics alliance",
+        detail: "Joint delivery across FMCG and Fortune 500 analytics engagements, with shared capacity on large-scale data programmes.",
+    },
+    {
+        name: "NuSoft",
+        note: "Engineering partner",
+        detail: "Additional build capacity for custom software, cloud platforms, and data products — scaled per engagement, never outsourced.",
+    },
+    {
+        name: "KPMG",
+        note: "Banking alliance",
+        detail: "Co-delivered IFRS 9 ECL, credit risk, and banking regulatory engagements for tier-one lenders.",
+    },
+    {
+        name: "Tabadlab",
+        note: "Policy & research alliance",
+        detail: "Partnership on policy research, digital transformation studies, and data-driven advisory for public sector and development engagements.",
+    },
+    {
+        name: "Enable Success",
+        note: "Growth & advisory partner",
+        detail: "Joint go-to-market and commercial advisory — expanding reach into new sectors and shared-client opportunities.",
+    },
+    {
+        name: "Red Buffer",
+        note: "Applied AI partner",
+        detail: "Extended AI and machine learning capacity — computer vision, NLP, and predictive analytics for production-grade deployments.",
+    },
 ];
 
 const STATS = [
     { number: "25+", label: "enterprise clients", note: "retail, banking, telecom, FMCG, public sector" },
     { number: "12", label: "CGAP batches", note: "9-month Georgia Tech programme" },
-    { number: "4", label: "partner alliances", note: "Microsoft, Snowflake, KPMG, OpenAI" },
+    { number: "6", label: "partner alliances", note: "WeCrunch, NuSoft, KPMG, Tabadlab, Enable Success, Red Buffer" },
     { number: "100%", label: "senior on engagement", note: "no bench swaps after SOW" },
 ];
 
 export default function AboutPage() {
     return (
         <main>
+            <ClientReveal />
             {/* ─── HERO ─── */}
             <section
                 className="hero-grid-texture"
@@ -124,7 +152,7 @@ export default function AboutPage() {
                             maxWidth: 640,
                         }}
                     >
-                        Convergent Business Technologies is a Data, Cloud &amp; AI consultancy. We&rsquo;re the team that ships &mdash; and then stands behind it when it&rsquo;s in production. Trusted by P&amp;G, Coca-Cola, PepsiCo, UNICEF, and ADNOC.
+                        Nearly two decades of delivering data-driven solutions to enterprises around the world. Our mission: liberate the business brain through analytics and automation, so leaders can realise the value already sitting in their data. Trusted by P&amp;G, Coca-Cola, PepsiCo, UNICEF, and ADNOC.
                     </p>
 
                     <div
@@ -142,8 +170,20 @@ export default function AboutPage() {
             </section>
 
             {/* ─── BY THE NUMBERS ─── */}
-            <section className="industry-highlights">
+            <section className="industry-highlights" style={{ padding: "120px 0 80px" }}>
                 <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal" style={{ marginBottom: 36 }}>
+                        <span className="services-section-tag">the record</span>
+                        <h2 className="services-section-title">
+                            What it&rsquo;s added up to,{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                so far.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Nearly two decades of practice, a focused toolkit, a bench we trained ourselves, and a delivery model we don&rsquo;t flex on &mdash; here&rsquo;s what that&rsquo;s compounded to.
+                        </p>
+                    </div>
                     <div className="about-stats-row">
                         {STATS.map((s) => (
                             <div key={s.label} className="industry-highlight">
@@ -160,11 +200,11 @@ export default function AboutPage() {
             <section className="services-section services-section-alt">
                 <div className="v2-wrap">
                     <div className="industry-context v2-reveal">
-                        <span className="services-section-tag">why we exist</span>
+                        <span className="services-section-tag">our story</span>
                         <h2 className="services-section-title" style={{ maxWidth: 820 }}>
-                            Data consulting should end with an outcome, not a{" "}
+                            Two decades of practice. Built before &ldquo;data&rdquo; was a{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                slide deck.
+                                buzzword.
                             </em>
                         </h2>
                         <p
@@ -178,7 +218,7 @@ export default function AboutPage() {
                                 marginBottom: 16,
                             }}
                         >
-                            CBT was built around a simple frustration: too many data initiatives ship a strategy document and stop there. The roadmap looks great on a slide and then quietly stalls the moment it meets real systems, real users, and real deadlines.
+                            Almost two decades ago, our founders began travelling the world delivering data-driven business solutions to large enterprises. As the market&rsquo;s appetite for data grew, so did their expertise &mdash; built the hard way, on real systems, for real operators.
                         </p>
                         <p
                             style={{
@@ -188,10 +228,59 @@ export default function AboutPage() {
                                 lineHeight: 1.75,
                                 color: "var(--color-text-body)",
                                 maxWidth: 820,
+                                marginBottom: 16,
                             }}
                         >
-                            We built the team to fix that. Senior consultants, our own graduate pipeline, a focused toolkit, and delivery that doesn&rsquo;t end at go-live. Whether the work is a data foundation, an IFRS 9 ECL pipeline, or a generative AI copilot &mdash; we own the outcome.
+                            They pulled ahead of the curve, able to anticipate shifts in the evolving data landscape before the rest of the market caught up. That foresight shaped how they built the team: analysts focused on delivering real value through data, not the latest acronym. While others chased buzzwords, they nurtured future leaders.
                         </p>
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 18,
+                                fontWeight: 350,
+                                lineHeight: 1.75,
+                                color: "var(--color-text-body)",
+                                maxWidth: 820,
+                                marginBottom: 36,
+                            }}
+                        >
+                            Eventually they outgrew their parent organisation and chose to chart their own course. Convergent Business Technologies is that course &mdash; the same founding team, the same conviction, operating on our own terms.
+                        </p>
+                        <blockquote
+                            style={{
+                                borderLeft: "3px solid var(--color-primary)",
+                                paddingLeft: 22,
+                                margin: 0,
+                                maxWidth: 820,
+                            }}
+                        >
+                            <p
+                                style={{
+                                    fontFamily: "var(--font-heading)",
+                                    fontStyle: "italic",
+                                    fontSize: 22,
+                                    fontWeight: 600,
+                                    lineHeight: 1.4,
+                                    color: "var(--color-text-heading)",
+                                    margin: 0,
+                                    marginBottom: 10,
+                                }}
+                            >
+                                &ldquo;Liberate the business brain through Analytics and Automation &mdash; helping businesses realise the Business Value of their Data.&rdquo;
+                            </p>
+                            <span
+                                style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: 12,
+                                    fontWeight: 600,
+                                    letterSpacing: "0.08em",
+                                    textTransform: "uppercase",
+                                    color: "var(--color-text-muted)",
+                                }}
+                            >
+                                &mdash; CBT&rsquo;s founding mission
+                            </span>
+                        </blockquote>
                     </div>
                 </div>
             </section>
@@ -234,12 +323,16 @@ export default function AboutPage() {
             {/* ─── PARTNERS ─── */}
             <section className="services-partners">
                 <div className="v2-wrap">
-                    <div className="services-partners-head">
-                        <span className="section-tag" style={{ marginBottom: 0 }}>
-                            Partner ecosystem
-                        </span>
-                        <p className="services-partners-sub">
-                            Alliances that back our delivery. We earn these — we don&rsquo;t badge-collect.
+                    <div className="services-section-head v2-reveal" style={{ marginBottom: 36 }}>
+                        <span className="services-section-tag">partner ecosystem</span>
+                        <h2 className="services-section-title">
+                            Alliances we&rsquo;ve{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                earned.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Six active alliances spanning data, applied AI, engineering, financial services, policy research, and growth advisory &mdash; each earned on delivered work, not bought on a logo slide.
                         </p>
                     </div>
                     <div className="about-partners-grid">
@@ -247,6 +340,17 @@ export default function AboutPage() {
                             <div key={p.name} className="about-partner-card">
                                 <span className="about-partner-name">{p.name}</span>
                                 <span className="about-partner-note">{p.note}</span>
+                                <span
+                                    style={{
+                                        fontFamily: "var(--font-body)",
+                                        fontSize: 13.5,
+                                        lineHeight: 1.65,
+                                        color: "var(--color-text-body)",
+                                        marginTop: 12,
+                                    }}
+                                >
+                                    {p.detail}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -273,10 +377,23 @@ export default function AboutPage() {
                                     lineHeight: 1.75,
                                     color: "var(--color-text-body)",
                                     maxWidth: 600,
+                                    marginBottom: 16,
+                                }}
+                            >
+                                Our bench is built deliberately &mdash; a direct continuation of the founders&rsquo; instinct to nurture future leaders rather than chase buzzwords. The Convergent Graduate Academy Programme, 9 months and Georgia Tech-sponsored, funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
+                            </p>
+                            <p
+                                style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: 17,
+                                    fontWeight: 350,
+                                    lineHeight: 1.75,
+                                    color: "var(--color-text-body)",
+                                    maxWidth: 600,
                                     marginBottom: 24,
                                 }}
                             >
-                                Our bench is built deliberately. The Convergent Graduate Academy Programme &mdash; 9 months, Georgia Tech-sponsored &mdash; funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
+                                Cohorts run through fundamentals, a specialisation track (engineering, analytics, or applied AI), a live client project, and a named placement. By the time a graduate is on your engagement, they already know how we deliver.
                             </p>
                             <Link href="/cgap" className="hero-btn-secondary">
                                 Explore CGAP <span className="hero-btn-arrow">→</span>
@@ -295,6 +412,20 @@ export default function AboutPage() {
                                 <span className="about-cgap-fact-label">sponsored</span>
                                 <span className="about-cgap-fact-note">
                                     Georgia Tech partnership on content + certification
+                                </span>
+                            </div>
+                            <div className="about-cgap-fact">
+                                <span className="about-cgap-fact-num">100%</span>
+                                <span className="about-cgap-fact-label">client-facing</span>
+                                <span className="about-cgap-fact-note">
+                                    every graduate works on a real engagement by month two
+                                </span>
+                            </div>
+                            <div className="about-cgap-fact">
+                                <span className="about-cgap-fact-num">40+</span>
+                                <span className="about-cgap-fact-label">alumni placed</span>
+                                <span className="about-cgap-fact-note">
+                                    graduates now embedded across CBT and client teams
                                 </span>
                             </div>
                         </div>

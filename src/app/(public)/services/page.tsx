@@ -2,8 +2,33 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import CapabilityTile from "@/components/services/CapabilityTile";
 import ToolsStrip from "@/components/services/ToolsStrip";
+import EngagementCard from "@/components/services/EngagementCard";
+import PrinciplesStrip from "@/components/services/PrinciplesStrip";
+import ServicesFAQ from "@/components/services/ServicesFAQ";
+import ClientReveal from "@/components/shared/ClientReveal";
 import { createClient } from "@/lib/supabase/server";
 import type { IconName } from "@/components/shared/Icons";
+
+const PARTNER_TIERS: Array<{ name: string; tier: string }> = [
+    { name: "Microsoft", tier: "Solutions Partner — Data & AI" },
+    { name: "Snowflake", tier: "Select Services Partner" },
+    { name: "KPMG", tier: "Delivery Alliance" },
+    { name: "OpenAI", tier: "API Platform" },
+];
+
+const DONT_DO: string[] = [
+    "We don't sell licences we can't implement.",
+    "We don't run change programs without a data foundation underneath.",
+    "We don't dress pilots up as production.",
+];
+
+const MATURITY_STAGES: Array<{ label: string; note: string }> = [
+    { label: "Reactive", note: "Spreadsheets. Tribal knowledge." },
+    { label: "Repeatable", note: "A warehouse exists. Reports ship." },
+    { label: "Defined", note: "Governance and lineage are real." },
+    { label: "Managed", note: "Quality and SLAs, not vibes." },
+    { label: "Optimising", note: "Data is a product, measured in P&L." },
+];
 
 export const metadata: Metadata = {
     title: "Services | Convergent Business Technologies",
@@ -86,6 +111,7 @@ export default async function ServicesPage() {
 
     return (
         <>
+            <ClientReveal />
             {/* ─── HERO ─── */}
             <section
                 className="hero-grid-texture services-hero"
@@ -195,21 +221,19 @@ export default async function ServicesPage() {
                 </div>
             </section>
 
-            {(["strategy", "foundations", "intelligence"] as const).map((key) => {
-                const meta = SECTION_META[key];
-                const tiles = sections[key];
-                if (tiles.length === 0) return null;
-                return (
-                    <section key={key} id={key} className={meta.sectionClass}>
-                        <div className="v2-wrap">
-                            <div className="services-section-head v2-reveal">
-                                <span className="services-section-tag">{meta.tag}</span>
-                                <h2 className="services-section-title">{meta.title}</h2>
-                                <p className="services-section-sub">{meta.sub}</p>
-                            </div>
+            {/* ─── #STRATEGY (custom 2-col: tile + engagement sidebar) ─── */}
+            {sections.strategy.length > 0 && (
+                <section id="strategy" className={SECTION_META.strategy.sectionClass}>
+                    <div className="v2-wrap">
+                        <div className="services-section-head v2-reveal">
+                            <span className="services-section-tag">{SECTION_META.strategy.tag}</span>
+                            <h2 className="services-section-title">{SECTION_META.strategy.title}</h2>
+                            <p className="services-section-sub">{SECTION_META.strategy.sub}</p>
+                        </div>
 
-                            <div className={meta.gridClass}>
-                                {tiles.map((t) => (
+                        <div className="services-strategy-grid">
+                            <div className="services-strategy-left">
+                                {sections.strategy.map((t) => (
                                     <CapabilityTile
                                         key={t.slug}
                                         num={t.num}
@@ -220,11 +244,135 @@ export default async function ServicesPage() {
                                         emerging={t.emerging}
                                     />
                                 ))}
+                                <div className="services-maturity">
+                                    <div className="services-maturity-head">
+                                        <span className="services-maturity-eyebrow">
+                                            Maturity model
+                                        </span>
+                                        <h4 className="services-maturity-title">
+                                            Where most teams sit — and where they&rsquo;re trying to get.
+                                        </h4>
+                                    </div>
+                                    <ol className="services-maturity-ladder">
+                                        {MATURITY_STAGES.map((s, i) => (
+                                            <li key={s.label} className="services-maturity-step">
+                                                <div className="services-maturity-num">
+                                                    {String(i + 1).padStart(2, "0")}
+                                                </div>
+                                                <div className="services-maturity-text">
+                                                    <div className="services-maturity-label">{s.label}</div>
+                                                    <div className="services-maturity-note">{s.note}</div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
                             </div>
+                            <EngagementCard />
                         </div>
-                    </section>
-                );
-            })}
+                    </div>
+                </section>
+            )}
+
+            {/* ─── #FOUNDATIONS ─── */}
+            {sections.foundations.length > 0 && (
+                <section id="foundations" className={SECTION_META.foundations.sectionClass}>
+                    <div className="v2-wrap">
+                        <div className="services-section-head v2-reveal">
+                            <span className="services-section-tag">{SECTION_META.foundations.tag}</span>
+                            <h2 className="services-section-title">{SECTION_META.foundations.title}</h2>
+                            <p className="services-section-sub">{SECTION_META.foundations.sub}</p>
+                        </div>
+                        <div className={SECTION_META.foundations.gridClass}>
+                            {sections.foundations.map((t) => (
+                                <CapabilityTile
+                                    key={t.slug}
+                                    num={t.num}
+                                    icon={(t.icon || "target") as IconName}
+                                    title={t.name}
+                                    description={t.description || ""}
+                                    tools={t.tools?.length ? t.tools : undefined}
+                                    emerging={t.emerging}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* ─── HOW WE DELIVER (principles) ─── */}
+            <section className="services-section services-section-principles">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">#delivery · how we work</span>
+                        <h2 className="services-section-title">
+                            The same people, from the whiteboard to{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                production.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Four principles that decide how we staff, scope, and ship. They&rsquo;re also why we turn work down when the shape&rsquo;s wrong.
+                        </p>
+                    </div>
+                    <PrinciplesStrip />
+                </div>
+            </section>
+
+            {/* ─── #INTELLIGENCE ─── */}
+            {sections.intelligence.length > 0 && (
+                <section id="intelligence" className={SECTION_META.intelligence.sectionClass}>
+                    <div className="v2-wrap">
+                        <div className="services-section-head v2-reveal">
+                            <span className="services-section-tag">{SECTION_META.intelligence.tag}</span>
+                            <h2 className="services-section-title">{SECTION_META.intelligence.title}</h2>
+                            <p className="services-section-sub">{SECTION_META.intelligence.sub}</p>
+                        </div>
+                        <div className={SECTION_META.intelligence.gridClass}>
+                            {sections.intelligence.map((t) => (
+                                <CapabilityTile
+                                    key={t.slug}
+                                    num={t.num}
+                                    icon={(t.icon || "target") as IconName}
+                                    title={t.name}
+                                    description={t.description || ""}
+                                    tools={t.tools?.length ? t.tools : undefined}
+                                    emerging={t.emerging}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* ─── WHAT WE DON'T DO ─── */}
+            <section className="services-dontdo-section">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">#candour</span>
+                        <h2 className="services-section-title">
+                            What we{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                don&rsquo;t
+                            </em>{" "}
+                            do.
+                        </h2>
+                        <p className="services-section-sub">
+                            Saying no is a capability. Three lines we won&rsquo;t cross, so the ones we do cross mean something.
+                        </p>
+                    </div>
+                    <ul className="services-dontdo-list">
+                        {DONT_DO.map((line) => (
+                            <li key={line} className="services-dontdo-item">
+                                <span className="services-dontdo-mark" aria-hidden>
+                                    ×
+                                </span>
+                                <span>{line}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
 
             {/* ─── #TOOLS ─── */}
             <section id="tools" className="services-section">
@@ -249,19 +397,46 @@ export default async function ServicesPage() {
             {/* ─── PARTNER BADGES ─── */}
             <section className="services-partners">
                 <div className="v2-wrap">
-                    <div className="services-partners-head">
-                        <span className="section-tag" style={{ marginBottom: 0 }}>
-                            Partner ecosystem
-                        </span>
-                        <p className="services-partners-sub">
-                            Tiered alliances that back our delivery. We earn these; we don&rsquo;t badge-collect.
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">#partners · the ecosystem</span>
+                        <h2 className="services-section-title">
+                            Tiered alliances, not a{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                badge collection.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Each partnership here maps to real project history — co-delivered work, certified people, joint customers. We earn these; we don&rsquo;t collect them.
                         </p>
                     </div>
                     <div className="services-partners-row">
-                        <span className="services-partner-badge">Microsoft</span>
-                        <span className="services-partner-badge">Snowflake</span>
-                        <span className="services-partner-badge">KPMG</span>
-                        <span className="services-partner-badge">OpenAI</span>
+                        {PARTNER_TIERS.map((p) => (
+                            <div key={p.name} className="services-partner-cell">
+                                <span className="services-partner-badge">{p.name}</span>
+                                <span className="services-partner-tier">{p.tier}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── FAQ ─── */}
+            <section className="services-section services-section-faq">
+                <div className="v2-wrap">
+                    <div className="services-faq-wrap">
+                        <div className="services-faq-head v2-reveal">
+                            <span className="services-section-tag">#common questions</span>
+                            <h2 className="services-section-title">
+                                What most teams ask before they{" "}
+                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                    engage.
+                                </em>
+                            </h2>
+                            <p className="services-section-sub">
+                                Five questions that come up on almost every first call. Short, honest answers.
+                            </p>
+                        </div>
+                        <ServicesFAQ />
                     </div>
                 </div>
             </section>

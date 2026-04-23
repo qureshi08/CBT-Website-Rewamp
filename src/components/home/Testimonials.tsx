@@ -102,8 +102,8 @@ export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
                                     )}
                                 </div>
                                 <div>
-                                    <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "14px", color: "var(--color-text-heading)" }}>{t.author}</div>
-                                    <div style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-text-muted)", textTransform: "uppercase" }}>{t.role}, {t.company}</div>
+                                    <div style={{ fontFamily: "var(--font-heading)", fontWeight: 1000, fontSize: "16px", color: "var(--color-text-heading)" }}>{t.author}</div>
+                                    <div style={{ fontFamily: "var(--font-body)", fontSize: "12px", color: "var(--color-text-muted)", textTransform: "uppercase" }}>{t.role}, {t.company}</div>
                                 </div>
                             </div>
                         </div>

@@ -10,9 +10,9 @@ type Credential = {
 };
 
 const credentials: Credential[] = [
-    { icon: "award", title: "Microsoft Gold", sub: "Certified partner across Fabric, Power BI and Azure." },
-    { icon: "shield", title: "Snowflake Select", sub: "Data Cloud partner, production deployments at enterprise scale." },
-    { icon: "external", title: "AppSource", sub: "8,000+ annual downloads across our Power BI visuals." },
+    { icon: "shield", title: "AWS Certified", sub: "Certified consultants across AWS — the cloud foundation behind our data and analytics builds." },
+    { icon: "award", title: "Microsoft Certified", sub: "Certified across Microsoft Fabric and Power BI — the stack powering most of our delivery." },
+    { icon: "external", title: "AppSource Publisher", sub: "Custom Power BI visuals published to the Microsoft marketplace, downloaded by teams across the world." },
 ];
 
 export default function CredentialsBar() {
