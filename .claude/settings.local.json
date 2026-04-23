@@ -5,7 +5,11 @@
       "Bash(taskkill /F /IM node.exe)",
       "Bash(exit 0)",
       "Bash(npm run:*)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080)",
+      "Bash(pandoc --track-changes=all \"C:/Users/User/Downloads/Website Brief.docx\" -o \"C:/Users/User/Downloads/website_brief.md\")",
+      "Read(//c/Users/User/Downloads/**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/products)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/admin/products)"
     ]
   }
 }

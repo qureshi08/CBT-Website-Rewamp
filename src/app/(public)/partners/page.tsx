@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import {
-    ArrowRight,
     Cpu,
     Truck,
     Share2,
@@ -133,128 +132,171 @@ export default async function PartnersPage() {
                 </div>
             </section>
 
-            {/* Models */}
-            <section className="bg-white py-16" id="models">
+            {/* ─── MODELS ─── */}
+            <section id="models" className="services-section">
                 <div className="v2-wrap">
-                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
-                        <span className="v2-lbl v2-reveal">Co-Innovation</span>
-                        <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}>Partnership Models</h2>
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">partnership models</span>
+                        <h2 className="services-section-title">
+                            Three ways to{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                collaborate.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Technology, delivery, referral — pick the shape that fits your practice and the clients you already serve.
+                        </p>
                     </div>
-                    <div className="services-grid-bordered v2-reveal">
+
+                    <div className="services-grid services-grid-3">
                         {partnershipTypes.map((type, i) => {
                             const Icon = type.icon;
                             const num = String(i + 1).padStart(2, "0");
                             return (
-                                <div key={type.title} className="service-card">
-                                    <span className="service-num">{num}</span>
-                                    <div className="service-icon-wrap">
-                                        <Icon size={20} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                <article key={type.title} className="services-tile">
+                                    <div className="services-tile-head">
+                                        <div className="services-tile-icon">
+                                            <Icon size={22} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                        </div>
+                                        <span className="services-tile-num">{num}</span>
                                     </div>
-                                    <div className="service-title">{type.title}</div>
-                                    <p className="service-desc">{type.desc}</p>
-                                </div>
+                                    <div className="services-tile-title-row">
+                                        <h3 className="services-tile-title">{type.title}</h3>
+                                    </div>
+                                    <p className="services-tile-desc">{type.desc}</p>
+                                </article>
                             );
                         })}
                     </div>
                 </div>
             </section>
 
-            {/* Why Partner */}
-            <section className="bg-white py-20">
+            {/* ─── WHY PARTNER ─── */}
+            <section className="services-section services-section-alt">
                 <div className="v2-wrap">
-                    <div style={{ textAlign: "center", maxWidth: "800px", margin: "0 auto 56px" }}>
-                        <span className="v2-lbl v2-reveal">The Advantage</span>
-                        <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(28px, 4vw, 36px)", marginBottom: "20px" }}>Why Global Leaders Partner with CBT?</h2>
-                        <p className="v2-sub v2-reveal">We combine niche technical expertise with a proven delivery model to help our partners close gaps in their data stack and deliver enterprise-grade results.</p>
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">the advantage</span>
+                        <h2 className="services-section-title">
+                            Why global leaders partner with{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                CBT.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Niche technical expertise and a proven delivery model — so you can close gaps in your data stack without building the bench yourself.
+                        </p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                        {valueProps.map((prop, i) => (
-                            <div key={prop.title} className={`v2-reveal v2-d${i + 1}`} style={{ textAlign: "center" }}>
-                                <div style={{ color: "var(--green)", marginBottom: "16px", display: "flex", justifyContent: "center" }}>
-                                    <prop.icon size={32} />
-                                </div>
-                                <h3 className="v2-h3" style={{ fontSize: "17px", marginBottom: "8px" }}>{prop.title}</h3>
-                                <p style={{ fontFamily: "var(--f-body)", fontSize: "13.5px", color: "var(--muted)", lineHeight: "1.6" }}>
-                                    {prop.description}
-                                </p>
-                            </div>
-                        ))}
+                    <div className="services-grid services-grid-2">
+                        {valueProps.map((prop, i) => {
+                            const Icon = prop.icon;
+                            const num = String(i + 1).padStart(2, "0");
+                            return (
+                                <article key={prop.title} className="services-tile">
+                                    <div className="services-tile-head">
+                                        <div className="services-tile-icon">
+                                            <Icon size={22} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                        </div>
+                                        <span className="services-tile-num">{num}</span>
+                                    </div>
+                                    <div className="services-tile-title-row">
+                                        <h3 className="services-tile-title">{prop.title}</h3>
+                                    </div>
+                                    <p className="services-tile-desc">{prop.description}</p>
+                                </article>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
-            {/* Marquees */}
+            {/* ─── MARQUEES ─── */}
             <IndustryLeadersStrip clientNames={clientNames} />
             <TechPartnersStrip />
 
-            {/* Testimonials */}
-            <section className="bg-white py-16">
+            {/* ─── TESTIMONIALS ─── */}
+            <section className="services-section">
                 <div className="v2-wrap">
-                    <div className="section-header-bar v2-reveal" style={{ borderBottom: "none", paddingBottom: 0, marginBottom: "48px" }}>
-                        <div>
-                            <span style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: "11px",
-                                fontWeight: 600,
-                                letterSpacing: "0.1em",
-                                textTransform: "uppercase",
-                                color: "var(--color-primary)",
-                                marginBottom: "14px",
-                                display: "block",
-                            }}>Strategic Alliance</span>
-                            <h2 style={{
-                                fontFamily: "var(--font-heading)",
-                                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
-                                fontWeight: 700,
-                                color: "var(--color-text-heading)",
-                                lineHeight: 1.2,
-                                letterSpacing: "-0.02em",
-                            }}>What Our Partners Say</h2>
-                        </div>
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">strategic alliance</span>
+                        <h2 className="services-section-title">
+                            What our partners{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                say.
+                            </em>
+                        </h2>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {testimonials.map((t: any, i) => (
-                            <div key={t.author} className={`v2-card v2-card-static v2-reveal v2-d${(i % 3) + 1}`} style={{ display: "flex", flexDirection: "column" }}>
-                                <Quote size={20} style={{ color: "var(--green)", opacity: 0.2, marginBottom: "16px" }} />
-                                <p style={{ fontFamily: "var(--f-body)", color: "var(--heading-c)", lineHeight: "1.6", marginBottom: "20px" }}>
+
+                    <div className="partners-testimonial-grid">
+                        {testimonials.map((t: any) => (
+                            <article key={t.author} className="partners-testimonial-card v2-reveal">
+                                <Quote size={20} style={{ color: "var(--color-primary)", opacity: 0.25, marginBottom: 16 }} />
+                                <p className="partners-testimonial-quote">
                                     &ldquo;{t.quote}&rdquo;
                                 </p>
-                                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "auto" }}>
-                                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontWeight: 700, fontSize: "10px" }}>
+                                <div className="partners-testimonial-meta">
+                                    <div className="partners-testimonial-avatar">
                                         {t.avatar_url ? (
-                                            <img src={t.avatar_url} className="w-full h-full object-cover" alt="" />
+                                            <img src={t.avatar_url} alt="" />
                                         ) : (
                                             t.author[0]
                                         )}
                                     </div>
                                     <div>
-                                        <div style={{ fontFamily: "var(--f-head)", fontWeight: 700, fontSize: "14px" }}>{t.author}</div>
-                                        <div style={{ fontFamily: "var(--f-body)", fontSize: "10px", color: "var(--muted)", textTransform: "uppercase" }}>{t.company}</div>
+                                        <div className="partners-testimonial-author">{t.author}</div>
+                                        <div className="partners-testimonial-company">{t.company}</div>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Form */}
-            <section id="partner-form" className="v2-section" style={{ background: "var(--surface)" }}>
-                <div className="v2-wrap" style={{ padding: "64px 32px", position: "relative" }}>
-                    <div style={{ textAlign: "center", marginBottom: "48px" }}>
-                        <h2 style={{
-                                fontFamily: "var(--font-heading)",
-                                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
-                                fontWeight: 700,
-                                color: "var(--color-text-heading)",
-                                lineHeight: 1.2,
-                                letterSpacing: "-0.02em",
-                            }}>Arrange a Discovery Call</h2>
-                        <p className="v2-sub" style={{ maxWidth: "560px", margin: "10px auto 0" }}>Start a conversation about how we can deliver more value together. Response within 24 hours.</p>
+            {/* ─── FORM ─── */}
+            <section id="partner-form" className="services-section services-section-alt">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">arrange a call</span>
+                        <h2 className="services-section-title">
+                            Start the{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                conversation.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Tell us about your practice and the clients you serve. We&rsquo;ll come back within one business day.
+                        </p>
                     </div>
-                    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+
+                    <div className="partners-form-wrap v2-reveal">
                         <PartnerForm />
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── CTA BAND ─── */}
+            <section className="cta-band">
+                <div className="v2-wrap cta-inner-grid">
+                    <div>
+                        <h2 className="cta-heading">
+                            Prefer to talk before the{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                paperwork?
+                            </em>
+                        </h2>
+                        <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
+                            Thirty minutes with a senior consultant to sanity-check the fit — no form, no pitch.
+                        </p>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+                        <Link
+                            href="/contact?intent=partnership"
+                            className="btn-cta-white"
+                            style={{ fontFamily: "var(--font-body)" }}
+                        >
+                            Book a Discovery Call →
+                        </Link>
                     </div>
                 </div>
             </section>

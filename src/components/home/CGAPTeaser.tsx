@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function CGAPTeaser({ batchCount = 12 }: { batchCount?: number }) {
     return (
         <section className="v2-section" style={{
-            background: "var(--dark)",
+            background: "var(--color-dark)",
             position: "relative",
             overflow: "hidden",
         }}>

@@ -5,7 +5,7 @@ import { resend } from "@/lib/resend";
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { name, email, company, region, industry, subject, message } = body;
+        const { name, email, company, region, industry, subject, message, intent } = body;
 
         // Validate required fields
         if (!name || !email || !subject || !message) {
@@ -39,10 +39,11 @@ export async function POST(request: NextRequest) {
 
         // Send confirmation email via Resend
         if (process.env.RESEND_API_KEY) {
+            const intentPrefix = intent ? `[${intent}] ` : "";
             await resend.emails.send({
                 from: process.env.EMAIL_FROM || "onboarding@resend.dev",
                 to: process.env.EMAIL_TO || "muhammadanasq@gmail.com",
-                subject: `New Contact Submission: ${subject}`,
+                subject: `${intentPrefix}New Contact Submission: ${subject}`,
                 html: `
                     <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
                         <h2 style="color: #2D7D46; margin-top: 0;">New Contact Form Submission</h2>
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
                         <p><strong>Region:</strong> ${region || "Not specified"}</p>
                         <p><strong>Industry:</strong> ${industry || "Not specified"}</p>
                         <p><strong>Subject:</strong> ${subject}</p>
+                        ${intent ? `<p><strong>Intent:</strong> ${intent}</p>` : ""}
                         <div style="margin-top: 25px; padding: 20px; background: #F9F9F9; border-left: 4px solid #2D7D46; border-radius: 4px;">
                             <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; text-transform: uppercase; color: #666;">Message:</p>
                             <p style="white-space: pre-wrap; margin: 0; line-height: 1.6;">${message}</p>

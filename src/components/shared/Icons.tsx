@@ -44,7 +44,7 @@ const Icons: Record<string, IconPath> = {
 
 export type IconName = keyof typeof Icons;
 
-export default function Ic({ name, size = 20, stroke = "var(--green)", sw = 1.5, style = {} }: IconProps) {
+export default function Ic({ name, size = 20, stroke = "var(--color-primary)", sw = 1.5, style = {} }: IconProps) {
     const d = Icons[name];
     if (!d) return null;
     return (

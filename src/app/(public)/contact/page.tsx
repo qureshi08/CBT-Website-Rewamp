@@ -1,6 +1,8 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { Mail, MapPin, Clock } from "lucide-react";
 import ContactForm from "@/components/contact/ContactForm";
+import PersonaBridge from "@/components/shared/PersonaBridge";
 
 export const metadata: Metadata = {
     title: "Contact Us | CBT — Convergent Business Technologies",
@@ -8,108 +10,232 @@ export const metadata: Metadata = {
         "Get in touch with CBT. We help organisations turn their data into competitive advantage. Offices in Islamabad, Pakistan.",
 };
 
-import PersonaBridge from "@/components/shared/PersonaBridge";
+type IntentKey = "ecl-demo" | "discovery" | "partnership";
 
-export default function ContactPage() {
+type IntentCopy = {
+    tag: string;
+    titleLead: string;
+    titleAccent: string;
+    sub: string;
+    defaultSubject: string;
+};
+
+const INTENT_COPY: Record<IntentKey, IntentCopy> = {
+    "ecl-demo": {
+        tag: "ECL Calculator · Demo Request",
+        titleLead: "Let's run ECL against your",
+        titleAccent: "book.",
+        sub: "Thirty minutes with a senior consultant and a KPMG collaborator. We'll walk the methodology, map it to your portfolio, and tell you whether a pilot fits.",
+        defaultSubject: "ECL Calculator Demo",
+    },
+    discovery: {
+        tag: "Discovery Call",
+        titleLead: "Book your Discovery",
+        titleAccent: "Call.",
+        sub: "Thirty minutes with a senior consultant. No pitch deck — we'll scope the problem, pressure-test the approach, and tell you whether we're the right team for it.",
+        defaultSubject: "Customer Enquiry",
+    },
+    partnership: {
+        tag: "Partnership Enquiry",
+        titleLead: "Let's explore a",
+        titleAccent: "partnership.",
+        sub: "Tell us about your practice, geography and the kinds of engagements you take on. We'll come back with where we see fit — or where we don't.",
+        defaultSubject: "Partnership (Arrange a Call)",
+    },
+};
+
+const DEFAULT_COPY: IntentCopy = {
+    tag: "Get in touch",
+    titleLead: "Let's start a",
+    titleAccent: "conversation.",
+    sub: "Whether you're scoping a data transformation, exploring a partnership, or joining our talent pipeline — tell us what you're chasing and we'll take it from there.",
+    defaultSubject: "",
+};
+
+function resolveIntent(raw: string | string[] | undefined): IntentKey | null {
+    if (typeof raw !== "string") return null;
+    if (raw in INTENT_COPY) return raw as IntentKey;
+    return null;
+}
+
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function ContactPage({ searchParams }: Props) {
+    const params = await searchParams;
+    const intent = resolveIntent(params.intent);
+    const copy = intent ? INTENT_COPY[intent] : DEFAULT_COPY;
+
     return (
-        <div className="font-body">
-            {/* Hero */}
-            <section className="bg-white pt-20 md:pt-24 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2 -z-10" />
-
-                <div className="container-main py-12 md:py-16">
-                    <div className="max-w-2xl">
-                        <span className="uppercase-label text-primary mb-6 inline-block border-b border-primary/30 pb-1">
-                            Partner with Us
+        <main>
+            {/* ─── HERO ─── */}
+            <section
+                className="hero-grid-texture"
+                style={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "120px 0 80px",
+                    background: "#fff",
+                    position: "relative",
+                    overflow: "hidden",
+                }}
+            >
+                <div className="v2-wrap" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+                    <div
+                        className="a-fadeUp-1"
+                        style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            background: "var(--color-primary-muted)",
+                            borderRadius: 20,
+                            padding: "5px 13px",
+                            marginBottom: 22,
+                        }}
+                    >
+                        <span
+                            style={{
+                                width: 7,
+                                height: 7,
+                                borderRadius: "50%",
+                                background: "var(--color-primary)",
+                                animation: "pulse 2s infinite",
+                            }}
+                        />
+                        <span
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "var(--text-xs)",
+                                fontWeight: 500,
+                                color: "var(--color-primary)",
+                            }}
+                        >
+                            {copy.tag}
                         </span>
-                        <h1 className="text-3xl md:text-5xl font-bold text-text-heading leading-[1.1] font-heading tracking-tight">
-                            Let&apos;s Start a <span className="italic-accent text-primary">Conversation.</span>
-                        </h1>
-                        <p className="mt-6 text-base md:text-lg text-text-body/80 leading-relaxed max-w-xl font-normal font-body">
-                            Whether you&apos;re looking to transform your data architecture,
-                            explore a partnership, or join our talent pipeline — we&apos;re here to help.
-                        </p>
+                    </div>
+
+                    <h1
+                        className="v2-h1 a-fadeUp-2"
+                        style={{
+                            fontSize: "clamp(2.6rem, 5vw, 4rem)",
+                            marginBottom: 22,
+                            maxWidth: 920,
+                        }}
+                    >
+                        {copy.titleLead}{" "}
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                            {copy.titleAccent}
+                        </em>
+                    </h1>
+
+                    <p
+                        className="a-fadeUp-3"
+                        style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 20,
+                            fontWeight: 350,
+                            color: "#4B5563",
+                            lineHeight: 1.7,
+                            maxWidth: 640,
+                        }}
+                    >
+                        {copy.sub}
+                    </p>
+
+                    <div
+                        className="a-fadeUp-4"
+                        style={{
+                            display: "flex",
+                            gap: 16,
+                            marginTop: 32,
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Link href="#contact-form" className="hero-btn-primary">
+                            Send a message <span>→</span>
+                        </Link>
+                        <Link href="/case-studies" className="hero-btn-secondary">
+                            See our work <span className="hero-btn-arrow">→</span>
+                        </Link>
                     </div>
                 </div>
             </section>
 
-            <section className="bg-surface relative overflow-hidden">
-                {/* Background decoration */}
-                <div className="absolute top-0 left-0 w-full h-[300px] bg-white -z-10" />
-
-                <div className="container-main py-16">
-                    <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
-                        {/* Contact Info Sidebar */}
-                        <div className="lg:col-span-1">
-                            <h2 className="text-2xl font-bold text-text-heading mb-8 font-heading">
-                                Why Contact Us?
+            {/* ─── FORM + SIDEBAR ─── */}
+            <section id="contact-form" className="services-section services-section-alt">
+                <div className="v2-wrap">
+                    <div className="contact-body-grid">
+                        {/* Sidebar */}
+                        <aside className="contact-sidebar v2-reveal">
+                            <span className="services-section-tag">why contact us</span>
+                            <h2 className="services-section-title" style={{ fontSize: "clamp(1.6rem, 2.6vw, 2.1rem)", marginBottom: 28 }}>
+                                Straight to a{" "}
+                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                    senior consultant.
+                                </em>
                             </h2>
 
-                            <div className="space-y-8 font-body">
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-10 h-10 rounded-lg bg-primary-muted text-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                        <Clock size={18} />
+                            <div className="contact-feature-list">
+                                <div className="contact-feature">
+                                    <div className="contact-feature-icon">
+                                        <Clock size={18} strokeWidth={1.5} />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-text-heading text-base font-heading">
-                                            Quick Response
-                                        </h3>
-                                        <p className="text-[13px] text-text-body/70 mt-1 leading-relaxed">
-                                            Our consultants typically respond within 1 business day.
+                                        <h3 className="contact-feature-title">Quick response</h3>
+                                        <p className="contact-feature-body">
+                                            Our consultants typically respond within one business day.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-10 h-10 rounded-lg bg-primary-muted text-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                        <MapPin size={18} />
+                                <div className="contact-feature">
+                                    <div className="contact-feature-icon">
+                                        <MapPin size={18} strokeWidth={1.5} />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-text-heading text-base font-heading">
-                                            Global Delivery
-                                        </h3>
-                                        <p className="text-[13px] text-text-body/70 mt-1 leading-relaxed">
+                                        <h3 className="contact-feature-title">Global delivery</h3>
+                                        <p className="contact-feature-body">
                                             Based in Islamabad, Pakistan, delivering for brands worldwide.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-10 h-10 rounded-lg bg-primary-muted text-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                        <Mail size={18} />
+                                <div className="contact-feature">
+                                    <div className="contact-feature-icon">
+                                        <Mail size={18} strokeWidth={1.5} />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-text-heading text-base font-heading">
-                                            Direct Message
-                                        </h3>
-                                        <p className="text-[13px] text-text-body/70 mt-1 leading-relaxed">
-                                            Use the form to send a direct message to our support and team.
+                                        <h3 className="contact-feature-title">Direct message</h3>
+                                        <p className="contact-feature-body">
+                                            Use the form to reach the team handling your enquiry directly.
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-12 p-6 bg-white border border-border/60 rounded-2xl relative overflow-hidden shadow-lg shadow-black/5">
-                                <div className="absolute top-0 left-0 w-1 h-full bg-primary/20" />
-                                <p className="text-sm text-text-body/80 italic leading-relaxed relative z-10 font-body">
+                            <div className="contact-quote-card">
+                                <p className="contact-quote-text">
                                     &ldquo;CBT helped us transform our reporting architecture in weeks, not months. Highly recommend their responsive team.&rdquo;
                                 </p>
-                                <div className="mt-6 flex items-center gap-3">
-                                    <div className="w-7 h-7 rounded-full bg-primary-muted flex items-center justify-center text-primary font-bold text-[9px]">EP</div>
-                                    <p className="uppercase-label text-[9px] text-text-heading">Executive Partner, FMCG Client</p>
+                                <div className="contact-quote-meta">
+                                    <div className="contact-quote-avatar">EP</div>
+                                    <span className="contact-quote-byline">Executive Partner, FMCG Client</span>
                                 </div>
                             </div>
-                        </div>
+                        </aside>
 
-                        {/* Form Section */}
-                        <div className="lg:col-span-2">
-                            <ContactForm />
+                        {/* Form */}
+                        <div className="contact-form-col v2-reveal">
+                            <ContactForm intent={intent ?? undefined} defaultSubject={copy.defaultSubject || undefined} />
                         </div>
                     </div>
                 </div>
             </section>
 
             <PersonaBridge exclude="contact" />
-        </div>
+        </main>
     );
 }

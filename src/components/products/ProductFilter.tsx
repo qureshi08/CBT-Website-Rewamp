@@ -13,6 +13,9 @@ interface Product {
     features: string[];
     appsource_url?: string;
     industry?: string;
+    badge_text?: string | null;
+    detail_path?: string | null;
+    partner_note?: string | null;
 }
 
 export default function ProductFilter() {
@@ -43,6 +46,9 @@ export default function ProductFilter() {
                 features: p.screenshot_urls || [], // Reusing this for demo feature list
                 appsource_url: p.appsource_url || "#",
                 industry: p.industry || "General",
+                badge_text: p.badge_text || null,
+                detail_path: p.detail_path || null,
+                partner_note: p.partner_note || null,
             }));
 
             setProducts(mappedProducts);
@@ -113,6 +119,14 @@ export default function ProductFilter() {
                             <span className="absolute top-6 left-6 uppercase-label text-white bg-primary px-3 py-1 rounded-full shadow-lg">
                                 {product.industry}
                             </span>
+
+                            {product.badge_text && (
+                                <span
+                                    className="absolute top-6 right-6 font-mono text-[10px] font-bold tracking-wider uppercase text-text-heading bg-white/95 border border-border/40 px-2.5 py-1 rounded-full shadow-md"
+                                >
+                                    {product.badge_text}
+                                </span>
+                            )}
                         </div>
 
                         <div className="p-5 sm:p-8 flex flex-col flex-grow">
@@ -121,11 +135,17 @@ export default function ProductFilter() {
                                 <span className="uppercase-label text-primary">{product.category}</span>
                             </div>
 
-                            <h3 className="text-2xl font-bold text-text-heading mb-4 font-heading">
+                            <h3 className="text-2xl font-bold text-text-heading mb-2 font-heading">
                                 {product.name}
                             </h3>
 
-                            <p className="text-text-body/70 leading-relaxed mb-8 text-sm font-body">
+                            {product.partner_note && (
+                                <p className="text-[11px] font-mono uppercase tracking-wider text-primary mb-4">
+                                    {product.partner_note}
+                                </p>
+                            )}
+
+                            <p className="text-text-body/70 leading-relaxed mb-8 text-sm font-body mt-2">
                                 {product.short_description}
                             </p>
 
@@ -141,15 +161,25 @@ export default function ProductFilter() {
                             </div>
 
                             <div className="mt-auto flex flex-col gap-3">
-                                <a
-                                    href={product.appsource_url || "#"}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hero-btn-primary"
-                                    style={{ display: "flex", width: "100%", justifyContent: "center" }}
-                                >
-                                    Get on AppSource <span><ExternalLink size={14} /></span>
-                                </a>
+                                {product.detail_path ? (
+                                    <Link
+                                        href={product.detail_path}
+                                        className="hero-btn-primary"
+                                        style={{ display: "flex", width: "100%", justifyContent: "center" }}
+                                    >
+                                        Learn more <span><ArrowRight size={14} /></span>
+                                    </Link>
+                                ) : (
+                                    <a
+                                        href={product.appsource_url || "#"}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="hero-btn-primary"
+                                        style={{ display: "flex", width: "100%", justifyContent: "center" }}
+                                    >
+                                        Get on AppSource <span><ExternalLink size={14} /></span>
+                                    </a>
+                                )}
                                 <Link
                                     href={`/contact?subject=Demo: ${product.name}`}
                                     className="btn-ghost justify-center text-sm font-bold"

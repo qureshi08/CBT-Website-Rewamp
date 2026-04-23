@@ -30,21 +30,20 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
                     </div>
 
                     <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
-                        Enabling Business to<br />
-                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>harness data </em>
-                        and Deliver Value{" "}
+                        Data, Cloud &amp; AI that actually{" "}
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>ships.</em>
                     </h1>
 
-                    <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "460px", marginTop: "13px" }}>
-                        Strategic agile development experts. We help companies create software that rapidly scales businesses and delights users.
+                    <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "480px", marginTop: "13px" }}>
+                        Enterprise data capability, delivered by a team that owns the outcome. Trusted by P&amp;G, Coca-Cola, PepsiCo, UNICEF, and ADNOC.
                     </p>
 
                     <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
-                        <Link href="/contact" className="hero-btn-primary">
-                            Work with us <span>→</span>
+                        <Link href="/contact?intent=discovery" className="hero-btn-primary">
+                            Book a Discovery Call <span>→</span>
                         </Link>
                         <Link href="/customers" className="hero-btn-secondary">
-                            See Our Work <span className="hero-btn-arrow">→</span>
+                            See our work <span className="hero-btn-arrow">→</span>
                         </Link>
                     </div>
                 </div>
@@ -57,36 +56,60 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
     );
 }
 
-// ─── Persona Cards ───
-export function PersonaCards() {
-    const personas = [
-        { num: "01", href: "/customers", icon: "building" as const, title: "Customer", sub: "Work with us to transform your data capability and deliver measurable business value." },
-        { num: "02", href: "/partners", icon: "handshake" as const, title: "Partner", sub: "Co-deliver engagements and grow through a structured collaboration with CBT." },
-        { num: "03", href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "Graduate academy bridging academia and industry in data analytics consultancy." },
+// ─── Secondary Entries (demoted tri-block: CGAP, Products, Partners) ───
+export function SecondaryEntries() {
+    const entries = [
+        { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "A career, not a job. Nine-month graduate programme — Georgia Tech sponsored." },
+        { href: "/products", icon: "layersData" as const, title: "Products", sub: "Productising our expertise. ECL Calculator and Power BI visuals on AppSource." },
+        { href: "/partners", icon: "handshake" as const, title: "Partners", sub: "Global network of technology and delivery partners. Explore collaboration." },
     ];
 
     return (
-        <section style={{ padding: "100px 32px", background: "var(--color-white)" }}>
+        <section style={{ padding: "80px 32px", background: "var(--color-surface)" }}>
             <div className="v2-wrap">
-                <div style={{ textAlign: "center", marginBottom: "48px" }}>
-                    <p className="v2-lbl v2-reveal">Choose your journey</p>
-                    <h2 className="v2-h2 v2-reveal" style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)" }}>Who are you?</h2>
+                <div className="v2-reveal" style={{ marginBottom: "36px" }}>
+                    <p className="v2-lbl">Also at CBT</p>
+                    <h2 className="v2-h3" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)", maxWidth: "640px" }}>
+                        Other ways we <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>work together.</em>
+                    </h2>
                 </div>
 
-                <div className="services-grid-bordered v2-reveal">
-                    {personas.map((p, i) => (
-                        <Link key={p.href} href={p.href} style={{ textDecoration: "none" }}>
-                            <div className="service-card" style={{ height: "100%" }}>
-                                <span className="service-num">{p.num}</span>
-                                <div className="service-icon-wrap">
-                                    <Ic name={p.icon as any} size={20} stroke="var(--color-primary)" />
+                <div className="home-persona-grid v2-reveal">
+                    {entries.map((e) => (
+                        <Link key={e.href} href={e.href} style={{ textDecoration: "none" }}>
+                            <div className="v2-pc" style={{ padding: "24px 22px" }}>
+                                <div className="v2-pc-icon" style={{ width: 36, height: 36, borderRadius: 8, marginBottom: 12 }}>
+                                    <Ic name={e.icon as any} size={18} stroke="var(--color-primary)" />
                                 </div>
-                                <div className="service-title">{p.title}</div>
-                                <p className="service-desc" style={{ marginBottom: "24px" }}>
-                                    {p.sub}
+                                <div style={{
+                                    fontFamily: "var(--font-heading)",
+                                    fontSize: "1.1rem",
+                                    fontWeight: 700,
+                                    color: "var(--color-text-heading)",
+                                    marginBottom: 6,
+                                }}>
+                                    {e.title}
+                                </div>
+                                <p style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: 13.5,
+                                    lineHeight: 1.6,
+                                    color: "var(--color-text-muted)",
+                                    marginBottom: 16,
+                                    flexGrow: 1,
+                                }}>
+                                    {e.sub}
                                 </p>
-                                <span className="service-link">
-                                    Explore <span style={{ transition: "transform 0.2s" }}>→</span>
+                                <span style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    color: "var(--color-text-body)",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 5,
+                                }}>
+                                    Explore <span>→</span>
                                 </span>
                             </div>
                         </Link>
@@ -96,3 +119,6 @@ export function PersonaCards() {
         </section>
     );
 }
+
+// ─── Backwards-compat alias (pages still importing PersonaCards) ───
+export const PersonaCards = SecondaryEntries;

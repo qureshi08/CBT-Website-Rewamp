@@ -1,13 +1,65 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+
+type NavChild = { href: string; label: string; note?: string };
+type NavLink = {
+    href: string;
+    label: string;
+    children?: NavChild[];
+};
+
+const LINKS: NavLink[] = [
+    { href: "/", label: "Home" },
+    {
+        href: "/services",
+        label: "Services",
+        children: [
+            { href: "/services#strategy", label: "Data Strategy & Maturity" },
+            { href: "/services#foundations", label: "Data Engineering & Platforms" },
+            { href: "/services#foundations", label: "Data Governance & Quality" },
+            { href: "/services#foundations", label: "Data Analytics & BI" },
+            { href: "/services#intelligence", label: "AI & Generative AI" },
+            { href: "/services#intelligence", label: "Agentic AI", note: "Emerging" },
+        ],
+    },
+    {
+        href: "/industries/retail",
+        label: "Industries",
+        children: [
+            { href: "/industries/retail", label: "Retail" },
+            { href: "/industries/telecom", label: "Telecom" },
+            { href: "/industries/banking", label: "Banking" },
+            { href: "/industries/government", label: "Government" },
+        ],
+    },
+    { href: "/case-studies", label: "Case Studies" },
+    {
+        href: "/products",
+        label: "Products",
+        children: [
+            { href: "/products", label: "All Products" },
+            { href: "/products/ecl-calculator", label: "ECL Calculator", note: "Hero SKU" },
+            { href: "/products#products", label: "Power BI Visuals" },
+        ],
+    },
+    { href: "/partners", label: "Partners" },
+    { href: "/cgap", label: "CGAP" },
+    { href: "/about", label: "About" },
+];
+
+const CTA_HREF = "/contact?intent=discovery";
+const CTA_LABEL = "Book a Call";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
     const pathname = usePathname();
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         const fn = () => setScrolled(window.scrollY > 16);
@@ -15,33 +67,32 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", fn);
     }, []);
 
-    // Close mobile menu on route change
     useEffect(() => {
         setMenuOpen(false);
+        setOpenDropdown(null);
     }, [pathname]);
 
-    // Prevent body scroll when mobile menu is open
     useEffect(() => {
         document.body.style.overflow = menuOpen ? "hidden" : "";
         return () => { document.body.style.overflow = ""; };
     }, [menuOpen]);
 
-    const links = [
-        { href: "/", label: "Home" },
-        { href: "/customers", label: "Customers" },
-        { href: "/partners", label: "Partners" },
-        { href: "/products", label: "Products" },
-        { href: "/cgap", label: "CGAP" },
-    ];
-
     const isActive = (href: string) =>
-        href === "/" ? pathname === "/" : pathname.startsWith(href);
+        href === "/" ? pathname === "/" : pathname.startsWith(href.split("#")[0]);
+
+    const openMenu = (label: string) => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        setOpenDropdown(label);
+    };
+    const scheduleClose = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        closeTimer.current = setTimeout(() => setOpenDropdown(null), 120);
+    };
 
     return (
         <>
             <nav className={`v2-nav${scrolled ? " v2-scrolled" : ""}`}>
                 <div className="v2-nav-inner">
-                    {/* Logo */}
                     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
                         <img
                             src="/cbt logos/CBT Logo - Light BG.svg"
@@ -50,19 +101,73 @@ export default function Navbar() {
                         />
                     </Link>
 
-                    {/* Desktop Nav Links */}
                     <div className="v2-nav-links">
-                        {links.map(l => (
-                            <Link key={l.href} href={l.href} className={`v2-nl${isActive(l.href) ? " v2-on" : ""}`} style={{ textDecoration: "none" }}>
-                                {l.label}
-                            </Link>
-                        ))}
+                        {LINKS.map(l => {
+                            const hasChildren = !!l.children?.length;
+                            const active = isActive(l.href);
+                            if (hasChildren) {
+                                const open = openDropdown === l.label;
+                                return (
+                                    <div
+                                        key={l.label}
+                                        className="v2-nl-wrap"
+                                        onMouseEnter={() => openMenu(l.label)}
+                                        onMouseLeave={scheduleClose}
+                                    >
+                                        <Link
+                                            href={l.href}
+                                            className={`v2-nl v2-nl-dd${active ? " v2-on" : ""}`}
+                                            style={{ textDecoration: "none" }}
+                                            aria-haspopup="menu"
+                                            aria-expanded={open}
+                                        >
+                                            {l.label}
+                                            <ChevronDown size={14} strokeWidth={1.75} style={{ marginLeft: 3, marginTop: 1, transition: "transform .18s", transform: open ? "rotate(180deg)" : "none" }} />
+                                        </Link>
+                                        {open && (
+                                            <div
+                                                className="v2-dd"
+                                                role="menu"
+                                                onMouseEnter={() => openMenu(l.label)}
+                                                onMouseLeave={scheduleClose}
+                                            >
+                                                {l.children!.map(c => (
+                                                    <Link
+                                                        key={c.label}
+                                                        href={c.href}
+                                                        className="v2-dd-item"
+                                                        role="menuitem"
+                                                    >
+                                                        <span>{c.label}</span>
+                                                        {c.note && <span className="v2-dd-note">{c.note}</span>}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            }
+                            return (
+                                <Link
+                                    key={l.href + l.label}
+                                    href={l.href}
+                                    className={`v2-nl${active ? " v2-on" : ""}`}
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    {l.label}
+                                </Link>
+                            );
+                        })}
                     </div>
 
-                    {/* Desktop CTA */}
-                    <Link href="/contact" className="v2-nav-cta v2-nav-cta-desktop" style={{ textDecoration: "none" }}>Contact Us</Link>
+                    <Link
+                        href={CTA_HREF}
+                        className="v2-nav-cta v2-nav-cta-desktop"
+                        style={{ textDecoration: "none" }}
+                    >
+                        {CTA_LABEL} <span aria-hidden>→</span>
+                    </Link>
 
-                    {/* Hamburger button — mobile only */}
                     <button
                         className="v2-hamburger"
                         onClick={() => setMenuOpen(o => !o)}
@@ -74,32 +179,65 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Mobile Menu Drawer */}
             <div className={`v2-mobile-menu${menuOpen ? " v2-mobile-open" : ""}`} aria-hidden={!menuOpen}>
                 <nav className="v2-mobile-nav">
-                    {links.map(l => (
-                        <Link
-                            key={l.href}
-                            href={l.href}
-                            className={`v2-mobile-link${isActive(l.href) ? " v2-on" : ""}`}
-                            style={{ textDecoration: "none" }}
-                            onClick={() => setMenuOpen(false)}
-                        >
-                            {l.label}
-                        </Link>
-                    ))}
+                    {LINKS.map(l => {
+                        const active = isActive(l.href);
+                        const hasChildren = !!l.children?.length;
+                        const sectionOpen = openMobileSection === l.label;
+                        if (hasChildren) {
+                            return (
+                                <div key={l.label}>
+                                    <button
+                                        type="button"
+                                        className={`v2-mobile-link v2-mobile-link-btn${active ? " v2-on" : ""}`}
+                                        onClick={() => setOpenMobileSection(sectionOpen ? null : l.label)}
+                                        aria-expanded={sectionOpen}
+                                    >
+                                        <span>{l.label}</span>
+                                        <ChevronDown size={18} strokeWidth={1.5} style={{ transition: "transform .2s", transform: sectionOpen ? "rotate(180deg)" : "none" }} />
+                                    </button>
+                                    {sectionOpen && (
+                                        <div className="v2-mobile-sublist">
+                                            {l.children!.map(c => (
+                                                <Link
+                                                    key={c.label}
+                                                    href={c.href}
+                                                    className="v2-mobile-sublink"
+                                                    onClick={() => setMenuOpen(false)}
+                                                >
+                                                    {c.label}
+                                                    {c.note && <span className="v2-mobile-subnote">{c.note}</span>}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        }
+                        return (
+                            <Link
+                                key={l.href + l.label}
+                                href={l.href}
+                                className={`v2-mobile-link${active ? " v2-on" : ""}`}
+                                style={{ textDecoration: "none" }}
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                {l.label}
+                            </Link>
+                        );
+                    })}
                     <Link
-                        href="/contact"
+                        href={CTA_HREF}
                         className="v2-nav-cta"
-                        style={{ textDecoration: "none", marginTop: "8px", textAlign: "center" }}
+                        style={{ textDecoration: "none", marginTop: "12px", textAlign: "center", justifyContent: "center" }}
                         onClick={() => setMenuOpen(false)}
                     >
-                        Contact Us
+                        {CTA_LABEL} <span aria-hidden>→</span>
                     </Link>
                 </nav>
             </div>
 
-            {/* Backdrop */}
             {menuOpen && (
                 <div className="v2-mobile-backdrop" onClick={() => setMenuOpen(false)} aria-hidden />
             )}

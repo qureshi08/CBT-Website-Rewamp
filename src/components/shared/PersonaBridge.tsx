@@ -3,7 +3,7 @@ import Link from "next/link";
 import Ic from "@/components/shared/Icons";
 
 const personas = [
-    { key: "customers", label: "Customers", href: "/customers", icon: "building" as const },
+    { key: "customers", label: "Case Studies", href: "/case-studies", icon: "building" as const },
     { key: "partners", label: "Partners", href: "/partners", icon: "handshake" as const },
     { key: "products", label: "Products", href: "/products", icon: "pieChart" as const },
     { key: "cgap", label: "CGAP", href: "/cgap", icon: "graduation" as const },
@@ -14,15 +14,15 @@ export default function PersonaBridge({ exclude }: { exclude?: string }) {
     return (
         <div className="v2-bridge">
             <div className="v2-wrap" style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "var(--f-body)", fontSize: "13px", fontWeight: 500, color: "var(--muted)", marginRight: "6px" }}>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "13px", fontWeight: 500, color: "var(--color-text-muted)", marginRight: "6px" }}>
                     Also explore:
                 </span>
                 {items.map(p => (
                     <Link key={p.key} href={p.href} style={{ textDecoration: "none" }}>
                         <div className="v2-bridge-chip">
-                            <Ic name={p.icon} size={15} stroke="var(--green)" />
+                            <Ic name={p.icon} size={15} stroke="var(--color-primary)" />
                             {p.label}
-                            <Ic name="arrowRight" size={13} stroke="var(--muted)" />
+                            <Ic name="arrowRight" size={13} stroke="var(--color-text-muted)" />
                         </div>
                     </Link>
                 ))}

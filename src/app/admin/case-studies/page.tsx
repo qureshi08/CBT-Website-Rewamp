@@ -9,6 +9,7 @@ import ImageUpload from "@/components/ui/ImageUpload";
 export default function AdminCaseStudies() {
     const [caseStudies, setCaseStudies] = useState<any[]>([]);
     const [clients, setClients] = useState<any[]>([]);
+    const [industries, setIndustries] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,13 +31,15 @@ export default function AdminCaseStudies() {
 
     async function fetchData() {
         setIsLoading(true);
-        const [studiesRes, clientsRes] = await Promise.all([
+        const [studiesRes, clientsRes, industriesRes] = await Promise.all([
             adminCrud("case_studies", "read", null, undefined, { orderBy: { column: "created_at", ascending: false } }),
-            adminCrud("clients", "read", null, undefined, { orderBy: { column: "name", ascending: true } })
+            adminCrud("clients", "read", null, undefined, { orderBy: { column: "name", ascending: true } }),
+            adminCrud("industries", "read", null, undefined, { orderBy: { column: "display_order", ascending: true } })
         ]);
 
         if (studiesRes.success) setCaseStudies(studiesRes.data || []);
         if (clientsRes.success) setClients(clientsRes.data || []);
+        if (industriesRes.success) setIndustries(industriesRes.data || []);
         setIsLoading(false);
     }
 
@@ -50,6 +53,7 @@ export default function AdminCaseStudies() {
             slug: (formData.get("title") as string).toLowerCase().replace(/\s+/g, '-'),
             client_id: formData.get("client_id") as string,
             service_area: formData.get("service_area") as string,
+            industry_slug: (formData.get("industry_slug") as string) || null,
             summary: formData.get("summary") as string,
             content: formData.get("content") as string,
             published: formData.get("published") === "on",
@@ -187,6 +191,13 @@ export default function AdminCaseStudies() {
                             <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Service Area</label>
                             <input name="service_area" defaultValue={editingStudy?.service_area} className="form-input" placeholder="e.g. Data Strategy" />
                         </div>
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Industry (drives /industries/[slug] grouping)</label>
+                        <select name="industry_slug" defaultValue={editingStudy?.industry_slug || ""} className="form-input">
+                            <option value="">(none — won't appear on any industry page)</option>
+                            {industries.map(i => <option key={i.slug} value={i.slug}>{i.label}</option>)}
+                        </select>
                     </div>
                     <div className="space-y-1">
                         <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Summary (Short)</label>

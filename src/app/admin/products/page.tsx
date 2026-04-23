@@ -53,6 +53,9 @@ export default function AdminProducts() {
             short_description: formData.get("short_description") as string,
             appsource_url: formData.get("appsource_url") as string,
             demo_url: formData.get("demo_url") as string,
+            badge_text: (formData.get("badge_text") as string) || null,
+            detail_path: (formData.get("detail_path") as string) || null,
+            partner_note: (formData.get("partner_note") as string) || null,
             display_order: parseInt(formData.get("display_order") as string) || 0,
             is_featured: formData.get("is_featured") === "on",
             screenshot_urls: logoUrl ? [logoUrl] : [],
@@ -177,7 +180,12 @@ export default function AdminProducts() {
                         </div>
                         <div className="space-y-1">
                             <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Category</label>
-                            <input name="category" defaultValue={editingProduct?.category} required className="form-input" placeholder="e.g. Custom Visual" />
+                            <select name="category" defaultValue={editingProduct?.category || ""} required className="form-input">
+                                <option value="" disabled>Select a category…</option>
+                                <option value="Power BI Custom Visuals">Power BI Custom Visuals</option>
+                                <option value="ECL Calculator">ECL Calculator</option>
+                                <option value="Data Tool">Data Tool</option>
+                            </select>
                         </div>
                     </div>
                     <div className="space-y-1">
@@ -200,6 +208,24 @@ export default function AdminProducts() {
                         <div className="space-y-1">
                             <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Demo URL</label>
                             <input name="demo_url" defaultValue={editingProduct?.demo_url} className="form-input" />
+                        </div>
+                    </div>
+                    <div className="pt-4 mt-2 border-t border-border/40">
+                        <p className="text-[10px] uppercase tracking-widest text-text-muted/60 font-bold mb-3">Portfolio positioning (optional)</p>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Badge Text</label>
+                                <input name="badge_text" defaultValue={editingProduct?.badge_text || ""} className="form-input" placeholder="e.g. HERO SKU" />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Partner Note</label>
+                                <input name="partner_note" defaultValue={editingProduct?.partner_note || ""} className="form-input" placeholder="e.g. Built with KPMG" />
+                            </div>
+                        </div>
+                        <div className="space-y-1 mt-4">
+                            <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Internal Detail Path</label>
+                            <input name="detail_path" defaultValue={editingProduct?.detail_path || ""} className="form-input" placeholder="e.g. /products/ecl-calculator" />
+                            <p className="text-[11px] text-text-muted/70 mt-1">If set, the card links to this internal page instead of AppSource.</p>
                         </div>
                     </div>
                     <div className="flex items-center justify-between pt-4">

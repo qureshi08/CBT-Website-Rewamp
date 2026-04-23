@@ -13,7 +13,9 @@ import {
     LogOut,
     BarChart3,
     MessageSquare,
-    UsersRound
+    UsersRound,
+    Layers,
+    Globe
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -38,6 +40,8 @@ export default function AdminLayout({
                     <AdminNavLink href="/admin" icon={<LayoutDashboard size={18} />} label="Dashboard" active={pathname === "/admin"} />
                     <AdminNavLink href="/admin/clients" icon={<Users size={18} />} label="Clients" active={pathname === "/admin/clients"} />
                     <AdminNavLink href="/admin/case-studies" icon={<FileText size={18} />} label="Case Studies" active={pathname === "/admin/case-studies"} />
+                    <AdminNavLink href="/admin/services" icon={<Layers size={18} />} label="Services" active={pathname === "/admin/services"} />
+                    <AdminNavLink href="/admin/industries" icon={<Globe size={18} />} label="Industries" active={pathname === "/admin/industries"} />
                     <AdminNavLink href="/admin/partners" icon={<Handshake size={18} />} label="Partners" active={pathname === "/admin/partners"} />
                     <AdminNavLink href="/admin/batches" icon={<GraduationCap size={18} />} label="CGAP Batches" active={pathname === "/admin/batches"} />
                     <AdminNavLink href="/admin/products" icon={<Package size={18} />} label="Products" active={pathname === "/admin/products"} />

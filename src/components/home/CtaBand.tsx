@@ -7,17 +7,16 @@ export default function CtaBand() {
             <div className="v2-wrap cta-inner-grid">
                 <div>
                     <h2 className="cta-heading">
-                        Ready to make your data <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>work harder?</em>
+                        Ready to ship <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>outcomes?</em>
                     </h2>
                     <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
-                        Whether you&apos;re at the start of your data journey or scaling an existing capability, let&apos;s have a conversation.
+                        Thirty minutes with a senior consultant. No pitch deck — we&apos;ll scope the problem, pressure-test the approach, and tell you whether we&apos;re the right team for it.
                     </p>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
-                    <Link href="/contact" className="btn-cta-white" style={{ fontFamily: "var(--font-body)" }}>
-                        Start a conversation →
+                    <Link href="/contact?intent=discovery" className="btn-cta-white" style={{ fontFamily: "var(--font-body)" }}>
+                        Book a Discovery Call →
                     </Link>
-
                 </div>
             </div>
         </section>

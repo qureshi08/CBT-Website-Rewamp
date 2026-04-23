@@ -14,8 +14,14 @@ interface ContactFormData {
     message: string;
 }
 
+type ContactFormProps = {
+    intent?: string;
+    defaultSubject?: string;
+};
+
 const subjects = [
     "Customer Enquiry",
+    "ECL Calculator Demo",
     "Partnership (Arrange a Call)",
     "Product Support",
     "CGAP Query",
@@ -43,7 +49,7 @@ const industries = [
     "Other",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ intent, defaultSubject }: ContactFormProps) {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,7 +58,9 @@ export default function ContactForm() {
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<ContactFormData>();
+    } = useForm<ContactFormData>({
+        defaultValues: defaultSubject ? { subject: defaultSubject } : undefined,
+    });
 
     const onSubmit = async (data: ContactFormData) => {
         setIsSubmitting(true);
@@ -60,7 +68,7 @@ export default function ContactForm() {
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify({ ...data, intent }),
             });
 
             if (res.ok) {

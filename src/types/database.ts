@@ -21,6 +21,7 @@ export interface Database {
                     summary: string | null
                     tags: string[]
                     title: string
+                    industry_slug: string | null
                 }
                 Insert: {
                     client_id: string
@@ -33,6 +34,7 @@ export interface Database {
                     summary?: string | null
                     tags?: string[]
                     title: string
+                    industry_slug?: string | null
                 }
                 Update: {
                     client_id?: string
@@ -45,6 +47,7 @@ export interface Database {
                     summary?: string | null
                     tags?: string[]
                     title?: string
+                    industry_slug?: string | null
                 }
                 Relationships: [
                     {
@@ -170,7 +173,7 @@ export interface Database {
             products: {
                 Row: {
                     appsource_url: string | null
-                    category: string
+                    category: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at: string
                     demo_url: string | null
                     display_order: number
@@ -183,10 +186,13 @@ export interface Database {
                     short_description: string | null
                     slug: string
                     industry: string | null
+                    badge_text: string | null
+                    detail_path: string | null
+                    partner_note: string | null
                 }
                 Insert: {
                     appsource_url?: string | null
-                    category: string
+                    category: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at?: string
                     demo_url?: string | null
                     display_order?: number
@@ -199,10 +205,13 @@ export interface Database {
                     short_description?: string | null
                     slug: string
                     industry?: string | null
+                    badge_text?: string | null
+                    detail_path?: string | null
+                    partner_note?: string | null
                 }
                 Update: {
                     appsource_url?: string | null
-                    category?: string
+                    category?: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at?: string
                     demo_url?: string | null
                     display_order?: number
@@ -215,6 +224,108 @@ export interface Database {
                     short_description?: string | null
                     slug?: string
                     industry?: string | null
+                    badge_text?: string | null
+                    detail_path?: string | null
+                    partner_note?: string | null
+                }
+                Relationships: []
+            }
+            services: {
+                Row: {
+                    id: string
+                    created_at: string
+                    slug: string
+                    name: string
+                    section: "strategy" | "foundations" | "intelligence"
+                    num: string
+                    description: string | null
+                    tools: string[]
+                    icon: string | null
+                    emerging: boolean
+                    display_order: number
+                    is_active: boolean
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    slug: string
+                    name: string
+                    section: "strategy" | "foundations" | "intelligence"
+                    num: string
+                    description?: string | null
+                    tools?: string[]
+                    icon?: string | null
+                    emerging?: boolean
+                    display_order?: number
+                    is_active?: boolean
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    slug?: string
+                    name?: string
+                    section?: "strategy" | "foundations" | "intelligence"
+                    num?: string
+                    description?: string | null
+                    tools?: string[]
+                    icon?: string | null
+                    emerging?: boolean
+                    display_order?: number
+                    is_active?: boolean
+                }
+                Relationships: []
+            }
+            industries: {
+                Row: {
+                    id: string
+                    created_at: string
+                    slug: string
+                    label: string
+                    tagline: string | null
+                    hero_headline: string
+                    hero_italic: string | null
+                    hero_sub: string | null
+                    context_title: string | null
+                    context_italic: string | null
+                    context_body: string | null
+                    where_we_help: Array<{ num: string; title: string; body: string }>
+                    outcome_highlights: Array<{ number: string; label: string; note: string }>
+                    display_order: number
+                    is_active: boolean
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    slug: string
+                    label: string
+                    tagline?: string | null
+                    hero_headline: string
+                    hero_italic?: string | null
+                    hero_sub?: string | null
+                    context_title?: string | null
+                    context_italic?: string | null
+                    context_body?: string | null
+                    where_we_help?: Array<{ num: string; title: string; body: string }>
+                    outcome_highlights?: Array<{ number: string; label: string; note: string }>
+                    display_order?: number
+                    is_active?: boolean
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    slug?: string
+                    label?: string
+                    tagline?: string | null
+                    hero_headline?: string
+                    hero_italic?: string | null
+                    hero_sub?: string | null
+                    context_title?: string | null
+                    context_italic?: string | null
+                    context_body?: string | null
+                    where_we_help?: Array<{ num: string; title: string; body: string }>
+                    outcome_highlights?: Array<{ number: string; label: string; note: string }>
+                    display_order?: number
+                    is_active?: boolean
                 }
                 Relationships: []
             }

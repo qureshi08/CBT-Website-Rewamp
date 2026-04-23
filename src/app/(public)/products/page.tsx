@@ -44,67 +44,112 @@ export default function ProductsPage() {
                 </div>
             </section>
 
-            {/* Products with Filter Tabs */}
-            <section className="bg-white py-16" id="products">
-                <div className="v2-reveal p-5 sm:p-8 md:p-12 v2-wrap" style={{ background: "white", borderRadius: "24px", border: "1px solid var(--border)", boxShadow: "0 10px 40px rgba(0,0,0,0.05)" }}>
-                    <div style={{ textAlign: "center", marginBottom: "40px" }}>
-                        <span className="v2-lbl">Marketplace</span>
-                        <h2 className="v2-h2" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}>Our Product <span className="italic-accent text-primary">Portfolio</span></h2>
+            {/* ─── PRODUCT PORTFOLIO ─── */}
+            <section id="products" className="services-section">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">marketplace</span>
+                        <h2 className="services-section-title">
+                            Our product{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                portfolio.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Power BI custom visuals, regulatory calculators, and data tools — productised from the work we ship for enterprise clients every day.
+                        </p>
                     </div>
+
                     <ProductFilter />
                 </div>
             </section>
 
-            {/* Edge */}
-            <section className="bg-white py-20 overflow-hidden">
+            {/* ─── THE EDGE ─── */}
+            <section className="services-section services-section-alt">
                 <div className="v2-wrap">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+                    <div className="products-edge-grid v2-reveal">
                         <div>
-                            <span className="v2-lbl v2-reveal">Built for Scale</span>
-                            <h2 className="v2-h2 v2-reveal" style={{ fontSize: "32px", marginBottom: "20px" }}>The CBT Product Edge</h2>
-                            <p className="v2-sub v2-reveal" style={{ marginBottom: "32px" }}>Our products aren&apos;t just code; they are the distilled expertise of our consulting team who solve enterprise data problems every day.</p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                <div className="v2-reveal">
-                                    <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}><BarChart3 size={20} /></div>
-                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>User Centric</h3>
-                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)", lineHeight: "1.6" }}>Designed for high-frequency use in corporate environments.</p>
+                            <span className="services-section-tag">built for scale</span>
+                            <h2 className="services-section-title" style={{ maxWidth: 520 }}>
+                                The CBT product{" "}
+                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                    edge.
+                                </em>
+                            </h2>
+                            <p
+                                style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: 17,
+                                    fontWeight: 350,
+                                    lineHeight: 1.75,
+                                    color: "var(--color-text-body)",
+                                    maxWidth: 520,
+                                    marginBottom: 32,
+                                }}
+                            >
+                                Our products aren&rsquo;t just code &mdash; they&rsquo;re the distilled expertise of a consulting team that solves enterprise data problems every day.
+                            </p>
+
+                            <div className="products-edge-points">
+                                <div className="products-edge-point">
+                                    <div className="products-edge-icon">
+                                        <BarChart3 size={20} strokeWidth={1.5} />
+                                    </div>
+                                    <div>
+                                        <h3 className="products-edge-point-title">User centric</h3>
+                                        <p className="products-edge-point-body">
+                                            Designed for high-frequency use in corporate environments.
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="v2-reveal">
-                                    <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--green-muted)", color: "var(--green)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}><Star size={20} /></div>
-                                    <h3 className="v2-h3" style={{ fontSize: "16px", marginBottom: "8px" }}>Certified Quality</h3>
-                                    <p style={{ fontFamily: "var(--f-body)", fontSize: "12.5px", color: "var(--muted)", lineHeight: "1.6" }}>Rigorously tested to meet enterprise security and performance standards.</p>
+                                <div className="products-edge-point">
+                                    <div className="products-edge-icon">
+                                        <Star size={20} strokeWidth={1.5} />
+                                    </div>
+                                    <div>
+                                        <h3 className="products-edge-point-title">Certified quality</h3>
+                                        <p className="products-edge-point-body">
+                                            Rigorously tested against enterprise security and performance standards.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="v2-reveal">
-                            <div className="v2-card v2-card-static" style={{ padding: "48px", textAlign: "center" }}>
-                                <div style={{ color: "var(--green)", fontSize: "42px", fontWeight: 700, marginBottom: "8px" }}>2.5M+</div>
-                                <div className="v2-lbl" style={{ marginBottom: "40px" }}>Data Points Rendered Daily</div>
-                                <div style={{ height: "120px", display: "flex", alignItems: "flex-end", gap: "8px", justifyContent: "center", padding: "0 20px" }}>
-                                    {[0.4, 0.7, 0.9, 0.55, 0.3, 0.85, 0.6].map((h, i) => (
-                                        <div key={i} style={{ flexGrow: 1, background: `linear-gradient(to top, var(--green) ${h * 100}%, var(--green-muted) 0%)`, borderRadius: "4px 4px 0 0", height: "100%", opacity: 0.1 + (i * 0.1) }} />
-                                    ))}
-                                </div>
+
+                        <div className="products-edge-stat-card">
+                            <div className="products-edge-stat-number">2.5M+</div>
+                            <div className="products-edge-stat-label">Data points rendered daily</div>
+                            <div className="products-edge-stat-bars" aria-hidden>
+                                {[0.4, 0.7, 0.9, 0.55, 0.3, 0.85, 0.6].map((h, i) => (
+                                    <div
+                                        key={i}
+                                        className="products-edge-stat-bar"
+                                        style={{ height: `${h * 100}%` }}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Custom Banner */}
+            {/* ─── CTA BAND ─── */}
             <section className="cta-band">
                 <div className="v2-wrap cta-inner-grid">
                     <div>
                         <h2 className="cta-heading">
-                            Need a <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Custom Solution?</em>
+                            Need something we haven&rsquo;t{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                shipped yet?
+                            </em>
                         </h2>
                         <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
-                            Our product team can build custom visuals and automated tools tailored to your unique enterprise requirements.
+                            Thirty minutes with a senior consultant. We&rsquo;ll scope the custom build, pressure-test the approach, and tell you whether we&rsquo;re the right team for it.
                         </p>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
-                        <Link href="/contact?subject=Custom Visual Request" className="btn-cta-white" style={{ fontFamily: "var(--font-body)" }}>
-                            Request a Demo →
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+                        <Link href="/contact?intent=discovery" className="btn-cta-white" style={{ fontFamily: "var(--font-body)" }}>
+                            Book a Discovery Call →
                         </Link>
                     </div>
                 </div>
