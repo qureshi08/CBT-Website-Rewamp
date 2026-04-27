@@ -30,9 +30,12 @@ const CLIENTS: LogoItem[] = [
     { name: "Bunge" }, { name: "Shelfr" }, { name: "Olayan" },
 ];
 
-const TECH_PARTNERS: LogoItem[] = [
-    { name: "WeCrunch" }, { name: "NuSoft" }, { name: "KPMG" },
-    { name: "Tabadlab" }, { name: "Enable Success" }, { name: "Red Buffer" },
+// Fallback only — the live list is fetched from the `partners` Supabase table
+// and passed into TechPartnersStrip via the `partnerNames` prop. This array
+// renders when the query returns empty (e.g. before any rows have been seeded).
+const TECH_PARTNERS = [
+    "WeCrunch", "NuSoft", "KPMG",
+    "Tabadlab", "Enable Success", "Red Buffer",
 ];
 
 // Accept legacy string[] or the new object[] shape and normalise.
