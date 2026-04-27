@@ -5510,14 +5510,15 @@
 
 .cs-prose p {
   font-family: var(--font-body);
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.75;
   color: var(--color-text-body);
+  font-weight: 400;
   margin: 0 0 24px;
 }
 
 .cs-prose p:first-child {
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.55;
   color: var(--color-text-heading);
   font-weight: 400;
