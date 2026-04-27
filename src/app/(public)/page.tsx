@@ -3,6 +3,7 @@ import ServicesGrid from "@/components/home/ServicesGrid";
 import ClientLogoStrip from "@/components/home/ClientLogoStrip";
 import CaseStudiesFeatured from "@/components/home/CaseStudiesFeatured";
 import Differentiators from "@/components/home/Differentiators";
+import AboutTheFirm from "@/components/home/AboutTheFirm";
 import CredentialsBar from "@/components/home/CredentialsBar";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBand from "@/components/home/CtaBand";
@@ -17,7 +18,9 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  let clientNames: string[] = NAMED_TRUST;
+  let trustClients: { name: string; logoUrl?: string | null }[] =
+    NAMED_TRUST.map((name) => ({ name }));
+  let clientLogos: { name: string; logo_url: string }[] = [];
   let batchCount = 12;
   let testimonialsData: any[] = [];
 
@@ -26,7 +29,7 @@ export default async function HomePage() {
     const [{ data: clientsData }, { data: batchStat }, { data: testiData }] = await Promise.all([
       supabase
         .from("clients")
-        .select("name")
+        .select("name, logo_url, logo_full_url")
         .eq("is_featured", true)
         .order("display_order", { ascending: true }),
       supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any,
@@ -34,15 +37,34 @@ export default async function HomePage() {
     ]);
     testimonialsData = (testiData as any[]) || [];
 
+    const rows = ((clientsData as any[]) || []) as {
+      name: string;
+      logo_url: string | null;
+      logo_full_url: string | null;
+    }[];
+
     // Priority: P&G / Coca-Cola / PepsiCo / UNICEF / ADNOC first, then any other featured clients.
-    const dbNames = ((clientsData as any[]) || []).map((c) => c.name);
-    const preferred = NAMED_TRUST.filter((n) =>
-      dbNames.some((d) => d.toLowerCase() === n.toLowerCase())
+    const byName = new Map(rows.map((r) => [r.name.toLowerCase(), r]));
+    const preferred = NAMED_TRUST
+      .map((n) => byName.get(n.toLowerCase()))
+      .filter((r): r is typeof rows[number] => !!r);
+    const extras = rows.filter(
+      (r) => !NAMED_TRUST.some((t) => t.toLowerCase() === r.name.toLowerCase()),
     );
-    const extras = dbNames.filter(
-      (n) => !NAMED_TRUST.some((t) => t.toLowerCase() === n.toLowerCase())
-    );
-    clientNames = preferred.length ? [...preferred, ...extras] : NAMED_TRUST;
+    const ordered = preferred.length ? [...preferred, ...extras] : rows;
+
+    trustClients = ordered.length
+      ? ordered.map((r) => ({
+          name: r.name,
+          // Trust strip prefers the full wordmark; fall back to icon-only.
+          logoUrl: r.logo_full_url || r.logo_url || null,
+        }))
+      : NAMED_TRUST.map((name) => ({ name }));
+
+    // Featured clients with uploaded icon logos, in display order, for the hero orbit.
+    clientLogos = rows
+      .filter((c): c is typeof rows[number] & { logo_url: string } => !!c.logo_url)
+      .map((c) => ({ name: c.name, logo_url: c.logo_url }));
 
     batchCount = (batchStat as any)?.value ?? batchCount;
   } catch (error) {
@@ -52,32 +74,35 @@ export default async function HomePage() {
   return (
     <>
       {/* 01 — Hero */}
-      <Hero batchCount={batchCount} />
+      <Hero batchCount={batchCount} clientLogos={clientLogos} />
 
-      {/* 02 — Trust bar (named logos lead) */}
-      <ClientLogoStrip clientNames={clientNames} />
-
-      {/* 03 — Services (6 capabilities) */}
+      {/* 02 — What we do (problem-framed capabilities) */}
       <ServicesGrid />
 
-      {/* 04 — Case studies, outcome-led */}
-      <CaseStudiesFeatured />
-
-      {/* 05 — Differentiators */}
+      {/* 03 — How we work (ownership / senior / CGAP) */}
       <Differentiators />
 
-      {/* 06 — Credentials bar */}
+      {/* 04 — Trust bar (named logos lead) */}
+      <ClientLogoStrip clients={trustClients} />
+
+      {/* 05 — Selected work (case studies, outcome-led) */}
+      <CaseStudiesFeatured />
+
+      {/* 06 — About the firm (7 yrs, 35 people, CGAP, Georgia Tech) */}
+      <AboutTheFirm />
+
+      {/* 07 — Credentials bar (AWS / Microsoft / AppSource) */}
       <CredentialsBar />
 
-      {/* 07 — Secondary entries (demoted tri-block) */}
+      {/* 08 — Secondary entries (demoted tri-block) */}
       <SecondaryEntries />
 
-      {/* 08 — Testimonials (social proof) */}
+      {/* 09 — Testimonials (social proof) */}
       <div id="testimonials">
         <Testimonials testimonials={testimonialsData} />
       </div>
 
-      {/* 09 — CTA band */}
+      {/* 10 — CTA band */}
       <CtaBand />
     </>
   );

@@ -182,7 +182,7 @@ export default function AdminProducts() {
                             <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Category</label>
                             <select name="category" defaultValue={editingProduct?.category || ""} required className="form-input">
                                 <option value="" disabled>Select a category…</option>
-                                <option value="Power BI Custom Visuals">Power BI Custom Visuals</option>
+                                <option value="Custom Visuals">Custom Visuals</option>
                                 <option value="ECL Calculator">ECL Calculator</option>
                                 <option value="Data Tool">Data Tool</option>
                             </select>
@@ -195,10 +195,6 @@ export default function AdminProducts() {
                     <div className="space-y-1">
                         <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Short Description</label>
                         <textarea name="short_description" defaultValue={editingProduct?.short_description} className="form-input min-h-[80px]" />
-                    </div>
-                    <div className="space-y-1">
-                        <label className="text-[11px] font-bold uppercase text-text-muted tracking-widest">Features (Comma separated)</label>
-                        <input name="features" defaultValue={editingProduct?.screenshot_urls?.join(", ")} className="form-input" placeholder="Feature 1, Feature 2..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">

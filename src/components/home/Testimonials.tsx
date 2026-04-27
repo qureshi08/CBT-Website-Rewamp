@@ -39,7 +39,7 @@ export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
     const list = testimonials && testimonials.length > 0 ? testimonials : defaultTestimonials;
 
     return (
-        <section className="section-padding" style={{ background: "var(--color-white)" }} id="case-studies">
+        <section className="section-padding" style={{ background: "var(--color-white)" }}>
             <div className="v2-wrap">
                 <div className="section-header-bar" style={{ borderBottom: "none", marginBottom: "46px", paddingBottom: "0" }}>
                     <div>

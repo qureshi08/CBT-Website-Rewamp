@@ -4,7 +4,6 @@ import Link from "next/link";
 const NAVIGATION = [
     { href: "/", label: "Home" },
     { href: "/services", label: "Services" },
-    { href: "/industries/retail", label: "Industries" },
     { href: "/case-studies", label: "Case Studies" },
     { href: "/products", label: "Products" },
     { href: "/partners", label: "Partners" },
@@ -21,17 +20,10 @@ const CAPABILITIES = [
     { href: "/services#intelligence", label: "Agentic AI" },
 ];
 
-const INDUSTRIES = [
-    { href: "/industries/retail", label: "Retail" },
-    { href: "/industries/telecom", label: "Telecom" },
-    { href: "/industries/banking", label: "Banking" },
-    { href: "/industries/government", label: "Government" },
-];
-
 const PRODUCTS = [
     { href: "/products", label: "All Products" },
     { href: "/products/ecl-calculator", label: "ECL Calculator" },
-    { href: "/products#products", label: "Power BI Visuals" },
+    { href: "/cbt-custom-visuals", label: "Custom Visuals" },
 ];
 
 export default function Footer() {
@@ -61,6 +53,9 @@ export default function Footer() {
                         </p>
                     </div>
 
+                    {/* Spacer — reserves column 2 so Navigation/Services/Products sit on the right. */}
+                    <div aria-hidden />
+
                     {/* Navigation */}
                     <div>
                         <p className="footer-col-label">Navigation</p>
@@ -80,18 +75,6 @@ export default function Footer() {
                             <div key={c.label} className="footer-col-row">
                                 <Link href={c.href} className="v2-footer-link">
                                     {c.label}
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Industries */}
-                    <div>
-                        <p className="footer-col-label">Industries</p>
-                        {INDUSTRIES.map((i) => (
-                            <div key={i.label} className="footer-col-row">
-                                <Link href={i.href} className="v2-footer-link">
-                                    {i.label}
                                 </Link>
                             </div>
                         ))}
@@ -140,9 +123,9 @@ export default function Footer() {
                         <Link href="/contact" className="v2-footer-link" style={{ fontSize: "12.5px" }}>
                             Contact
                         </Link>
-                        <button className="v2-footer-link" style={{ fontSize: "12.5px" }}>
+                        <Link href="/privacy-policy" className="v2-footer-link" style={{ fontSize: "12.5px" }}>
                             Privacy Policy
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

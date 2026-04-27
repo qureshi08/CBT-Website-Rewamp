@@ -2,7 +2,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Ic from "@/components/shared/Icons";
-import { HeroIllustration } from "@/components/shared/Illustrations";
+import OrbitLogos, { type ClientLogo } from "@/components/home/OrbitLogos";
+import { FlipWords } from "@/components/ui/flip-words";
 
 // ─── Scroll reveal hook ───
 export function useScrollReveal() {
@@ -17,7 +18,13 @@ export function useScrollReveal() {
 }
 
 // ─── Hero Section ───
-export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
+export default function Hero({
+    batchCount = 12,
+    clientLogos = [],
+}: {
+    batchCount?: number;
+    clientLogos?: ClientLogo[];
+}) {
     useScrollReveal();
 
     return (
@@ -31,7 +38,9 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
 
                     <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
                         Data, Cloud &amp; AI that actually{" "}
-                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>ships.</em>
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)", display: "inline-block" }}>
+                            <FlipWords words={["ships.", "delivers.", "scales.", "performs."]} />
+                        </em>
                     </h1>
 
                     <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "480px", marginTop: "13px" }}>
@@ -40,16 +49,18 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
 
                     <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
                         <Link href="/contact?intent=discovery" className="hero-btn-primary">
-                            Book a Discovery Call <span>→</span>
+                            Let&apos;s talk about your data challenge <span>→</span>
                         </Link>
-                        <Link href="/customers" className="hero-btn-secondary">
+                        <Link href="/case-studies" className="hero-btn-secondary">
                             See our work <span className="hero-btn-arrow">→</span>
                         </Link>
                     </div>
                 </div>
 
                 <div className="a-scaleIn home-hero-illustration" style={{ flexShrink: 0 }}>
-                    <HeroIllustration />
+                    <div className="hero-illustration-inner">
+                        <OrbitLogos clients={clientLogos} />
+                    </div>
                 </div>
             </div>
         </section>
@@ -59,8 +70,8 @@ export default function Hero({ batchCount = 12 }: { batchCount?: number }) {
 // ─── Secondary Entries (demoted tri-block: CGAP, Products, Partners) ───
 export function SecondaryEntries() {
     const entries = [
-        { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "A career, not a job. Nine-month graduate programme — Georgia Tech sponsored." },
-        { href: "/products", icon: "layersData" as const, title: "Products", sub: "Productising our expertise. ECL Calculator and Power BI visuals on AppSource." },
+        { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "A career, not a job. Nine-month learning-and-grooming program for top graduates." },
+        { href: "/products", icon: "layersData" as const, title: "Products", sub: "Productising our expertise. ECL Calculator and custom visuals on AppSource." },
         { href: "/partners", icon: "handshake" as const, title: "Partners", sub: "Global network of technology and delivery partners. Explore collaboration." },
     ];
 

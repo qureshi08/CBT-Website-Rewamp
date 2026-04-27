@@ -52,7 +52,7 @@ export default function ServicesGrid() {
     }, []);
 
     return (
-        <section style={{ padding: "120px 32px", background: "var(--color-white)" }}>
+        <section style={{ padding: "clamp(64px, 12vw, 120px) 32px", background: "var(--color-white)" }}>
             <div style={{ maxWidth: "1160px", margin: "0 auto" }}>
                 <div className="wehelp-grid">
                     {/* LEFT — sticky heading + progress */}

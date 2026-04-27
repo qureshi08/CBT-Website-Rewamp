@@ -11,43 +11,115 @@ export interface Database {
         Tables: {
             case_studies: {
                 Row: {
-                    client_id: string
-                    content: string | null
-                    created_at: string
                     id: string
-                    published: boolean
-                    service_area: string | null
+                    created_at: string
                     slug: string
-                    summary: string | null
-                    tags: string[]
                     title: string
+                    published: boolean
+                    display_order: number
+
+                    client_id: string | null
+                    client_descriptor: string | null
                     industry_slug: string | null
+                    service_area: string | null
+                    timeline: string | null
+
+                    summary: string | null
+                    content: string | null
+                    challenge: string | null
+                    approach: string | null
+                    impact: string | null
+                    deliverables: string[]
+
+                    outcome_value: string | null
+                    outcome_label: string | null
+                    secondary_metrics: Array<{ value: string; label: string }>
+
+                    stack: string[]
+                    tags: string[]
+
+                    featured_image_url: string | null
+                    thumbnail_url: string | null
+                    architecture_diagram_url: string | null
+                    architecture_caption: string | null
+
+                    quote_text: string | null
+                    quote_author: string | null
+                    quote_role: string | null
                 }
                 Insert: {
-                    client_id: string
-                    content?: string | null
-                    created_at?: string
                     id?: string
-                    published?: boolean
-                    service_area?: string | null
+                    created_at?: string
                     slug: string
-                    summary?: string | null
-                    tags?: string[]
                     title: string
+                    published?: boolean
+                    display_order?: number
+
+                    client_id?: string | null
+                    client_descriptor?: string | null
                     industry_slug?: string | null
+                    service_area?: string | null
+                    timeline?: string | null
+
+                    summary?: string | null
+                    content?: string | null
+                    challenge?: string | null
+                    approach?: string | null
+                    impact?: string | null
+                    deliverables?: string[]
+
+                    outcome_value?: string | null
+                    outcome_label?: string | null
+                    secondary_metrics?: Array<{ value: string; label: string }>
+
+                    stack?: string[]
+                    tags?: string[]
+
+                    featured_image_url?: string | null
+                    thumbnail_url?: string | null
+                    architecture_diagram_url?: string | null
+                    architecture_caption?: string | null
+
+                    quote_text?: string | null
+                    quote_author?: string | null
+                    quote_role?: string | null
                 }
                 Update: {
-                    client_id?: string
-                    content?: string | null
-                    created_at?: string
                     id?: string
-                    published?: boolean
-                    service_area?: string | null
+                    created_at?: string
                     slug?: string
-                    summary?: string | null
-                    tags?: string[]
                     title?: string
+                    published?: boolean
+                    display_order?: number
+
+                    client_id?: string | null
+                    client_descriptor?: string | null
                     industry_slug?: string | null
+                    service_area?: string | null
+                    timeline?: string | null
+
+                    summary?: string | null
+                    content?: string | null
+                    challenge?: string | null
+                    approach?: string | null
+                    impact?: string | null
+                    deliverables?: string[]
+
+                    outcome_value?: string | null
+                    outcome_label?: string | null
+                    secondary_metrics?: Array<{ value: string; label: string }>
+
+                    stack?: string[]
+                    tags?: string[]
+
+                    featured_image_url?: string | null
+                    thumbnail_url?: string | null
+                    architecture_diagram_url?: string | null
+                    architecture_caption?: string | null
+
+                    quote_text?: string | null
+                    quote_author?: string | null
+                    quote_role?: string | null
                 }
                 Relationships: [
                     {
@@ -68,6 +140,7 @@ export interface Database {
                     industry: string | null
                     is_featured: boolean
                     logo_url: string | null
+                    logo_full_url: string | null
                     name: string
                 }
                 Insert: {
@@ -78,6 +151,7 @@ export interface Database {
                     industry?: string | null
                     is_featured?: boolean
                     logo_url?: string | null
+                    logo_full_url?: string | null
                     name: string
                 }
                 Update: {
@@ -88,6 +162,7 @@ export interface Database {
                     industry?: string | null
                     is_featured?: boolean
                     logo_url?: string | null
+                    logo_full_url?: string | null
                     name?: string
                 }
                 Relationships: []
@@ -173,7 +248,7 @@ export interface Database {
             products: {
                 Row: {
                     appsource_url: string | null
-                    category: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
+                    category: "Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at: string
                     demo_url: string | null
                     display_order: number
@@ -192,7 +267,7 @@ export interface Database {
                 }
                 Insert: {
                     appsource_url?: string | null
-                    category: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
+                    category: "Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at?: string
                     demo_url?: string | null
                     display_order?: number
@@ -211,7 +286,7 @@ export interface Database {
                 }
                 Update: {
                     appsource_url?: string | null
-                    category?: "Power BI Custom Visuals" | "ECL Calculator" | "Data Tool"
+                    category?: "Custom Visuals" | "ECL Calculator" | "Data Tool"
                     created_at?: string
                     demo_url?: string | null
                     display_order?: number

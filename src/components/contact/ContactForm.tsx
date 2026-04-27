@@ -109,8 +109,8 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
                 {/* Basic Info Group */}
                 <div className="space-y-8">
                     <div className="flex items-center gap-4 pb-3 border-b border-border/40">
-                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">1</span>
-                        <h3 className="font-bold text-text-heading uppercase tracking-widest text-xs">Basic info</h3>
+                        <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">1</span>
+                        <h3 className="font-bold text-text-heading uppercase tracking-widest text-md font-bold">Basic info</h3>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -164,8 +164,8 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
                 {/* Contact Details Group */}
                 <div className="space-y-8">
                     <div className="flex items-center gap-4 pb-3 border-b border-border/40">
-                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">2</span>
-                        <h3 className="uppercase-label text-text-heading text-[10px]">Contact details</h3>
+                        <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">2</span>
+                        <h3 className="font-bold text-text-heading uppercase tracking-widest text-md font-bold">Contact details</h3>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -208,8 +208,8 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
                 {/* Message Group */}
                 <div className="space-y-8">
                     <div className="flex items-center gap-4 pb-3 border-b border-border/40">
-                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">3</span>
-                        <h3 className="uppercase-label text-text-heading text-[10px]">Message</h3>
+                        <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">3</span>
+                        <h3 className="font-bold text-text-heading uppercase tracking-widest text-md">Message</h3>
                     </div>
 
                     <div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Mail, MapPin, Clock } from "lucide-react";
 import ContactForm from "@/components/contact/ContactForm";
 import PersonaBridge from "@/components/shared/PersonaBridge";
+import ClientReveal from "@/components/shared/ClientReveal";
 
 export const metadata: Metadata = {
     title: "Contact Us | CBT — Convergent Business Technologies",
@@ -69,6 +70,7 @@ export default async function ContactPage({ searchParams }: Props) {
 
     return (
         <main>
+            <ClientReveal />
             {/* ─── HERO ─── */}
             <section
                 className="hero-grid-texture"
@@ -171,7 +173,7 @@ export default async function ContactPage({ searchParams }: Props) {
                         {/* Sidebar */}
                         <aside className="contact-sidebar v2-reveal">
                             <span className="services-section-tag">why contact us</span>
-                            <h2 className="services-section-title" style={{ fontSize: "clamp(1.6rem, 2.6vw, 2.1rem)", marginBottom: 28 }}>
+                            <h2 className="services-section-title" style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)", marginBottom: 28 }}>
                                 Straight to a{" "}
                                 <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
                                     senior consultant.

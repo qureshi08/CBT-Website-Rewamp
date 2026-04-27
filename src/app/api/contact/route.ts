@@ -24,15 +24,26 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Phase 2 — Insert into Supabase contact_submissions table
+        // Phase 2 — Insert into Supabase contact_submissions table.
+        // Only include optional fields when they're non-empty so submissions from
+        // shorter forms (e.g. homepage CTA) don't fail schema-cache checks on
+        // columns the row never actually populates.
         const { error: dbError } = await supabaseAdmin
             .from("contact_submissions")
-            .insert([{ name, email, company, region, industry, subject, message }]);
+            .insert([{
+                name,
+                email,
+                subject,
+                message,
+                ...(company && { company }),
+                ...(region && { region }),
+                ...(industry && { industry }),
+            }]);
 
         if (dbError) {
             console.error("Supabase Error:", dbError);
             return NextResponse.json(
-                { error: "Failed to save submission." },
+                { error: "Failed to save submission. Please try again." },
                 { status: 500 }
             );
         }
@@ -82,9 +93,10 @@ export async function POST(request: NextRequest) {
             { success: true, message: "Contact form submitted successfully." },
             { status: 200 }
         );
-    } catch {
+    } catch (err) {
+        console.error("Contact form error:", err);
         return NextResponse.json(
-            { error: "An unexpected error occurred." },
+            { error: "Something went wrong. Please try again." },
             { status: 500 }
         );
     }

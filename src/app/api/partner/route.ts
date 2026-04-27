@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
                 subject: `New Partner Registration: ${company}`,
                 html: `
                     <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
-                        <h2 style="color: #8B5CF6; margin-top: 0;">New Partner Registration</h2>
+                        <h2 style="color: #00994D; margin-top: 0;">New Partner Registration</h2>
                         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                         <p><strong>Company:</strong> ${company}</p>
                         <p><strong>Contact Name:</strong> ${contactName}</p>
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
                         <p><strong>Region:</strong> ${region || "Not specified"}</p>
                         <p><strong>Industry:</strong> ${industry || "Not specified"}</p>
                         <p><strong>Partnership Type:</strong> ${partnershipType}</p>
-                        <div style="margin-top: 25px; padding: 20px; background: #F5F3FF; border-left: 4px solid #8B5CF6; border-radius: 4px;">
+                        <div style="margin-top: 25px; padding: 20px; background: #E6F5ED; border-left: 4px solid #00994D; border-radius: 4px;">
                             <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; text-transform: uppercase; color: #666;">Message/Interest:</p>
                             <p style="white-space: pre-wrap; margin: 0; line-height: 1.6;">${message || "No message provided"}</p>
                         </div>

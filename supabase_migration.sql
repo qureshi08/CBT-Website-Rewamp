@@ -335,6 +335,63 @@ ON CONFLICT (slug) DO UPDATE SET
     outcome_highlights = EXCLUDED.outcome_highlights,
     display_order      = EXCLUDED.display_order;
 
+-- ==============================================================
+-- 10. CASE_STUDIES — Phase 1 expansion (design-lock schema)
+-- Aligns DB with fixture in src/lib/case-studies/fixtures.ts.
+-- All new fields optional; detail page renders sections conditionally.
+-- ==============================================================
+
+-- 10a. client_id must be nullable — client names never render publicly,
+--      but admin can still link a case study to a client for backend attribution.
+ALTER TABLE public.case_studies
+    ALTER COLUMN client_id DROP NOT NULL;
+
+-- 10b. Hero / framing
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS outcome_value     TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS outcome_label     TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS client_descriptor TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS timeline          TEXT;
+
+-- 10c. Long-form body sections (all optional; detail page renders conditionally)
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS challenge    TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS approach     TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS impact       TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS deliverables TEXT[] DEFAULT '{}';
+
+-- 10d. Tech stack + secondary metrics (capped at 3 via CHECK below)
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS stack             TEXT[] DEFAULT '{}';
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS secondary_metrics JSONB  DEFAULT '[]'::jsonb;
+
+-- 10e. Media — featured image (hero), thumbnail (cards), architecture diagram
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS featured_image_url       TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS thumbnail_url            TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS architecture_diagram_url TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS architecture_caption     TEXT;
+
+-- 10f. Pull-quote (optional; public-safe — author/role shown, never client name)
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS quote_text   TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS quote_author TEXT;
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS quote_role   TEXT;
+
+-- 10g. Ordering on /case-studies index
+ALTER TABLE public.case_studies ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+CREATE INDEX IF NOT EXISTS case_studies_display_order_idx
+    ON public.case_studies (display_order);
+
+-- 10h. Secondary metrics cap at 3 entries (design-lock constraint)
+DO $cs_sm$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'case_studies_secondary_metrics_max3'
+          AND conrelid = 'public.case_studies'::regclass
+    ) THEN
+        ALTER TABLE public.case_studies
+        ADD CONSTRAINT case_studies_secondary_metrics_max3
+        CHECK (jsonb_array_length(COALESCE(secondary_metrics, '[]'::jsonb)) <= 3);
+    END IF;
+END $cs_sm$;
+
 -- STORAGE POLICIES (Allow public access to read and authenticated/public to upload for demo)
 -- Replace 'authenticated' with 'public' if you want anyone to upload without login (careful!)
 DO $$
