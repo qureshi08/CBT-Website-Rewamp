@@ -40,6 +40,13 @@ export async function uploadFile(formData: FormData) {
         return { success: true, url: publicUrl };
     } catch (error) {
         console.error("Upload Error:", error);
-        return { success: false, error: error instanceof Error ? error.message : "An unknown error occurred" };
+        let message = "An unknown error occurred";
+        if (error instanceof Error) {
+            message = error.message;
+        } else if (error && typeof error === "object") {
+            const e = error as { message?: string; error?: string; statusCode?: string | number };
+            message = e.message || e.error || (e.statusCode ? `Storage error ${e.statusCode}` : JSON.stringify(error));
+        }
+        return { success: false, error: message };
     }
 }

@@ -3,68 +3,95 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
+import {
+    NavigationMenu,
+    NavigationMenuList,
+    NavigationMenuItem,
+    NavigationMenuTrigger,
+    NavigationMenuContent,
+    NavigationMenuLink,
+    navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
-type NavChild = { href: string; label: string; note?: string; image?: string };
+type NavChild = { href: string; label: string; note?: string; image?: string; description?: string };
 type NavLink = {
     href: string;
     label: string;
     children?: NavChild[];
+    featured?: { eyebrow: string; title: string; description: string; href: string; image?: string };
+    layout?: "two-col" | "list";
 };
+
+const CTA_HREF = "/contact?intent=discovery";
+const CTA_LABEL = "Book a Call";
 
 const LINKS: NavLink[] = [
     { href: "/", label: "Home" },
     {
         href: "/services",
         label: "Services",
+        layout: "two-col",
+        featured: {
+            eyebrow: "Capabilities",
+            title: "Data, Cloud & AI — end to end",
+            description:
+                "Strategy, engineering, governance, BI, and AI — delivered by a team that owns the outcome.",
+            href: "/services",
+        },
         children: [
-            { href: "/services#strategy", label: "Data Strategy & Maturity" },
-            { href: "/services#foundations", label: "Data Engineering & Platforms" },
-            { href: "/services#foundations", label: "Data Governance & Quality" },
-            { href: "/services#foundations", label: "Data Analytics & BI" },
-            { href: "/services#intelligence", label: "AI & Generative AI" },
-            { href: "/services#intelligence", label: "Agentic AI", note: "Emerging" },
+            { href: "/services#strategy",     label: "Data Strategy & Maturity",  description: "Roadmaps, operating models, ROI." },
+            { href: "/services#foundations",  label: "Data Engineering & Platforms", description: "Pipelines, warehouses, lakehouse." },
+            { href: "/services#foundations",  label: "Data Governance & Quality", description: "Lineage, catalogue, policy." },
+            { href: "/services#foundations",  label: "Data Analytics & BI",       description: "Power BI, dashboards, self-serve." },
+            { href: "/services#intelligence", label: "AI & Generative AI",        description: "LLMs, RAG, forecasting, vision." },
+            { href: "/services#intelligence", label: "Agentic AI", note: "Emerging", description: "Autonomous workflows in production." },
         ],
     },
-    {
-        href: "/case-studies",
-        label: "Case Studies",
-        children: [
-            { href: "/industries/retail",     label: "Retail" },
-            { href: "/industries/telecom",    label: "Telecom" },
-            { href: "/industries/banking",    label: "Banking" },
-            { href: "/industries/government", label: "Government" },
-        ],
-    },
+    { href: "/case-studies", label: "Case Studies" },
     {
         href: "/products",
         label: "Products",
+        layout: "two-col",
+        featured: {
+            eyebrow: "Hero SKU",
+            title: "ECL Calculator",
+            description:
+                "IFRS 9 impairment modelling, out of the box. Available on Microsoft AppSource.",
+            href: "/products/ecl-calculator",
+        },
         children: [
-            { href: "/products", label: "All Products" },
-            { href: "/products/ecl-calculator", label: "ECL Calculator", note: "Hero SKU" },
-            { href: "/products#products", label: "Power BI Visuals" },
+            { href: "/products",                label: "All Products",      description: "Browse the full catalogue." },
+            { href: "/products/ecl-calculator", label: "ECL Calculator",    note: "Hero SKU", description: "IFRS 9 impairment, productised." },
+            { href: "/cbt-custom-visuals",      label: "Custom Visuals",    description: "Seven Power BI visuals on Microsoft AppSource." },
         ],
     },
     { href: "/partners", label: "Partners" },
     {
         href: "/cgap",
         label: "Careers",
+        layout: "two-col",
+        featured: {
+            eyebrow: "Graduate Program",
+            title: "CGAP",
+            image: "/cgap logos/CGAP - Logo Light BG.svg",
+            description:
+                "Convergent Graduate Academy Program — CBT's 9-month learning-and-grooming pathway that turns top graduates into industry-ready consultants.",
+            href: "/cgap",
+        },
         children: [
-            { href: "/cgap", label: "CGAP", image: "/cgap logos/CGAP - Logo Light BG.svg" },
+            { href: "/cgap", label: "CGAP Program", note: "Flagship", description: "A career, not a job — our graduate pipeline." },
         ],
     },
     { href: "/about", label: "About" },
 ];
 
-const CTA_HREF = "/contact?intent=discovery";
-const CTA_LABEL = "Book a Call";
-
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
     const pathname = usePathname();
-    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const mobileNavRef = useRef<HTMLDivElement | null>(null);
+    const hamburgerRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
         const fn = () => setScrolled(window.scrollY > 16);
@@ -74,7 +101,6 @@ export default function Navbar() {
 
     useEffect(() => {
         setMenuOpen(false);
-        setOpenDropdown(null);
     }, [pathname]);
 
     useEffect(() => {
@@ -82,21 +108,54 @@ export default function Navbar() {
         return () => { document.body.style.overflow = ""; };
     }, [menuOpen]);
 
+    // Mobile drawer: focus trap + Escape to close
+    useEffect(() => {
+        if (!menuOpen) {
+            hamburgerRef.current?.focus();
+            return;
+        }
+        const drawer = mobileNavRef.current;
+        if (!drawer) return;
+
+        const getFocusables = () =>
+            Array.from(
+                drawer.querySelectorAll<HTMLElement>(
+                    'a[href], button:not([disabled])'
+                )
+            ).filter(el => !el.hasAttribute("aria-hidden"));
+
+        const focusables = getFocusables();
+        focusables[0]?.focus();
+
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                setMenuOpen(false);
+                return;
+            }
+            if (e.key !== "Tab") return;
+            const current = getFocusables();
+            if (current.length === 0) return;
+            const first = current[0];
+            const last = current[current.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+        document.addEventListener("keydown", handleKey);
+        return () => document.removeEventListener("keydown", handleKey);
+    }, [menuOpen]);
+
     const isActive = (href: string) =>
         href === "/" ? pathname === "/" : pathname.startsWith(href.split("#")[0]);
 
-    const openMenu = (label: string) => {
-        if (closeTimer.current) clearTimeout(closeTimer.current);
-        setOpenDropdown(label);
-    };
-    const scheduleClose = () => {
-        if (closeTimer.current) clearTimeout(closeTimer.current);
-        closeTimer.current = setTimeout(() => setOpenDropdown(null), 120);
-    };
-
     return (
         <>
-            <nav className={`v2-nav${scrolled ? " v2-scrolled" : ""}`}>
+            <header className={`v2-nav${scrolled ? " v2-scrolled" : ""}`}>
                 <div className="v2-nav-inner">
                     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
                         <img
@@ -106,67 +165,95 @@ export default function Navbar() {
                         />
                     </Link>
 
-                    <div className="v2-nav-links">
-                        {LINKS.map(l => {
-                            const hasChildren = !!l.children?.length;
-                            const active = isActive(l.href);
-                            if (hasChildren) {
-                                const open = openDropdown === l.label;
+                    <NavigationMenu className="v2-nav-links" delayDuration={80} skipDelayDuration={200}>
+                        <NavigationMenuList>
+                            {LINKS.map(l => {
+                                const hasChildren = !!l.children?.length;
+                                const active = isActive(l.href);
+
+                                if (!hasChildren) {
+                                    return (
+                                        <NavigationMenuItem key={l.href + l.label}>
+                                            <NavigationMenuLink asChild active={active}>
+                                                <Link href={l.href}>{l.label}</Link>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
+                                    );
+                                }
+
                                 return (
-                                    <div
-                                        key={l.label}
-                                        className="v2-nl-wrap"
-                                        onMouseEnter={() => openMenu(l.label)}
-                                        onMouseLeave={scheduleClose}
-                                    >
-                                        <Link
-                                            href={l.href}
-                                            className={`v2-nl v2-nl-dd${active ? " v2-on" : ""}`}
-                                            style={{ textDecoration: "none" }}
-                                            aria-haspopup="menu"
-                                            aria-expanded={open}
+                                    <NavigationMenuItem key={l.label}>
+                                        <NavigationMenuTrigger
+                                            className={navigationMenuTriggerStyle()}
+                                            data-active={active ? "true" : undefined}
                                         >
                                             {l.label}
-                                            <ChevronDown size={14} strokeWidth={1.75} style={{ marginLeft: 3, marginTop: 1, transition: "transform .18s", transform: open ? "rotate(180deg)" : "none" }} />
-                                        </Link>
-                                        {open && (
-                                            <div
-                                                className="v2-dd"
-                                                role="menu"
-                                                onMouseEnter={() => openMenu(l.label)}
-                                                onMouseLeave={scheduleClose}
-                                            >
-                                                {l.children!.map(c => (
-                                                    <Link
-                                                        key={c.label}
-                                                        href={c.href}
-                                                        className="v2-dd-item"
-                                                        role="menuitem"
-                                                    >
-                                                        {c.image
-                                                            ? <img src={c.image} alt={c.label} style={{ height: "20px", width: "auto" }} />
-                                                            : <span>{c.label}</span>
-                                                        }
-                                                        {c.note && <span className="v2-dd-note">{c.note}</span>}
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+                                        </NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            {l.layout === "two-col" && l.featured ? (
+                                                <div className="v2-nm-panel">
+                                                    <div className="v2-nm-panel-grid is-2col">
+                                                        <Link
+                                                            href={l.featured.href}
+                                                            className="v2-nm-featured"
+                                                        >
+                                                            <span className="v2-nm-featured-eyebrow">{l.featured.eyebrow}</span>
+                                                            {l.featured.image ? (
+                                                                <img
+                                                                    src={l.featured.image}
+                                                                    alt={l.featured.title}
+                                                                    className="v2-nm-featured-logo"
+                                                                />
+                                                            ) : (
+                                                                <span className="v2-nm-featured-title">{l.featured.title}</span>
+                                                            )}
+                                                            <p className="v2-nm-featured-desc">{l.featured.description}</p>
+                                                        </Link>
+                                                        <div className="v2-nm-links-col">
+                                                            {l.children!.map(c => (
+                                                                <NavigationMenuLink asChild key={c.label + c.href}>
+                                                                    <Link href={c.href} className="v2-nm-row">
+                                                                        <span>
+                                                                            <span className="v2-nm-row-title">
+                                                                                {c.label}
+                                                                                {c.note && <span className="v2-nm-note">{c.note}</span>}
+                                                                            </span>
+                                                                            {c.description && (
+                                                                                <span className="v2-nm-row-desc">{c.description}</span>
+                                                                            )}
+                                                                        </span>
+                                                                    </Link>
+                                                                </NavigationMenuLink>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="v2-nm-panel">
+                                                    <div className="v2-nm-panel-grid is-list">
+                                                        <div className="v2-nm-links-col">
+                                                            {l.children!.map(c => (
+                                                                <NavigationMenuLink asChild key={c.label + c.href}>
+                                                                    <Link href={c.href} className="v2-nm-row">
+                                                                        <span className="v2-nm-row-title">
+                                                                            {c.image
+                                                                                ? <img src={c.image} alt={c.label} style={{ height: 20, width: "auto" }} />
+                                                                                : c.label}
+                                                                        </span>
+                                                                        {c.note && <span className="v2-nm-note">{c.note}</span>}
+                                                                    </Link>
+                                                                </NavigationMenuLink>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
                                 );
-                            }
-                            return (
-                                <Link
-                                    key={l.href + l.label}
-                                    href={l.href}
-                                    className={`v2-nl${active ? " v2-on" : ""}`}
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    {l.label}
-                                </Link>
-                            );
-                        })}
-                    </div>
+                            })}
+                        </NavigationMenuList>
+                    </NavigationMenu>
 
                     <Link
                         href={CTA_HREF}
@@ -177,6 +264,7 @@ export default function Navbar() {
                     </Link>
 
                     <button
+                        ref={hamburgerRef}
                         className="v2-hamburger"
                         onClick={() => setMenuOpen(o => !o)}
                         aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -185,9 +273,16 @@ export default function Navbar() {
                         {menuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
                     </button>
                 </div>
-            </nav>
+            </header>
 
-            <div className={`v2-mobile-menu${menuOpen ? " v2-mobile-open" : ""}`} aria-hidden={!menuOpen}>
+            <div
+                ref={mobileNavRef}
+                className={`v2-mobile-menu${menuOpen ? " v2-mobile-open" : ""}`}
+                aria-hidden={!menuOpen}
+                role="dialog"
+                aria-modal={menuOpen || undefined}
+                aria-label="Main navigation"
+            >
                 <nav className="v2-mobile-nav">
                     {LINKS.map(l => {
                         const active = isActive(l.href);
@@ -203,15 +298,47 @@ export default function Navbar() {
                                         aria-expanded={sectionOpen}
                                     >
                                         <span>{l.label}</span>
-                                        <ChevronDown size={18} strokeWidth={1.5} style={{ transition: "transform .2s", transform: sectionOpen ? "rotate(180deg)" : "none" }} />
+                                        <ChevronDown
+                                            size={18}
+                                            strokeWidth={1.5}
+                                            style={{
+                                                transition: "transform .2s",
+                                                transform: sectionOpen ? "rotate(180deg)" : "none",
+                                            }}
+                                        />
                                     </button>
-                                    {sectionOpen && (
-                                        <div className="v2-mobile-sublist">
+                                    <div
+                                        className="v2-mobile-sublist"
+                                        data-open={sectionOpen ? "true" : "false"}
+                                        aria-hidden={!sectionOpen}
+                                    >
+                                        {l.featured && (
+                                            <Link
+                                                href={l.featured.href}
+                                                className="v2-mobile-featured"
+                                                tabIndex={sectionOpen ? 0 : -1}
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                <span className="v2-mobile-featured-eyebrow">{l.featured.eyebrow}</span>
+                                                {l.featured.image ? (
+                                                    <img
+                                                        src={l.featured.image}
+                                                        alt={l.featured.title}
+                                                        className="v2-mobile-featured-logo"
+                                                    />
+                                                ) : (
+                                                    <span className="v2-mobile-featured-title">{l.featured.title}</span>
+                                                )}
+                                                <p className="v2-mobile-featured-desc">{l.featured.description}</p>
+                                            </Link>
+                                        )}
+                                        <div className="v2-mobile-sublist-inner">
                                             {l.children!.map(c => (
                                                 <Link
                                                     key={c.label}
                                                     href={c.href}
                                                     className="v2-mobile-sublink"
+                                                    tabIndex={sectionOpen ? 0 : -1}
                                                     onClick={() => setMenuOpen(false)}
                                                 >
                                                     {c.image
@@ -222,7 +349,7 @@ export default function Navbar() {
                                                 </Link>
                                             ))}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             );
                         }

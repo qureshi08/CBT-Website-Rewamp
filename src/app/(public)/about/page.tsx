@@ -26,7 +26,7 @@ const VALUES = [
         num: "03",
         icon: "graduation" as const,
         title: "Our own pipeline",
-        body: "We don't offshore. Our talent comes through CGAP — a 9-month Georgia Tech-sponsored programme that trains graduates on real client work from month two. The result is a bench that already knows how we deliver.",
+        body: "We don't offshore. Our talent comes through CGAP — a 9-month learning-and-grooming program that trains graduates on real client work from month two. The result is a bench that already knows how we deliver.",
     },
     {
         num: "04",
@@ -40,7 +40,7 @@ const PARTNERS = [
     {
         name: "WeCrunch",
         note: "Data & analytics alliance",
-        detail: "Joint delivery across FMCG and Fortune 500 analytics engagements, with shared capacity on large-scale data programmes.",
+        detail: "Joint delivery across FMCG and Fortune 500 analytics engagements, with shared capacity on large-scale data programs.",
     },
     {
         name: "NuSoft",
@@ -71,9 +71,9 @@ const PARTNERS = [
 
 const STATS = [
     { number: "25+", label: "enterprise clients", note: "retail, banking, telecom, FMCG, public sector" },
-    { number: "12", label: "CGAP batches", note: "9-month Georgia Tech programme" },
+    { number: "12", label: "CGAP batches", note: "9-month learning-and-grooming program" },
     { number: "6", label: "partner alliances", note: "WeCrunch, NuSoft, KPMG, Tabadlab, Enable Success, Red Buffer" },
-    { number: "100%", label: "senior on engagement", note: "no bench swaps after SOW" },
+    { number: "35+", label: "consultants, all direct", note: "trained through CGAP, zero contractors" },
 ];
 
 export default function AboutPage() {
@@ -152,7 +152,7 @@ export default function AboutPage() {
                             maxWidth: 640,
                         }}
                     >
-                        Nearly two decades of delivering data-driven solutions to enterprises around the world. Our mission: liberate the business brain through analytics and automation, so leaders can realise the value already sitting in their data. Trusted by P&amp;G, Coca-Cola, PepsiCo, UNICEF, and ADNOC.
+                        Seven years as CBT, nearly two decades of practice behind it. Our mission: liberate the business brain through analytics and automation, so leaders can realise the value already sitting in their data. Trusted by P&amp;G, Coca-Cola, PepsiCo, UNICEF, and ADNOC.
                     </p>
 
                     <div
@@ -380,7 +380,7 @@ export default function AboutPage() {
                                     marginBottom: 16,
                                 }}
                             >
-                                Our bench is built deliberately &mdash; a direct continuation of the founders&rsquo; instinct to nurture future leaders rather than chase buzzwords. The Convergent Graduate Academy Programme, 9 months and Georgia Tech-sponsored, funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
+                                Our bench is built deliberately &mdash; a direct continuation of the founders&rsquo; instinct to nurture future leaders rather than chase buzzwords. The Convergent Graduate Academy Program &mdash; nine months of structured learning, senior mentorship, and real client engagement &mdash; funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
                             </p>
                             <p
                                 style={{
@@ -409,9 +409,9 @@ export default function AboutPage() {
                             </div>
                             <div className="about-cgap-fact">
                                 <span className="about-cgap-fact-num">GT</span>
-                                <span className="about-cgap-fact-label">sponsored</span>
+                                <span className="about-cgap-fact-label">post-placement</span>
                                 <span className="about-cgap-fact-note">
-                                    Georgia Tech partnership on content + certification
+                                    CBT-sponsored Georgia Tech credential after placement
                                 </span>
                             </div>
                             <div className="about-cgap-fact">

@@ -1,21 +1,30 @@
 import { Metadata } from "next";
-import Link from "next/link";
-import { CheckCircle2, Quote } from "lucide-react";
+import {
+    CheckCircle2,
+    Quote,
+    BookOpen,
+    MessagesSquare,
+    Award,
+    Users,
+    GraduationCap,
+} from "lucide-react";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import ClientReveal from "@/components/shared/ClientReveal";
+import CgapHeroStats from "@/components/cgap/CgapHeroStats";
+import { BackgroundPaths } from "@/components/ui/background-paths";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-    title: "CGAP — Convergent Graduate Academy Programme | A career, not a job",
+    title: "CGAP — Convergent Graduate Academy Program | Learning, grooming, career.",
     description:
-        "A 9-month paid programme bridging academia and industry. Georgia Tech sponsored. Real client work from month two. Launch your career in data, cloud, and AI.",
+        "The Convergent Graduate Academy Program (CGAP) is CBT's 9-month learning-and-grooming pathway that turns top graduates into industry-ready data & AI consultants. Real projects from month two. Permanent career on the other side.",
 };
 
 const JOURNEY = [
     {
         months: "M1–M2",
         title: "Fundamentals",
-        body: "Cohort bootcamp. SQL, data modelling, Power BI, Python, consulting basics. Georgia Tech-aligned curriculum, delivered by senior CBT consultants.",
+        body: "CBT-designed bootcamp. SQL, data modelling, Power BI, Python, consulting basics — built and delivered by the same senior consultants who ship for our enterprise clients.",
     },
     {
         months: "M3–M5",
@@ -30,30 +39,30 @@ const JOURNEY = [
     {
         months: "M8–M9",
         title: "Placement",
-        body: "Permanent placement on a CBT delivery team, or partner track with a sponsoring client. Either way, the programme ends with a career, not a certificate.",
+        body: "Permanent placement on a CBT delivery team, or partner track with a sponsoring client. Either way, the program ends with a career, not a certificate.",
     },
 ];
 
-const CULTURE = [
+const GROOMING = [
     {
-        icon: "graduation" as const,
-        title: "Georgia Tech partnership",
-        body: "Content, curriculum, and credentialing are shaped in partnership with Georgia Tech — so the academic grounding is defensible and the certification is recognisable.",
+        icon: BookOpen,
+        title: "Structured learning",
+        body: "A month-by-month curriculum designed by senior CBT consultants — grounded in real delivery methodology, not abstract coursework. You learn how we actually ship.",
     },
     {
-        icon: "award" as const,
+        icon: MessagesSquare,
+        title: "Consulting craft",
+        body: "Stakeholder management, discovery, scoping, pushback. The soft skills that separate a junior analyst from a trusted consultant — taught as hard skills, practised in real rooms.",
+    },
+    {
+        icon: Award,
         title: "Certification budget",
-        body: "We pay for your certifications. Microsoft Fabric, Power BI, Databricks, Snowflake, cloud — whatever the track needs. Training is a line item, not a perk.",
+        body: "We pay for Microsoft Fabric, Databricks, Snowflake, Azure, Power BI — whatever the track needs. Training is a line item, not a stretch goal.",
     },
     {
-        icon: "users" as const,
-        title: "Senior mentors, not peer pods",
-        body: "Every cohort is paired with senior CBT consultants — the same people who ship for P&G, KPMG, and ADNOC. Mentorship is programme-mandated, not optional.",
-    },
-    {
-        icon: "handshake" as const,
-        title: "Paid, stipended, residential-optional",
-        body: "A stipend from day one. Residential or hybrid — we flex around commute and circumstance, not the other way around.",
+        icon: Users,
+        title: "Mentorship + stipend",
+        body: "Paired with senior mentors from day one. Paid stipend from day one. Residential or hybrid — we flex around commute and circumstance, not the other way around.",
     },
 ];
 
@@ -87,7 +96,7 @@ const ELIGIBILITY = [
     "Bachelor's degree in CS, Stats, Math, Engineering, or Economics",
     "Fresh graduates or up to 2 years of experience",
     "Strong analytical thinking and problem-solving skills",
-    "Willing to commit to the full 9-month programme",
+    "Willing to commit to the full 9-month program",
 ];
 
 export default async function CGAPPage() {
@@ -101,7 +110,7 @@ export default async function CGAPPage() {
     ] = await Promise.all([
         supabase
             .from("clients")
-            .select("name")
+            .select("name, logo_url, logo_full_url")
             .eq("is_featured", true)
             .order("display_order", { ascending: true }),
         supabase.from("cgap_alumni").select("*").order("display_order", { ascending: true }),
@@ -114,7 +123,10 @@ export default async function CGAPPage() {
         supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any,
     ]);
 
-    const clientNames = (clientsData as any[])?.map((c) => c.name) || [];
+    const clients = ((clientsData as any[]) || []).map((c) => ({
+        name: c.name,
+        logoUrl: c.logo_full_url || c.logo_url || null,
+    }));
     const displayAlumni =
         (dbAlumni as any[])?.length ? (dbAlumni as any[]) : fallbackAlumni;
     const activeBatch = (openBatches as any[])?.[0];
@@ -130,7 +142,6 @@ export default async function CGAPPage() {
 
             {/* ─── HERO ─── */}
             <section
-                className="hero-grid-texture"
                 style={{
                     minHeight: "100vh",
                     display: "flex",
@@ -141,6 +152,7 @@ export default async function CGAPPage() {
                     overflow: "hidden",
                 }}
             >
+                <BackgroundPaths />
                 <div
                     className="v2-wrap"
                     style={{ position: "relative", zIndex: 1, width: "100%" }}
@@ -154,7 +166,7 @@ export default async function CGAPPage() {
                             background: "var(--color-primary-muted)",
                             borderRadius: 20,
                             padding: "5px 13px",
-                            marginBottom: 22,
+                            marginBottom: 18,
                         }}
                     >
                         <span
@@ -174,68 +186,63 @@ export default async function CGAPPage() {
                                 color: "var(--color-primary)",
                             }}
                         >
-                            The CGAP &middot; Convergent Graduate Academy Programme
+                            Batch {nextBatchNumber} &middot; applications open
                         </span>
                     </div>
 
+                    <img
+                        src="/cgap logos/CGAP - Logo Light BG.svg"
+                        alt="Convergent Graduate Academy Program"
+                        className="cgap-hero-logo a-fadeUp-2"
+                    />
+
                     <h1
-                        className="v2-h1 a-fadeUp-2"
+                        className="v2-h1 a-fadeUp-3"
                         style={{
-                            fontSize: "clamp(2.6rem, 5vw, 4rem)",
-                            marginBottom: 22,
-                            maxWidth: 920,
+                            fontSize: "clamp(2.1rem, 3.8vw, 3rem)",
+                            marginBottom: 18,
+                            maxWidth: 820,
+                            lineHeight: 1.15,
+                            color: "#4a4a4a",
                         }}
                     >
-                        Bridging Academia &amp;{" "}
+                        Graduates today. Consultants,{" "}
                         <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                            Industry.
+                            shipping.
                         </em>
                     </h1>
 
                     <p
-                        className="a-fadeUp-3"
+                        className="a-fadeUp-4"
                         style={{
                             fontFamily: "var(--font-body)",
-                            fontSize: 20,
+                            fontSize: 19,
                             fontWeight: 350,
                             color: "#4B5563",
                             lineHeight: 1.7,
-                            maxWidth: 680,
+                            maxWidth: 720,
                         }}
                     >
-                        A <b>9-month paid programme</b> &mdash; Georgia Tech sponsored &mdash; that turns top graduates into shipping consultants. Real project work from month two. A career on the other side, not just a certificate.
+                        The <b>Convergent Graduate Academy Program (CGAP)</b> is CBT&rsquo;s 9-month learning-and-grooming pathway &mdash; turning top graduates into industry-ready data &amp; AI professionals, with real client projects from month two and a permanent career on the other side.
                     </p>
 
                     <div
                         className="a-fadeUp-4"
-                        style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
+                        style={{ display: "flex", gap: 16, marginTop: 28, flexWrap: "wrap", alignItems: "center" }}
                     >
                         <a href={applicationUrl} target="_blank" rel="noreferrer" className="hero-btn-primary">
                             Apply to CGAP <span>↗</span>
                         </a>
-                        <Link href="#journey" className="hero-btn-secondary">
-                            See the 9-month journey <span className="hero-btn-arrow">→</span>
-                        </Link>
                     </div>
 
-                    <div className="cgap-hero-facts">
-                        <div className="cgap-hero-fact">
-                            <span className="cgap-hero-fact-num">9</span>
-                            <span className="cgap-hero-fact-label">months</span>
-                        </div>
-                        <div className="cgap-hero-fact">
-                            <span className="cgap-hero-fact-num">GT</span>
-                            <span className="cgap-hero-fact-label">sponsored</span>
-                        </div>
-                        <div className="cgap-hero-fact">
-                            <span className="cgap-hero-fact-num">M2</span>
-                            <span className="cgap-hero-fact-label">real projects</span>
-                        </div>
-                        <div className="cgap-hero-fact">
-                            <span className="cgap-hero-fact-num">B{nextBatchNumber}</span>
-                            <span className="cgap-hero-fact-label">next batch</span>
-                        </div>
-                    </div>
+                    <CgapHeroStats
+                        stats={[
+                            { value: 9, label: "months" },
+                            { value: 4, label: "phases" },
+                            { prefix: "M", value: 2, label: "real projects" },
+                            { prefix: "B", value: nextBatchNumber, label: "next batch" },
+                        ]}
+                    />
                 </div>
             </section>
 
@@ -245,9 +252,9 @@ export default async function CGAPPage() {
                     <div className="services-section-head v2-reveal">
                         <span className="services-section-tag">the 9-month journey</span>
                         <h2 className="services-section-title">
-                            Fundamentals &rarr; Specialise &rarr; Ship &rarr;{" "}
+                            Starts as a graduate. Ends as a{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                Placed.
+                                consultant.
                             </em>
                         </h2>
                         <p className="services-section-sub">
@@ -270,149 +277,104 @@ export default async function CGAPPage() {
                 </div>
             </section>
 
-            {/* ─── GEORGIA TECH & PARTNER TRACK ─── */}
-            <section className="services-section">
-                <div className="v2-wrap">
-                    <div className="cgap-gt-panel v2-reveal">
-                        <div>
-                            <span className="services-section-tag">Georgia Tech &amp; partner track</span>
-                            <h2 className="services-section-title" style={{ maxWidth: 640 }}>
-                                A curriculum you can{" "}
-                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                    defend.
-                                </em>
-                            </h2>
-                            <p
-                                style={{
-                                    fontFamily: "var(--font-body)",
-                                    fontSize: 17.5,
-                                    fontWeight: 350,
-                                    lineHeight: 1.75,
-                                    color: "var(--color-text-body)",
-                                    maxWidth: 620,
-                                    marginBottom: 16,
-                                }}
-                            >
-                                CGAP is shaped in partnership with <b>Georgia Tech</b> &mdash; content, assessment, and certification aligned with a recognised academic programme, not home-brewed in a training room.
-                            </p>
-                            <p
-                                style={{
-                                    fontFamily: "var(--font-body)",
-                                    fontSize: 17.5,
-                                    fontWeight: 350,
-                                    lineHeight: 1.75,
-                                    color: "var(--color-text-body)",
-                                    maxWidth: 620,
-                                }}
-                            >
-                                The <b>partner track</b> runs in parallel: sponsoring clients host a cohort member from month six and can convert the placement to a permanent hire. Same programme, different end destination.
-                            </p>
-                        </div>
-                        <div className="cgap-gt-stats">
-                            <div className="about-cgap-fact">
-                                <span className="about-cgap-fact-num">GT</span>
-                                <span className="about-cgap-fact-label">academic partner</span>
-                                <span className="about-cgap-fact-note">
-                                    content &amp; credentialing
-                                </span>
-                            </div>
-                            <div className="about-cgap-fact">
-                                <span className="about-cgap-fact-num">CBT</span>
-                                <span className="about-cgap-fact-label">delivery track</span>
-                                <span className="about-cgap-fact-note">
-                                    permanent CBT placement
-                                </span>
-                            </div>
-                            <div className="about-cgap-fact">
-                                <span className="about-cgap-fact-num">◆</span>
-                                <span className="about-cgap-fact-label">partner track</span>
-                                <span className="about-cgap-fact-note">
-                                    client-hosted placement &amp; hire
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── CULTURE & CERT ─── */}
-            <section className="services-section services-section-alt">
+            {/* ─── LEARNING & GROOMING ─── */}
+            <section className="services-section cgap-section-tinted">
                 <div className="v2-wrap">
                     <div className="services-section-head v2-reveal">
-                        <span className="services-section-tag">culture &amp; investment</span>
+                        <span className="services-section-tag">learning + grooming</span>
                         <h2 className="services-section-title">
-                            A career isn&rsquo;t a{" "}
+                            Not a bootcamp. Not a bench. A{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                perks list.
+                                craft.
                             </em>
                         </h2>
                         <p className="services-section-sub">
-                            Training, mentorship, and certifications are line items on the cohort budget &mdash; not stretch goals.
+                            Universities give you theory. Job boards give you a job. CGAP gives you a craft &mdash; structured learning, consulting skills, and senior mentorship, stitched into every month of the program.
                         </p>
                     </div>
 
                     <div className="services-grid services-grid-2">
-                        {CULTURE.map((c, i) => (
-                            <article key={c.title} className="services-tile">
-                                <div className="services-tile-head">
-                                    <div className="services-tile-icon">
-                                        {/* inline SVG icon via the shared Icons component would require client; keep simple here */}
-                                        <svg
-                                            width={22}
-                                            height={22}
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="var(--color-primary)"
-                                            strokeWidth={1.5}
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            {c.icon === "graduation" && (
-                                                <>
-                                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                                                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                                                </>
-                                            )}
-                                            {c.icon === "award" && (
-                                                <>
-                                                    <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z" />
-                                                    <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12" />
-                                                </>
-                                            )}
-                                            {c.icon === "users" && (
-                                                <>
-                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                                    <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                                </>
-                                            )}
-                                            {c.icon === "handshake" && (
-                                                <>
-                                                    <path d="M6 9H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2" />
-                                                    <path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2" />
-                                                    <path d="M6 13l2.5 2.5 7-7" />
-                                                    <path d="M10 9V7a2 2 0 0 1 4 0v2" />
-                                                </>
-                                            )}
-                                        </svg>
+                        {GROOMING.map((g, i) => {
+                            const Icon = g.icon;
+                            return (
+                                <article key={g.title} className="services-tile">
+                                    <div className="services-tile-head">
+                                        <div className="services-tile-icon">
+                                            <Icon size={22} strokeWidth={1.5} stroke="var(--color-primary)" />
+                                        </div>
+                                        <span className="services-tile-num">
+                                            {String(i + 1).padStart(2, "0")}
+                                        </span>
                                     </div>
-                                    <span className="services-tile-num">
-                                        {String(i + 1).padStart(2, "0")}
+                                    <div className="services-tile-title-row">
+                                        <h3 className="services-tile-title">{g.title}</h3>
+                                    </div>
+                                    <p className="services-tile-desc">{g.body}</p>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── GEORGIA TECH — AFTER PLACEMENT ─── */}
+            <section className="services-section">
+                <div className="v2-wrap">
+                    <div className="cgap-after-panel v2-reveal">
+                        <div className="cgap-after-grid">
+                            <div>
+                                <span className="services-section-tag cgap-after-tag">
+                                    post-placement career track
+                                </span>
+                                <h2
+                                    className="services-section-title"
+                                    style={{ color: "#fff", maxWidth: 540 }}
+                                >
+                                    When you&rsquo;re in, we keep{" "}
+                                    <em style={{ fontStyle: "italic", color: "var(--color-primary-light)" }}>
+                                        investing.
+                                    </em>
+                                </h2>
+                                <p className="cgap-after-copy">
+                                    Placement isn&rsquo;t the finish line. Once you&rsquo;ve joined CBT and proven you can deliver, we sponsor a <b>Georgia Tech academic credential</b> as part of your long-term career development &mdash; compounding the program into a career, not capping it at a certificate.
+                                </p>
+                                <p className="cgap-after-copy">
+                                    To be clear: Georgia Tech isn&rsquo;t a CGAP partner. It&rsquo;s a <b>post-placement benefit</b> CBT funds for consultants who&rsquo;ve earned it.
+                                </p>
+                            </div>
+                            <div className="cgap-after-visual">
+                                <div className="cgap-after-visual-head">
+                                    <GraduationCap size={22} strokeWidth={1.5} stroke="var(--color-primary-light)" />
+                                    <span>how the career track compounds</span>
+                                </div>
+                                <div className="cgap-after-row">
+                                    <span className="cgap-after-row-label">month 9</span>
+                                    <span className="cgap-after-row-value">
+                                        Placed as a CBT consultant
                                     </span>
                                 </div>
-                                <div className="services-tile-title-row">
-                                    <h3 className="services-tile-title">{c.title}</h3>
+                                <div className="cgap-after-divider" />
+                                <div className="cgap-after-row">
+                                    <span className="cgap-after-row-label">post-placement</span>
+                                    <span className="cgap-after-row-value">
+                                        Live engagements, senior mentorship
+                                    </span>
                                 </div>
-                                <p className="services-tile-desc">{c.body}</p>
-                            </article>
-                        ))}
+                                <div className="cgap-after-divider" />
+                                <div className="cgap-after-row">
+                                    <span className="cgap-after-row-label">career benefit</span>
+                                    <span className="cgap-after-row-value">
+                                        CBT-sponsored Georgia Tech credential
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* ─── ELIGIBILITY + ALUMNI ─── */}
-            <section className="services-section">
+            <section className="services-section services-section-alt">
                 <div className="v2-wrap">
                     <div className="cgap-two-col">
                         <div>
@@ -480,7 +442,7 @@ export default async function CGAPPage() {
                 </div>
             </section>
 
-            <IndustryLeadersStrip clientNames={clientNames} />
+            <IndustryLeadersStrip clients={clients} />
 
             {/* ─── CTA BAND ─── */}
             <section className="cta-band">
@@ -493,7 +455,7 @@ export default async function CGAPPage() {
                             </em>
                         </h2>
                         <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
-                            Applications for the next cohort are open. Nine months. Georgia Tech sponsored. Real stakes from month two.
+                            Applications for the next cohort are open. Nine months of structured learning, senior mentorship, and real stakes from month two.
                         </p>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>

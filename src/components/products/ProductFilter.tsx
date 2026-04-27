@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, ExternalLink, ArrowRight, Loader2 } from "lucide-react";
+import { ExternalLink, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
@@ -10,7 +10,6 @@ interface Product {
     slug: string;
     category: string;
     short_description: string;
-    features: string[];
     appsource_url?: string;
     industry?: string;
     badge_text?: string | null;
@@ -43,7 +42,6 @@ export default function ProductFilter() {
                 slug: p.slug,
                 category: p.category,
                 short_description: p.short_description || "",
-                features: p.screenshot_urls || [], // Reusing this for demo feature list
                 appsource_url: p.appsource_url || "#",
                 industry: p.industry || "General",
                 badge_text: p.badge_text || null,
@@ -149,17 +147,6 @@ export default function ProductFilter() {
                                 {product.short_description}
                             </p>
 
-                            <div className="space-y-3 mb-10 border-t border-border/30 pt-6">
-                                {product.features.slice(0, 3).map((f) => (
-                                    <div key={f} className="flex items-center gap-3">
-                                        <div className="w-4 h-4 rounded-full bg-primary-muted flex items-center justify-center">
-                                            <Star size={8} className="text-primary" fill="currentColor" />
-                                        </div>
-                                        <span className="text-[11px] font-medium text-text-body font-body truncate">{f}</span>
-                                    </div>
-                                ))}
-                            </div>
-
                             <div className="mt-auto flex flex-col gap-3">
                                 {product.detail_path ? (
                                     <Link
@@ -181,7 +168,7 @@ export default function ProductFilter() {
                                     </a>
                                 )}
                                 <Link
-                                    href={`/contact?subject=Demo: ${product.name}`}
+                                    href={`/contact?subject=${encodeURIComponent(`Demo: ${product.name}`)}`}
                                     className="btn-ghost justify-center text-sm font-bold"
                                 >
                                     Request a Demo

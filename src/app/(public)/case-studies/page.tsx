@@ -10,69 +10,52 @@ export const metadata: Metadata = {
         "Outcomes we've shipped. Measurable results in data, cloud, and AI — across retail, banking, telecom, and government.",
 };
 
-// Outcome-led fallback — title *is* the outcome, client/industry is supporting context.
-const fallbackCaseStudies: CaseStudy[] = [
-    {
-        slug: "loyalty-margin-uplift",
-        title: "+32% margin on pilot category",
-        summary:
-            "Rebuilt the loyalty decisioning stack on Microsoft Fabric. Redemption uplift drove a 32% margin improvement in the pilot category within one quarter.",
-        tags: ["Retail", "Fabric", "Data Engineering"],
-        outcome: "+32%",
-        industry: "Retail",
-    },
-    {
-        slug: "ecl-48-hours",
-        title: "ECL calculated in 48 hours",
-        summary:
-            "IFRS 9 expected credit loss modelling, bank-ready and audit-traceable. From raw data to regulator-shaped output in 48 hours, built in collaboration with KPMG.",
-        tags: ["Banking", "KPMG", "Regulatory"],
-        outcome: "48h",
-        industry: "Banking",
-    },
-    {
-        slug: "realtime-bi-40x",
-        title: "40× faster time-to-insight",
-        summary:
-            "Replaced a batch reporting estate with a Snowflake + Power BI architecture. Time-to-insight dropped from six hours to nine minutes across the operations estate.",
-        tags: ["Telecom", "Snowflake", "Power BI"],
-        outcome: "40×",
-        industry: "Telecom",
-    },
-];
-
-type CaseStudy = {
+type CaseStudyCard = {
     slug: string;
     title: string;
     summary: string | null;
-    tags: string[];
-    outcome?: string;
-    industry?: string;
+    outcome_value: string | null;
+    outcome_label: string | null;
+    tags: string[] | null;
+    industry_label: string | null;
 };
 
 export default async function CaseStudiesPage() {
     const supabase = await createClient();
 
-    const [{ data: clientsData }, { data: dbCaseStudies }] = await Promise.all([
-        supabase.from("clients").select("name").order("display_order", { ascending: true }),
-        supabase
-            .from("case_studies")
-            .select("slug, title, summary, tags")
-            .eq("published", true)
-            .order("created_at", { ascending: false }),
-    ]);
+    const [{ data: clientsData }, { data: studiesData }, { data: industriesData }] =
+        await Promise.all([
+            supabase
+                .from("clients")
+                .select("name, logo_url, logo_full_url")
+                .order("display_order", { ascending: true }),
+            supabase
+                .from("case_studies")
+                .select("slug, title, summary, outcome_value, outcome_label, tags, industry_slug, display_order")
+                .eq("published", true)
+                .order("display_order", { ascending: true }),
+            supabase.from("industries").select("slug, label"),
+        ]);
 
-    const clientNames = clientsData?.map((c) => c.name);
+    const clients = clientsData?.map((c: any) => ({
+        name: c.name,
+        logoUrl: c.logo_full_url || c.logo_url || null,
+    }));
 
-    const studies: CaseStudy[] =
-        dbCaseStudies && dbCaseStudies.length > 0
-            ? (dbCaseStudies as any[]).map((s) => ({
-                slug: s.slug,
-                title: s.title,
-                summary: s.summary,
-                tags: s.tags || [],
-            }))
-            : fallbackCaseStudies;
+    // Build industry slug→label map so cards can show a human label instead of the slug.
+    const industryLabel = new Map<string, string>(
+        ((industriesData as any[]) || []).map((i) => [i.slug, i.label]),
+    );
+
+    const studies: CaseStudyCard[] = ((studiesData as any[]) || []).map((s) => ({
+        slug: s.slug,
+        title: s.title,
+        summary: s.summary,
+        outcome_value: s.outcome_value,
+        outcome_label: s.outcome_label,
+        tags: s.tags,
+        industry_label: s.industry_slug ? industryLabel.get(s.industry_slug) ?? null : null,
+    }));
 
     return (
         <main>
@@ -168,7 +151,7 @@ export default async function CaseStudiesPage() {
             </section>
 
             {/* ─── TRUST BAR ─── */}
-            <IndustryLeadersStrip clientNames={clientNames} />
+            <IndustryLeadersStrip clients={clients} />
 
             {/* ─── STUDIES GRID ─── */}
             <section id="studies" className="services-section services-section-alt">
@@ -186,42 +169,77 @@ export default async function CaseStudiesPage() {
                         </p>
                     </div>
 
-                    <div className="case-study-grid">
-                        {studies.map((s) => (
+                    {studies.length > 0 ? (
+                        <div className="case-study-grid">
+                            {studies.map((s) => {
+                                const hasMetric = !!(s.outcome_value && s.outcome_label);
+                                return (
+                                    <Link
+                                        key={s.slug}
+                                        href={`/case-studies/${s.slug}`}
+                                        className="cs-card"
+                                    >
+                                        <div className="cs-card-inner">
+                                            {s.industry_label && (
+                                                <span className="cs-card-industry">
+                                                    <span
+                                                        className="cs-card-industry-dot"
+                                                        aria-hidden
+                                                    />
+                                                    {s.industry_label}
+                                                </span>
+                                            )}
+
+                                            <h3 className="cs-card-title">{s.title}</h3>
+
+                                            {s.summary && (
+                                                <p className="cs-card-summary">{s.summary}</p>
+                                            )}
+
+                                            {hasMetric && (
+                                                <div className="cs-card-metric">
+                                                    <span className="cs-card-metric-value">
+                                                        {s.outcome_value}
+                                                    </span>
+                                                    <span className="cs-card-metric-label">
+                                                        {s.outcome_label}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            <div className="cs-card-foot">
+                                                {s.tags && s.tags.length > 0 && (
+                                                    <div className="cs-card-tags">
+                                                        {s.tags.slice(0, 3).map((t) => (
+                                                            <span key={t} className="cs-card-tag">
+                                                                {t}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <span className="cs-card-cta">
+                                                    Read the case <span aria-hidden>→</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="cs-empty v2-reveal">
+                            <p className="cs-empty-title">Case studies coming soon.</p>
+                            <p className="cs-empty-sub">
+                                Want to see outcomes for your industry? Book a call — we&rsquo;ll talk through what&rsquo;s shipped adjacent to your problem.
+                            </p>
                             <Link
-                                key={s.slug}
-                                href={`/case-studies/${s.slug}`}
-                                className="case-study-card"
+                                href="/contact?intent=discovery"
+                                className="hero-btn-primary"
                             >
-                                {(s.outcome || s.industry) && (
-                                    <div className="case-study-card-head">
-                                        {s.industry && (
-                                            <span className="case-study-card-industry">{s.industry}</span>
-                                        )}
-                                        {s.outcome && (
-                                            <span className="case-study-card-outcome">{s.outcome}</span>
-                                        )}
-                                    </div>
-                                )}
-                                <h3 className="case-study-card-title">{s.title}</h3>
-                                {s.summary && (
-                                    <p className="case-study-card-summary">{s.summary}</p>
-                                )}
-                                <div className="case-study-card-foot">
-                                    <div className="case-study-card-tags">
-                                        {s.tags?.slice(0, 3).map((t) => (
-                                            <span key={t} className="services-tile-tool">
-                                                {t}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <span className="case-study-card-cta">
-                                        Read the case <span aria-hidden>→</span>
-                                    </span>
-                                </div>
+                                Book a Discovery Call <span>→</span>
                             </Link>
-                        ))}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </section>
 

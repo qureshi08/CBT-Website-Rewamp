@@ -141,17 +141,17 @@ export const INDUSTRIES: Record<IndustryKey, IndustryContent> = {
         heroHeadline: "Citizen outcomes, measured",
         heroItalic: "transparently.",
         heroSub:
-            "Programme measurement, service analytics, and operational visibility across ministries and agencies. Delivered by a team that respects procurement, governance, and the long road to impact.",
+            "Program measurement, service analytics, and operational visibility across ministries and agencies. Delivered by a team that respects procurement, governance, and the long road to impact.",
         context: {
             title: "The accountability is",
             italic: "public.",
-            body: "Public-sector data work is slower and more scrutinised — rightly so. We design for auditability, procurement cycles, and programme owners who need to show impact to stakeholders and the public. Dashboards that answer real questions, not demo questions.",
+            body: "Public-sector data work is slower and more scrutinised — rightly so. We design for auditability, procurement cycles, and program owners who need to show impact to stakeholders and the public. Dashboards that answer real questions, not demo questions.",
         },
         whereWeHelp: [
             {
                 num: "01",
-                title: "Programme measurement",
-                body: "Outcome frameworks, instrumentation, and reporting on grant- and KPI-tied programmes — without a year-long discovery.",
+                title: "Program measurement",
+                body: "Outcome frameworks, instrumentation, and reporting on grant- and KPI-tied programs — without a year-long discovery.",
             },
             {
                 num: "02",

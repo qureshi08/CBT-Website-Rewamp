@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Ic from "@/components/shared/Icons";
+import ClientReveal from "@/components/shared/ClientReveal";
 
 export async function generateMetadata(): Promise<Metadata> {
     const supabase = await createClient();
@@ -54,6 +55,60 @@ const SOLUTION_TILES = [
     },
 ];
 
+const PILOT_WEEKS = [
+    {
+        num: "01",
+        label: "Week 01",
+        title: "Scoping & data",
+        body: "Senior consultant on the ground (or remote) to scope the segment, agree the data feeds, and stand up the secure workspace inside your tenancy. Methodology pack starts here.",
+    },
+    {
+        num: "02",
+        label: "Week 02",
+        title: "Segmentation & modelling",
+        body: "PD, LGD and EAD models calibrated against your portfolio segmentation. First parameter walkthrough mid-week with risk and finance — no surprises at the end.",
+    },
+    {
+        num: "03",
+        label: "Week 03",
+        title: "Scenarios & lineage",
+        body: "Baseline plus two scenarios wired in. Macro overlays plug into the same pipeline. Lineage records start emitting against every run, ready for the audit pack.",
+    },
+    {
+        num: "04",
+        label: "Week 04",
+        title: "Audit pack & sign-off",
+        body: "First full ECL run and a regulator-facing methodology pack. Walkthrough with your auditor — or with KPMG, if they're already in the room.",
+    },
+];
+
+const FAQ_ITEMS = [
+    {
+        q: "Will our regulator accept the methodology?",
+        a: "The methodology is co-developed with KPMG's banking practice and has been deployed against books supervised by South Asian central banks. We hand over a documentation pack designed to walk through with the regulator, not redact around them.",
+    },
+    {
+        q: "Can it sit alongside our existing risk stack?",
+        a: "Yes. The calculator ingests from your data warehouse and emits outputs your reporting layer can pick up. We don't replace your core banking or risk system — we sit between segmented data and the provision number.",
+    },
+    {
+        q: "Where does the data live?",
+        a: "Your environment. The engine deploys into your cloud tenancy (Azure or AWS), or runs on-prem if your risk policy requires it. No book data leaves your perimeter — we operate inside it.",
+    },
+    {
+        q: "What happens if the pilot doesn't land?",
+        a: "You don't scale, and you don't pay beyond the fixed pilot fee. The engagement is outcome-gated — if the methodology pack and ECL run aren't usable, the engagement closes there. We've never had to invoke that, but the contract makes it explicit.",
+    },
+    {
+        q: "How is the model maintained over time?",
+        a: "Quarterly model review is part of the enterprise tier. New macro forecasts, segmentation drift, and back-testing results feed into a structured review cycle, with a sign-off pack each quarter the regulator can read.",
+    },
+    {
+        q: "Who runs it day-to-day after deployment?",
+        a: "Your team. We train your risk and finance analysts during the pilot. The named senior consultant stays on call for major reruns and regulator submissions; routine quarterly runs are owned by you.",
+    },
+];
+
 const PRICING_TIERS = [
     {
         num: "01",
@@ -102,6 +157,7 @@ export default async function EclCalculatorPage() {
 
     return (
         <main>
+            <ClientReveal />
             {/* ─── HERO ─── */}
             <section
                 className="hero-grid-texture"
@@ -225,9 +281,9 @@ export default async function EclCalculatorPage() {
             {/* ─── PROBLEM / REGULATORY CONTEXT ─── */}
             <section className="services-section services-section-alt">
                 <div className="v2-wrap">
-                    <div className="industry-context v2-reveal">
+                    <div className="v2-reveal">
                         <span className="services-section-tag">the problem</span>
-                        <h2 className="services-section-title" style={{ maxWidth: 820 }}>
+                        <h2 className="services-section-title">
                             IFRS 9 didn&rsquo;t make provisioning{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
                                 simpler.
@@ -240,7 +296,6 @@ export default async function EclCalculatorPage() {
                                 fontWeight: 350,
                                 lineHeight: 1.75,
                                 color: "var(--color-text-body)",
-                                maxWidth: 820,
                                 marginBottom: 16,
                             }}
                         >
@@ -253,7 +308,7 @@ export default async function EclCalculatorPage() {
                                 fontWeight: 350,
                                 lineHeight: 1.75,
                                 color: "var(--color-text-body)",
-                                maxWidth: 820,
+                                margin: 0,
                             }}
                         >
                             We built the ECL Calculator so a quarterly run is a pipeline, not a fire drill. PD, LGD, EAD, scenario overlays and audit trail sit in one engine &mdash; reviewed by KPMG&rsquo;s banking practice, deployed against real books, and tuned for the regulators you actually answer to.
@@ -427,8 +482,57 @@ export default async function EclCalculatorPage() {
                 </div>
             </section>
 
+            {/* ─── PILOT TIMELINE ─── */}
+            <section className="services-section">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">how the pilot runs</span>
+                        <h2 className="services-section-title">
+                            From kickoff to a regulator-ready pack in{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                four weeks.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            Fixed-fee and outcome-gated. Here&rsquo;s what each week delivers — and where you sign off before scaling.
+                        </p>
+                    </div>
+
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                            gap: 20,
+                        }}
+                    >
+                        {PILOT_WEEKS.map((w) => (
+                            <article key={w.num} className="services-tile v2-reveal">
+                                <div className="services-tile-head">
+                                    <span
+                                        style={{
+                                            fontFamily: "var(--font-mono)",
+                                            fontSize: 11,
+                                            letterSpacing: ".08em",
+                                            textTransform: "uppercase",
+                                            color: "var(--color-primary)",
+                                        }}
+                                    >
+                                        {w.label}
+                                    </span>
+                                    <span className="services-tile-num">{w.num}</span>
+                                </div>
+                                <div className="services-tile-title-row">
+                                    <h3 className="services-tile-title">{w.title}</h3>
+                                </div>
+                                <p className="services-tile-desc">{w.body}</p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* ─── PRICING ─── */}
-            <section id="pricing" className="services-section">
+            <section id="pricing" className="services-section services-section-alt">
                 <div className="v2-wrap">
                     <div className="services-section-head v2-reveal">
                         <span className="services-section-tag">pricing</span>
@@ -542,6 +646,42 @@ export default async function EclCalculatorPage() {
                                     {t.cta} <span className="hero-btn-arrow">→</span>
                                 </Link>
                             </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── FAQ ─── */}
+            <section className="services-section">
+                <div className="v2-wrap">
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">frequently asked</span>
+                        <h2 className="services-section-title">
+                            What banks ask before they{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                pilot.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            The questions that come up in scoping calls — answered up front so you can decide if a pilot fits.
+                        </p>
+                    </div>
+
+                    <div className="services-faq v2-reveal" style={{ maxWidth: 880, margin: "0 auto" }}>
+                        {FAQ_ITEMS.map((item, i) => (
+                            <details
+                                key={item.q}
+                                className="services-faq-item"
+                                {...(i === 0 ? { open: true } : {})}
+                            >
+                                <summary className="services-faq-q">
+                                    <span>{item.q}</span>
+                                    <span className="services-faq-chev" aria-hidden>
+                                        +
+                                    </span>
+                                </summary>
+                                <div className="services-faq-a">{item.a}</div>
+                            </details>
                         ))}
                     </div>
                 </div>

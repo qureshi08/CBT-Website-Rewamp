@@ -57,7 +57,7 @@ export default function CaseStudiesFeatured() {
                         }}>Every engagement ships with a measurable outcome. Here are three.</p>
                     </div>
                     <Link
-                        href="/customers"
+                        href="/case-studies"
                         className="hero-btn-secondary"
                         style={{ flexShrink: 0, whiteSpace: "nowrap" }}
                     >

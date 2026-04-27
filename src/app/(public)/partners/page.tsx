@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import {
     Cpu,
     Truck,
@@ -10,10 +9,9 @@ import {
     Target,
     Quote,
 } from "lucide-react";
-import { IndustryLeadersStrip, TechPartnersStrip } from "@/components/home/ClientLogoStrip";
+import { IndustryLeadersStrip, TechPartnersGrid } from "@/components/home/ClientLogoStrip";
 import PartnerForm from "@/components/partners/PartnerForm";
 import ClientReveal from "@/components/shared/ClientReveal";
-import { PartnersIllustration } from "@/components/shared/Illustrations";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -26,18 +24,18 @@ const staticValueProps = [
     {
         icon: Users,
         title: "Deep Talent Pool",
-        descriptionTemplate: "30+ seasoned data consultants and a continuous CGAP pipeline.",
+        descriptionTemplate: "35+ seasoned data consultants and a continuous CGAP pipeline.",
     },
     {
         icon: Globe,
         title: "Global Reach",
         descriptionTemplate:
-            "Clients across FMCG, finance, retail, hospitality, and NGO sectors.",
+            "Clients across retail, banking, telecom, FMCG, and public sector.",
     },
     {
         icon: Award,
         title: "Proven Specialisation",
-        descriptionTemplate: "Deep expertise in BI, data warehousing, and analytics.",
+        descriptionTemplate: "Deep expertise across data engineering, analytics, and AI.",
     },
     {
         icon: Target,
@@ -75,15 +73,21 @@ export default async function PartnersPage() {
         { data: batchStat },
         { data: dbTestimonials },
     ] = await Promise.all([
-        supabase.from("clients").select("name").eq("is_featured", true).order("display_order", { ascending: true }),
+        supabase.from("clients").select("name, logo_url, logo_full_url").eq("is_featured", true).order("display_order", { ascending: true }),
         supabase.from("partners").select("name, logo_url").order("display_order", { ascending: true }),
         supabase.from("clients").select("*", { count: "exact", head: true }),
         (supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any),
         supabase.from("testimonials").select("*").or("page.eq.Partners,page.eq.General").order("display_order", { ascending: true }),
     ]);
 
-    const clientNames = clientsData?.map((c) => c.name);
-    const partnerNames = partnersData?.map((p) => p.name);
+    const clients = clientsData?.map((c: any) => ({
+        name: c.name,
+        logoUrl: c.logo_full_url || c.logo_url || null,
+    }));
+    const partners = partnersData?.map((p) => ({
+        name: p.name,
+        logoUrl: p.logo_url || null,
+    }));
     const displayClientCount = clientCount || 0;
     const displayBatchCount = batchStat?.value || 12;
     const testimonials = dbTestimonials?.length ? dbTestimonials : fallbackTestimonials;
@@ -106,7 +110,7 @@ export default async function PartnersPage() {
             <ClientReveal />
             {/* Hero */}
             <section className="hero-grid-texture" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
-                <div className="v2-wrap home-hero-grid" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+                <div className="v2-wrap" style={{ position: "relative", zIndex: 1, width: "100%" }}>
                     <div>
                         <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>
                             <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--color-primary)", display: "inline-block", animation: "pulse 2s infinite" }} />
@@ -115,7 +119,7 @@ export default async function PartnersPage() {
                         <h1 className="v2-h1 a-fadeUp-2" style={{ fontSize: "clamp(2.6rem, 4.5vw, 3.8rem)", marginBottom: "18px" }}>
                             Deliver Superior Value, <br /> <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Together.</em>
                         </h1>
-                        <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "460px", marginTop: "13px" }}>
+                        <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "560px", marginTop: "13px" }}>
                             Technology. Delivery. Referral. Three ways to partner with CBT and unlock enterprise-grade data opportunities for your clients.
                         </p>
                         <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
@@ -127,11 +131,23 @@ export default async function PartnersPage() {
                             </a>
                         </div>
                     </div>
-                    <div className="a-scaleIn home-hero-illustration" style={{ flexShrink: 0 }}>
-                        <PartnersIllustration />
-                    </div>
                 </div>
             </section>
+
+            {/* ─── PARTNER LOGOS ─── */}
+            <TechPartnersGrid
+                partners={partners}
+                eyebrow="Our Strategic Alliances"
+                title={
+                    <>
+                        An ecosystem already in{" "}
+                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                            motion.
+                        </em>
+                    </>
+                }
+                description="A select network of consultancy and delivery partners we co-sell and co-deliver with — chosen for domain depth, shared standards, and accountability on every engagement."
+            />
 
             {/* ─── MODELS ─── */}
             <section id="models" className="services-section">
@@ -211,9 +227,8 @@ export default async function PartnersPage() {
                 </div>
             </section>
 
-            {/* ─── MARQUEES ─── */}
-            <IndustryLeadersStrip clientNames={clientNames} />
-            <TechPartnersStrip partnerNames={partnerNames} />
+            {/* ─── INDUSTRY LEADERS MARQUEE ─── */}
+            <IndustryLeadersStrip clients={clients} />
 
             {/* ─── TESTIMONIALS ─── */}
             <section className="services-section">
@@ -254,32 +269,10 @@ export default async function PartnersPage() {
                 </div>
             </section>
 
-            {/* ─── FORM ─── */}
-            <section id="partner-form" className="services-section services-section-alt">
-                <div className="v2-wrap">
-                    <div className="services-section-head v2-reveal">
-                        <span className="services-section-tag">arrange a call</span>
-                        <h2 className="services-section-title">
-                            Start the{" "}
-                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                conversation.
-                            </em>
-                        </h2>
-                        <p className="services-section-sub">
-                            Tell us about your practice and the clients you serve. We&rsquo;ll come back within one business day.
-                        </p>
-                    </div>
-
-                    <div className="partners-form-wrap v2-reveal">
-                        <PartnerForm />
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── CTA BAND ─── */}
-            <section className="cta-band">
-                <div className="v2-wrap cta-inner-grid">
-                    <div>
+            {/* ─── CTA BAND WITH FORM ─── */}
+            <section id="partner-form" className="cta-band">
+                <div className="v2-wrap cta-band-grid">
+                    <div className="cta-band-intro">
                         <h2 className="cta-heading">
                             Prefer to talk before the{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
@@ -287,17 +280,12 @@ export default async function PartnersPage() {
                             </em>
                         </h2>
                         <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
-                            Thirty minutes with a senior consultant to sanity-check the fit — no form, no pitch.
+                            Tell us about your practice and the clients you serve. A senior consultant will reply within one business day.
                         </p>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-                        <Link
-                            href="/contact?intent=partnership"
-                            className="btn-cta-white"
-                            style={{ fontFamily: "var(--font-body)" }}
-                        >
-                            Book a Discovery Call →
-                        </Link>
+
+                    <div className="cta-band-form-wrap">
+                        <PartnerForm />
                     </div>
                 </div>
             </section>

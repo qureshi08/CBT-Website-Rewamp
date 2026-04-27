@@ -6,9 +6,9 @@ import { ProductIllustration } from "@/components/shared/Illustrations";
 import ProductFilter from "@/components/products/ProductFilter";
 
 export const metadata: Metadata = {
-    title: "Products | CBT — Power BI Custom Visuals & Analytics Tools",
+    title: "Products | CBT — Custom Visuals & Analytics Tools",
     description:
-        "Discover CBT's Power BI custom visuals and analytics tools built by data professionals for data professionals.",
+        "Discover CBT's custom visuals and analytics tools built by data professionals for data professionals.",
 };
 
 export default function ProductsPage() {
@@ -27,7 +27,7 @@ export default function ProductsPage() {
                             Power Up Your <br /> <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>Analytics Stack.</em>
                         </h1>
                         <p className="a-fadeUp-3" style={{ fontFamily: "var(--font-body)", fontSize: "20px", fontWeight: 350, color: "#4B5563", lineHeight: 1.7, maxWidth: "460px", marginTop: "13px" }}>
-                            Industry-grade Power BI custom visuals and automation tools. Built for <span className="font-medium text-text-heading">Banking</span>, <span className="font-medium text-text-heading">Retail</span>, and <span className="font-medium text-text-heading">Custom Visuals</span> sectors.
+                            Industry-grade custom visuals and analytics tools. Built for <span className="font-medium text-text-heading">Banking</span>, <span className="font-medium text-text-heading">Retail</span>, and <span className="font-medium text-text-heading">Telecom</span>.
                         </p>
                         <div className="a-fadeUp-4" style={{ display: "flex", gap: "16px", marginTop: "28px", flexWrap: "wrap", alignItems: "center" }}>
                             <a href="#products" className="hero-btn-primary">
@@ -56,7 +56,7 @@ export default function ProductsPage() {
                             </em>
                         </h2>
                         <p className="services-section-sub">
-                            Power BI custom visuals, regulatory calculators, and data tools — productised from the work we ship for enterprise clients every day.
+                            Custom visuals, regulatory calculators, and data tools — productised from the work we ship for enterprise clients every day.
                         </p>
                     </div>
 

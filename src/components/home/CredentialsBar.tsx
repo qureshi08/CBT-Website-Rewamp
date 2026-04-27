@@ -12,7 +12,7 @@ type Credential = {
 const credentials: Credential[] = [
     { icon: "shield", title: "AWS Certified", sub: "Certified consultants across AWS — the cloud foundation behind our data and analytics builds." },
     { icon: "award", title: "Microsoft Certified", sub: "Certified across Microsoft Fabric and Power BI — the stack powering most of our delivery." },
-    { icon: "external", title: "AppSource Publisher", sub: "Custom Power BI visuals published to the Microsoft marketplace, downloaded by teams across the world." },
+    { icon: "external", title: "AppSource Publisher", sub: "Custom visuals published to the Microsoft AppSource marketplace, downloaded by teams across the world." },
 ];
 
 export default function CredentialsBar() {

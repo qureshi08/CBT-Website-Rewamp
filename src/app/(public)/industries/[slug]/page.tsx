@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
@@ -24,11 +24,20 @@ type IndustryRow = {
 };
 
 export async function generateStaticParams() {
-    const { data } = await supabaseAdmin
-        .from("industries")
-        .select("slug")
-        .eq("is_active", true);
-    return (data || []).map((r) => ({ slug: r.slug }));
+    // Only pre-render industry pages that have at least one published case study —
+    // empty industries redirect to /case-studies on the detail page anyway.
+    const [{ data: industries }, { data: cases }] = await Promise.all([
+        supabaseAdmin.from("industries").select("slug").eq("is_active", true),
+        supabaseAdmin.from("case_studies").select("industry_slug").eq("published", true),
+    ]);
+    const slugsWithCases = new Set(
+        ((cases as { industry_slug: string | null }[] | null) || [])
+            .map((c) => c.industry_slug)
+            .filter(Boolean) as string[],
+    );
+    return ((industries as { slug: string }[] | null) || [])
+        .filter((r) => slugsWithCases.has(r.slug))
+        .map((r) => ({ slug: r.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -74,6 +83,14 @@ export default async function IndustryPage({ params }: Props) {
         summary: string | null;
         tags: string[] | null;
     }>;
+
+    // Industries without published case studies shouldn't surface publicly —
+    // they're either skeleton rows from admin combobox auto-create or an
+    // industry whose studies have all been unpublished. Send visitors to the
+    // case-studies index instead of showing an empty landing.
+    if (caseStudies.length === 0) {
+        redirect("/case-studies");
+    }
 
     const helpItems = industry.where_we_help || [];
     const outcomeItems = industry.outcome_highlights || [];
@@ -297,44 +314,32 @@ export default async function IndustryPage({ params }: Props) {
                         </p>
                     </div>
 
-                    {caseStudies.length > 0 ? (
-                        <div className="case-study-grid">
-                            {caseStudies.map((c) => (
-                                <Link
-                                    key={c.slug}
-                                    href={`/case-studies/${c.slug}`}
-                                    className="case-study-card"
-                                >
-                                    <h3 className="case-study-card-title">{c.title}</h3>
-                                    {c.summary && (
-                                        <p className="case-study-card-summary">{c.summary}</p>
-                                    )}
-                                    <div className="case-study-card-foot">
-                                        <div className="case-study-card-tags">
-                                            {c.tags?.slice(0, 3).map((t) => (
-                                                <span key={t} className="services-tile-tool">
-                                                    {t}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        <span className="case-study-card-cta">
-                                            Read the case <span aria-hidden>→</span>
-                                        </span>
+                    <div className="case-study-grid">
+                        {caseStudies.map((c) => (
+                            <Link
+                                key={c.slug}
+                                href={`/case-studies/${c.slug}`}
+                                className="case-study-card"
+                            >
+                                <h3 className="case-study-card-title">{c.title}</h3>
+                                {c.summary && (
+                                    <p className="case-study-card-summary">{c.summary}</p>
+                                )}
+                                <div className="case-study-card-foot">
+                                    <div className="case-study-card-tags">
+                                        {c.tags?.slice(0, 3).map((t) => (
+                                            <span key={t} className="services-tile-tool">
+                                                {t}
+                                            </span>
+                                        ))}
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="industry-cases-empty">
-                            <p>
-                                New {labelLower} cases are being written up. In the meantime,
-                                browse every case we&rsquo;ve shipped:
-                            </p>
-                            <Link href="/case-studies" className="hero-btn-secondary">
-                                All case studies <span className="hero-btn-arrow">→</span>
+                                    <span className="case-study-card-cta">
+                                        Read the case <span aria-hidden>→</span>
+                                    </span>
+                                </div>
                             </Link>
-                        </div>
-                    )}
+                        ))}
+                    </div>
                 </div>
             </section>
 

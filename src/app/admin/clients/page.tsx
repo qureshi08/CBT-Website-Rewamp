@@ -15,6 +15,7 @@ export default function AdminClients() {
     const [editingClient, setEditingClient] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [logoUrl, setLogoUrl] = useState("");
+    const [logoFullUrl, setLogoFullUrl] = useState("");
 
     useEffect(() => {
         fetchClients();
@@ -23,8 +24,10 @@ export default function AdminClients() {
     useEffect(() => {
         if (editingClient) {
             setLogoUrl(editingClient.logo_url || "");
+            setLogoFullUrl(editingClient.logo_full_url || "");
         } else {
             setLogoUrl("");
+            setLogoFullUrl("");
         }
     }, [editingClient, isModalOpen]);
 
@@ -50,6 +53,7 @@ export default function AdminClients() {
             name: formData.get("name") as string,
             industry: formData.get("industry") as string,
             logo_url: logoUrl,
+            logo_full_url: logoFullUrl,
             is_featured: formData.get("is_featured") === "on",
             display_order: parseInt(formData.get("display_order") as string) || 0,
         };
@@ -142,10 +146,17 @@ export default function AdminClients() {
                                     <tr key={client.id} className="hover:bg-surface/30 transition-colors group">
                                         <td className="px-8 py-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-surface border border-border/20 flex items-center justify-center p-1.5 text-[10px] font-bold text-text-body/30 overflow-hidden">
-                                                    {client.logo_url ? (
-                                                        <img src={client.logo_url} alt={client.name} className="w-full h-full object-contain" />
-                                                    ) : "LOGO"}
+                                                <div className="flex items-center gap-2">
+                                                    <div title="Logo mark (orbit)" className="w-10 h-10 rounded-lg bg-surface border border-border/20 flex items-center justify-center p-1.5 text-[9px] font-bold text-text-body/30 overflow-hidden">
+                                                        {client.logo_url ? (
+                                                            <img src={client.logo_url} alt={`${client.name} mark`} className="w-full h-full object-contain" />
+                                                        ) : "MARK"}
+                                                    </div>
+                                                    <div title="Full logo (wordmark)" className="w-16 h-10 rounded-lg bg-surface border border-border/20 flex items-center justify-center p-1.5 text-[9px] font-bold text-text-body/30 overflow-hidden">
+                                                        {client.logo_full_url ? (
+                                                            <img src={client.logo_full_url} alt={`${client.name} full logo`} className="w-full h-full object-contain" />
+                                                        ) : "FULL"}
+                                                    </div>
                                                 </div>
                                                 <div className="font-bold text-text-heading">{client.name}</div>
                                             </div>
@@ -198,12 +209,30 @@ export default function AdminClients() {
                 title={editingClient ? "Edit Client" : "Add New Client"}
             >
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <ImageUpload
-                        label="Client Logo"
-                        value={logoUrl}
-                        onChange={setLogoUrl}
-                        bucket="clients"
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <ImageUpload
+                                label="Logo Mark (icon only)"
+                                value={logoUrl}
+                                onChange={setLogoUrl}
+                                bucket="clients"
+                            />
+                            <p className="mt-1.5 text-xs text-text-body/50">
+                                Icon-only version. Shown in the homepage hero orbit — square/round works best.
+                            </p>
+                        </div>
+                        <div>
+                            <ImageUpload
+                                label="Full Logo (wordmark)"
+                                value={logoFullUrl}
+                                onChange={setLogoFullUrl}
+                                bucket="clients"
+                            />
+                            <p className="mt-1.5 text-xs text-text-body/50">
+                                Logo with brand name. Used on the client trust strip, case studies, etc.
+                            </p>
+                        </div>
+                    </div>
                     <div className="space-y-2">
                         <label className="form-label">Client Name</label>
                         <input name="name" defaultValue={editingClient?.name} required className="form-input" placeholder="e.g. PepsiCo" />
