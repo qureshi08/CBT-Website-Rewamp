@@ -119,13 +119,24 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
 
     if (withLogos.length === 0) return null;
 
-    // Soft edge mask — fades content toward the right and bottom edges so
-    // chips leaving the viewport dissolve instead of being hard-clipped.
-    // Two linear gradients composited with intersect (min of both).
-    const FADE_START = "88%";
-    const edgeMask =
-        `linear-gradient(to right, black 0%, black ${FADE_START}, transparent 100%), ` +
-        `linear-gradient(to bottom, black 0%, black ${FADE_START}, transparent 100%)`;
+    // Soft edge fade — two white-gradient overlays painted on top of the
+    // chips at the right and bottom edges. Replaces an earlier mask-composite
+    // approach whose `intersect` keyword has uneven cross-browser support
+    // (silent fallback → hard-clipped edges in some Safari/older Chromium).
+    // Parent section is solid white, so painting white over the chips is
+    // visually identical to alpha-masking them.
+    const FADE_SIZE = "14%";
+    const fadeOverlay = (axis: "right" | "bottom"): React.CSSProperties => ({
+        position: "absolute",
+        pointerEvents: "none",
+        background:
+            axis === "right"
+                ? "linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 100%)"
+                : "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)",
+        ...(axis === "right"
+            ? { top: 0, right: 0, bottom: 0, width: FADE_SIZE }
+            : { left: 0, right: 0, bottom: 0, height: FADE_SIZE }),
+    });
 
     return (
         <div
@@ -136,10 +147,6 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
                 height: CONTAINER_H,
                 overflow: "hidden",
                 flexShrink: 0,
-                WebkitMaskImage: edgeMask,
-                maskImage: edgeMask,
-                WebkitMaskComposite: "source-in",
-                maskComposite: "intersect",
             }}
         >
             {/* Static orbit rings */}
@@ -209,6 +216,10 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
                     </motion.div>
                 );
             })}
+
+            {/* Edge fades — painted last so they sit on top of the chips. */}
+            <div style={fadeOverlay("right")} />
+            <div style={fadeOverlay("bottom")} />
         </div>
     );
 }
