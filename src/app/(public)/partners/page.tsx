@@ -44,23 +44,7 @@ const staticValueProps = [
     },
 ];
 
-const fallbackTestimonials = [
-    {
-        quote: "WeCrunch has been an excellent partner. Their data expertise and delivery speed is unmatched.",
-        author: "Alex Rivera",
-        company: "WeCrunch",
-    },
-    {
-        quote: "The CGAP graduates they placed on our project exceeded all expectations from day one.",
-        author: "Sarah Jenkins",
-        company: "DataStream Solutions",
-    },
-    {
-        quote: "CBT's analytics approach helped us scale our BI infrastructure faster than we thought possible.",
-        author: "Michael Chen",
-        company: "Nexus Analytics",
-    },
-];
+
 
 export default async function PartnersPage() {
     const supabase = await createClient();
@@ -90,7 +74,7 @@ export default async function PartnersPage() {
     }));
     const displayClientCount = clientCount || 0;
     const displayBatchCount = batchStat?.value || 12;
-    const testimonials = dbTestimonials?.length ? dbTestimonials : fallbackTestimonials;
+    const testimonials = dbTestimonials?.length ? dbTestimonials : [];
 
     const partnershipTypes = [
         { icon: Cpu, title: "Technology Partner", desc: "Integrate your technology with our analytics expertise. Joint solutions for shared clients." },
@@ -231,43 +215,45 @@ export default async function PartnersPage() {
             <IndustryLeadersStrip clients={clients} />
 
             {/* ─── TESTIMONIALS ─── */}
-            <section className="services-section">
-                <div className="v2-wrap">
-                    <div className="services-section-head v2-reveal">
-                        <span className="services-section-tag">strategic alliance</span>
-                        <h2 className="services-section-title">
-                            What our partners{" "}
-                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                say.
-                            </em>
-                        </h2>
-                    </div>
+            {testimonials.length > 0 && (
+                <section className="services-section">
+                    <div className="v2-wrap">
+                        <div className="services-section-head v2-reveal">
+                            <span className="services-section-tag">strategic alliance</span>
+                            <h2 className="services-section-title">
+                                What our partners{" "}
+                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                    say.
+                                </em>
+                            </h2>
+                        </div>
 
-                    <div className="partners-testimonial-grid">
-                        {testimonials.map((t: any) => (
-                            <article key={t.author} className="partners-testimonial-card v2-reveal">
-                                <Quote size={20} style={{ color: "var(--color-primary)", opacity: 0.25, marginBottom: 16 }} />
-                                <p className="partners-testimonial-quote">
-                                    &ldquo;{t.quote}&rdquo;
-                                </p>
-                                <div className="partners-testimonial-meta">
-                                    <div className="partners-testimonial-avatar">
-                                        {t.avatar_url ? (
-                                            <img src={t.avatar_url} alt="" />
-                                        ) : (
-                                            t.author[0]
-                                        )}
+                        <div className="partners-testimonial-grid">
+                            {testimonials.map((t: any) => (
+                                <article key={t.author} className="partners-testimonial-card v2-reveal">
+                                    <Quote size={20} style={{ color: "var(--color-primary)", opacity: 0.25, marginBottom: 16 }} />
+                                    <p className="partners-testimonial-quote">
+                                        &ldquo;{t.quote}&rdquo;
+                                    </p>
+                                    <div className="partners-testimonial-meta">
+                                        <div className="partners-testimonial-avatar">
+                                            {t.avatar_url ? (
+                                                <img src={t.avatar_url} alt="" />
+                                            ) : (
+                                                t.author[0]
+                                            )}
+                                        </div>
+                                        <div>
+                                            <div className="partners-testimonial-author">{t.author}</div>
+                                            <div className="partners-testimonial-company">{t.company}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="partners-testimonial-author">{t.author}</div>
-                                        <div className="partners-testimonial-company">{t.company}</div>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
+                                </article>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* ─── CTA BAND WITH FORM ─── */}
             <section id="partner-form" className="cta-band">

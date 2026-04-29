@@ -66,31 +66,7 @@ const GROOMING = [
     },
 ];
 
-const fallbackAlumni = [
-    {
-        name: "Sarah Ahmed",
-        cohort: "Batch 10",
-        role: "BI Consultant",
-        company: "CBT",
-        quote:
-            "CGAP gave me the practical skills and confidence that university alone couldn't.",
-    },
-    {
-        name: "Ali Hassan",
-        cohort: "Batch 11",
-        role: "Data Engineer",
-        company: "CBT",
-        quote:
-            "The hands-on approach is what sets CGAP apart. You're working with real data from month two.",
-    },
-    {
-        name: "Fatima Malik",
-        cohort: "Batch 9",
-        role: "Analytics Consultant",
-        company: "Tech Solutions Ltd",
-        quote: "The mentors at CGAP are genuinely invested in your growth.",
-    },
-];
+
 
 const ELIGIBILITY = [
     "Bachelor's degree in CS, Stats, Math, Engineering, or Economics",
@@ -128,7 +104,7 @@ export default async function CGAPPage() {
         logoUrl: c.logo_full_url || c.logo_url || null,
     }));
     const displayAlumni =
-        (dbAlumni as any[])?.length ? (dbAlumni as any[]) : fallbackAlumni;
+        (dbAlumni as any[])?.length ? (dbAlumni as any[]) : [];
     const activeBatch = (openBatches as any[])?.[0];
     const applicationUrl =
         activeBatch?.application_url || "https://cbt-recruitment-portal.vercel.app/";
@@ -399,45 +375,47 @@ export default async function CGAPPage() {
                                 ))}
                             </div>
                         </div>
-                        <div>
-                            <span className="services-section-tag">alumni outcomes</span>
-                            <h2 className="services-section-title" style={{ fontSize: "2rem" }}>
-                                Where they{" "}
-                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                    ended up.
-                                </em>
-                            </h2>
-                            <div className="cgap-alumni-list">
-                                {displayAlumni.slice(0, 3).map((alum: any) => (
-                                    <div key={alum.name} className="cgap-alumni-card">
-                                        <Quote
-                                            size={18}
-                                            style={{ color: "var(--color-primary)", opacity: 0.25 }}
-                                        />
-                                        <p className="cgap-alumni-quote">&ldquo;{alum.quote}&rdquo;</p>
-                                        <div className="cgap-alumni-meta">
-                                            <div className="cgap-alumni-avatar">
-                                                {alum.avatar_url ? (
-                                                    <img
-                                                        src={alum.avatar_url}
-                                                        alt=""
-                                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                                    />
-                                                ) : (
-                                                    alum.name?.[0]
-                                                )}
-                                            </div>
-                                            <div>
-                                                <div className="cgap-alumni-name">{alum.name}</div>
-                                                <div className="cgap-alumni-role">
-                                                    {alum.role}{alum.company ? ` · ${alum.company}` : ""} &middot; {alum.cohort}
+                        {displayAlumni.length > 0 && (
+                            <div>
+                                <span className="services-section-tag">alumni outcomes</span>
+                                <h2 className="services-section-title" style={{ fontSize: "2rem" }}>
+                                    Where they{" "}
+                                    <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                        ended up.
+                                    </em>
+                                </h2>
+                                <div className="cgap-alumni-list">
+                                    {displayAlumni.slice(0, 3).map((alum: any) => (
+                                        <div key={alum.name} className="cgap-alumni-card">
+                                            <Quote
+                                                size={18}
+                                                style={{ color: "var(--color-primary)", opacity: 0.25 }}
+                                            />
+                                            <p className="cgap-alumni-quote">&ldquo;{alum.quote}&rdquo;</p>
+                                            <div className="cgap-alumni-meta">
+                                                <div className="cgap-alumni-avatar">
+                                                    {alum.avatar_url ? (
+                                                        <img
+                                                            src={alum.avatar_url}
+                                                            alt=""
+                                                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                                        />
+                                                    ) : (
+                                                        alum.name?.[0]
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <div className="cgap-alumni-name">{alum.name}</div>
+                                                    <div className="cgap-alumni-role">
+                                                        {alum.role}{alum.company ? ` · ${alum.company}` : ""} &middot; {alum.cohort}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>
