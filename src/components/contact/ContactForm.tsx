@@ -23,6 +23,7 @@ const subjects = [
     "Customer Enquiry",
     "ECL Calculator Demo",
     "Partnership (Arrange a Call)",
+    "Power BI Support",
     "Product Support",
     "CGAP Query",
     "Other",

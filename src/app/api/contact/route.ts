@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { resend } from "@/lib/resend";
+import nodemailer from "nodemailer";
+
+// Create reusable transporter using Gmail SMTP
+function createTransporter() {
+    return nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.SMTP_USER,   // your Gmail address
+            pass: process.env.SMTP_PASS,   // your Gmail App Password
+        },
+    });
+}
 
 export async function POST(request: NextRequest) {
     try {
@@ -24,10 +37,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Phase 2 — Insert into Supabase contact_submissions table.
-        // Only include optional fields when they're non-empty so submissions from
-        // shorter forms (e.g. homepage CTA) don't fail schema-cache checks on
-        // columns the row never actually populates.
+        // Save to Supabase
         const { error: dbError } = await supabaseAdmin
             .from("contact_submissions")
             .insert([{
@@ -48,12 +58,28 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Send confirmation email via Resend
-        if (process.env.RESEND_API_KEY) {
+        // Send email via Gmail SMTP (Nodemailer)
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+            const intentStr = intent ? intent.toLowerCase() : "";
+
+            // Determine recipient based on intent/subject
+            let emailTo = process.env.EMAIL_TO || "book_a_call@convergentbt.com";
+            if (
+                intentStr.includes("power bi") ||
+                intentStr.includes("pbi") ||
+                intentStr === "custom-visual" ||
+                subject?.toLowerCase().includes("power bi")
+            ) {
+                emailTo = process.env.EMAIL_TO_PBI || "pbi_contact_form@convergentbt.com";
+            }
+
             const intentPrefix = intent ? `[${intent}] ` : "";
-            await resend.emails.send({
-                from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-                to: process.env.EMAIL_TO || "muhammadanasq@gmail.com",
+            const transporter = createTransporter();
+
+            const { accepted, rejected } = await transporter.sendMail({
+                from: `"CBT Website" <${process.env.SMTP_USER}>`,
+                to: emailTo,
+                replyTo: email,
                 subject: `${intentPrefix}New Contact Submission: ${subject}`,
                 html: `
                     <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
@@ -76,18 +102,12 @@ export async function POST(request: NextRequest) {
                     </div>
                 `,
             });
-        }
 
-        console.log("Contact form submission:", {
-            name,
-            email,
-            company,
-            region,
-            industry,
-            subject,
-            message,
-            timestamp: new Date().toISOString(),
-        });
+            console.log("Email sent to:", accepted);
+            if (rejected.length > 0) console.warn("Rejected:", rejected);
+        } else {
+            console.warn("SMTP credentials not set — email not sent.");
+        }
 
         return NextResponse.json(
             { success: true, message: "Contact form submitted successfully." },

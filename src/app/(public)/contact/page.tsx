@@ -11,7 +11,7 @@ export const metadata: Metadata = {
         "Get in touch with CBT. We help organisations turn their data into competitive advantage. Offices in Islamabad, Pakistan.",
 };
 
-type IntentKey = "ecl-demo" | "discovery" | "partnership";
+type IntentKey = "ecl-demo" | "discovery" | "partnership" | "custom-visual";
 
 type IntentCopy = {
     tag: string;
@@ -42,6 +42,13 @@ const INTENT_COPY: Record<IntentKey, IntentCopy> = {
         titleAccent: "partnership.",
         sub: "Tell us about your practice, geography and the kinds of engagements you take on. We'll come back with where we see fit — or where we don't.",
         defaultSubject: "Partnership (Arrange a Call)",
+    },
+    "custom-visual": {
+        tag: "Power BI Custom Visuals",
+        titleLead: "Get support for your",
+        titleAccent: "Power BI visuals.",
+        sub: "Have a question about our custom visuals, AppSource listings, or need help integrating them into your reports? Our Power BI team will get back to you.",
+        defaultSubject: "Power BI Support",
     },
 };
 

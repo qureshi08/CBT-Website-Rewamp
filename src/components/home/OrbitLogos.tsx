@@ -199,8 +199,8 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
                                     key={`${ring.radius}-${i}-${logo.name}`}
                                     style={{
                                         position: "absolute",
-                                        left: x - CHIP_SIZE / 2,
-                                        top: y - CHIP_SIZE / 2,
+                                        left: `${x - CHIP_SIZE / 2}px`,
+                                        top: `${y - CHIP_SIZE / 2}px`,
                                     }}
                                     animate={{ rotate: -360 * ring.direction }}
                                     transition={{
