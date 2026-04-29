@@ -14,29 +14,12 @@ interface TestimonialsProps {
     testimonials?: TestimonialItem[];
 }
 
-const defaultTestimonials: TestimonialItem[] = [
-    {
-        quote: "CBT helped us build a data infrastructure we should have had five years ago. Within three months, our ops team was making decisions from live dashboards rather than week-old spreadsheets.",
-        author: "Sarah Okonkwo",
-        role: "CTO",
-        company: "NovaTech Solutions",
-    },
-    {
-        quote: "The team made our AWS migration feel effortless. Complex architecture decisions were explained clearly, timelines were kept, and the end result exceeded what we thought was possible.",
-        author: "Marcus Kwame",
-        role: "Head of Engineering",
-        company: "PulseHR",
-    },
-    {
-        quote: "As a startup, we weren't sure where to start with AI. CBT helped us identify the right use cases, build quickly, and avoid the expensive mistakes we'd have made alone.",
-        author: "Jamie Adeyemi",
-        role: "CEO",
-        company: "Rootly AI",
-    }
-];
-
 export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
-    const list = testimonials && testimonials.length > 0 ? testimonials : defaultTestimonials;
+    if (!testimonials || testimonials.length === 0) {
+        return null;
+    }
+
+    const list = testimonials;
 
     return (
         <section className="section-padding" style={{ background: "var(--color-white)" }}>
