@@ -225,15 +225,7 @@ export default async function ContactPage({ searchParams }: Props) {
                                 </div>
                             </div>
 
-                            <div className="contact-quote-card">
-                                <p className="contact-quote-text">
-                                    &ldquo;CBT helped us transform our reporting architecture in weeks, not months. Highly recommend their responsive team.&rdquo;
-                                </p>
-                                <div className="contact-quote-meta">
-                                    <div className="contact-quote-avatar">EP</div>
-                                    <span className="contact-quote-byline">Executive Partner, FMCG Client</span>
-                                </div>
-                            </div>
+
                         </aside>
 
                         {/* Form */}
