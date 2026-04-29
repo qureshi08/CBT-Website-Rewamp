@@ -3,7 +3,7 @@ import ServicesGrid from "@/components/home/ServicesGrid";
 import ClientLogoStrip from "@/components/home/ClientLogoStrip";
 import CaseStudiesFeatured from "@/components/home/CaseStudiesFeatured";
 import Differentiators from "@/components/home/Differentiators";
-import AboutTheFirm from "@/components/home/AboutTheFirm";
+
 import CredentialsBar from "@/components/home/CredentialsBar";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBand from "@/components/home/CtaBand";
@@ -55,10 +55,10 @@ export default async function HomePage() {
 
     trustClients = ordered.length
       ? ordered.map((r) => ({
-          name: r.name,
-          // Trust strip prefers the full wordmark; fall back to icon-only.
-          logoUrl: r.logo_full_url || r.logo_url || null,
-        }))
+        name: r.name,
+        // Trust strip prefers the full wordmark; fall back to icon-only.
+        logoUrl: r.logo_full_url || r.logo_url || null,
+      }))
       : NAMED_TRUST.map((name) => ({ name }));
 
     // Featured clients with uploaded icon logos, in display order, for the hero orbit.
@@ -88,8 +88,7 @@ export default async function HomePage() {
       {/* 05 — Selected work (case studies, outcome-led) */}
       <CaseStudiesFeatured />
 
-      {/* 06 — About the firm (7 yrs, 35 people, CGAP, Georgia Tech) */}
-      <AboutTheFirm />
+
 
       {/* 07 — Credentials bar (AWS / Microsoft / AppSource) */}
       <CredentialsBar />
