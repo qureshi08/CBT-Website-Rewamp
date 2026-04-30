@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus as PlusIcon } from "lucide-react";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
@@ -9,6 +9,50 @@ type LogoItem = {
     name: string;
     logoUrl?: string | null;
 };
+
+const MOSAIC_CELL_COUNT = 10;
+const MOSAIC_SWAP_INTERVAL_MS = 2500;
+// Must mirror the CSS animation duration in globals.css (.logo-mosaic-fade-*).
+const MOSAIC_FADE_MS = 700;
+
+// Per-cell border + plus-marker config for the 5×2 desktop / 2×5 mobile grid.
+// Mirrors TechPartnersGrid's PARTNERS_GRID_LAYOUT pattern:
+//   - border-r/border-b draw internal grid lines
+//   - the wrapper supplies top + bottom hairlines that bleed to viewport edges
+//   - the `+` marker decorates each *internal* cell intersection
+//
+// Index map:
+//   Desktop (5×2):              Mobile (2×5):
+//   [0] [1] [2] [3] [4]         [0] [1]
+//   [5] [6] [7] [8] [9]         [2] [3]
+//                               [4] [5]
+//                               [6] [7]
+//                               [8] [9]
+const MOSAIC_LAYOUT: { border: string; plus: string | null }[] = [
+    { border: "border-r border-b", plus: "block" },                          // 0 — inner on both
+    { border: "border-b md:border-r", plus: "hidden md:block" },             // 1 — mobile last col, desktop inner
+    { border: "border-r border-b", plus: "block" },                          // 2 — inner on both
+    { border: "border-b md:border-r", plus: "hidden md:block" },             // 3 — mobile last col, desktop inner
+    { border: "border-r border-b md:border-r-0", plus: "block md:hidden" },  // 4 — mobile inner, desktop last col
+    { border: "border-b md:border-r md:border-b-0", plus: null },            // 5 — mobile last col, desktop last row
+    { border: "border-r border-b md:border-b-0", plus: "block md:hidden" },  // 6 — mobile inner, desktop last row
+    { border: "border-b md:border-r md:border-b-0", plus: null },            // 7 — mobile last col, desktop last row
+    { border: "border-r", plus: null },                                      // 8 — last row both layouts, inner col
+    { border: "", plus: null },                                              // 9 — last cell on both
+];
+
+function shuffle<T>(arr: T[]): T[] {
+    const out = [...arr];
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
+function logoKey(item: LogoItem): string {
+    return `${item.name}|${item.logoUrl ?? ""}`;
+}
 
 function useIsMobile(breakpoint = 768) {
     const [isMobile, setIsMobile] = useState(false);
@@ -165,7 +209,301 @@ function LogoCell({ item }: { item: LogoItem }) {
     );
 }
 
-// ─── Default export: client marquee ───
+// ─── Logo mosaic — static grid with single-cell cross-fade swaps ───
+
+function LogoFace({ item, mode }: { item: LogoItem; mode: "in" | "out" }) {
+    const className =
+        mode === "in" ? "logo-mosaic-fade-in" : "logo-mosaic-fade-out";
+
+    return (
+        <div className={className}>
+            {item.logoUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                    src={item.logoUrl}
+                    alt={item.name}
+                    className="pointer-events-none select-none object-contain h-9 max-w-[130px] md:h-12 md:max-w-[180px]"
+                    style={{ filter: "grayscale(1)" }}
+                    draggable={false}
+                />
+            ) : (
+                <span
+                    style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "16px",
+                        fontWeight: 600,
+                        color: "var(--color-text-muted)",
+                        letterSpacing: ".01em",
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    {item.name}
+                </span>
+            )}
+        </div>
+    );
+}
+
+function MosaicCell({
+    item,
+    borderClasses,
+    plusClasses,
+}: {
+    item: LogoItem;
+    borderClasses: string;
+    plusClasses: string | null;
+}) {
+    const [previous, setPrevious] = useState<LogoItem | null>(null);
+    const lastItemRef = useRef(item);
+    const isFirstRender = useRef(true);
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            lastItemRef.current = item;
+            return;
+        }
+        if (logoKey(lastItemRef.current) === logoKey(item)) return;
+
+        const prev = lastItemRef.current;
+        lastItemRef.current = item;
+        setPrevious(prev);
+
+        const t = setTimeout(() => setPrevious(null), MOSAIC_FADE_MS + 40);
+        return () => clearTimeout(t);
+    }, [item]);
+
+    return (
+        <div
+            className={`relative flex items-center justify-center px-4 py-8 md:p-10 ${borderClasses}`}
+            style={{ borderColor: "var(--color-border)" }}
+        >
+            <LogoFace
+                key={`curr-${logoKey(item)}`}
+                item={item}
+                mode="in"
+            />
+            {previous && (
+                <LogoFace
+                    key={`prev-${logoKey(previous)}`}
+                    item={previous}
+                    mode="out"
+                />
+            )}
+            {plusClasses && (
+                <PlusIcon
+                    className={`absolute z-10 ${plusClasses}`}
+                    size={20}
+                    strokeWidth={1.25}
+                    style={{
+                        right: -10,
+                        bottom: -10,
+                        color: "var(--color-text-muted)",
+                        opacity: 0.55,
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
+// Top-N slice. No duplicate-padding — if the pool is smaller than the grid,
+// we render fewer cells rather than show the same logo twice.
+function takeTopForCells(items: LogoItem[]): LogoItem[] {
+    return items.slice(0, MOSAIC_CELL_COUNT);
+}
+
+// Weighted random index pick. weights need not sum to anything in particular;
+// each weight is its own probability mass.
+function pickWeightedIndex(weights: number[]): number {
+    const total = weights.reduce((s, w) => s + w, 0);
+    if (total <= 0) return 0;
+    let r = Math.random() * total;
+    for (let i = 0; i < weights.length; i++) {
+        r -= weights[i];
+        if (r <= 0) return i;
+    }
+    return weights.length - 1;
+}
+
+function LogoMosaic({
+    items,
+    eyebrow,
+    title,
+    description,
+}: {
+    items: LogoItem[];
+    eyebrow?: string;
+    title: React.ReactNode;
+    description?: string;
+}) {
+    // SSR-safe initial state: deterministic top-N slice. Shuffled on mount.
+    const [cells, setCells] = useState<LogoItem[]>(() => takeTopForCells(items));
+    const lastSwappedRef = useRef<number>(-1);
+
+    // Reshuffle starting positions on the client so the top-N don't always
+    // render in display_order.
+    useEffect(() => {
+        if (items.length === 0) return;
+        setCells(shuffle(takeTopForCells(items)));
+    }, [items]);
+
+    // Single-cell cross-fade swap loop. Only runs when there's a swap pool
+    // (i.e. more items than visible cells) and motion is allowed.
+    //
+    // Frequency weighting: position in `items` = priority rank (0 = top).
+    //   - Cell to swap OUT: weighted toward cells holding low-priority logos
+    //     (weight = rank + 1, so top item rarely leaves but isn't pinned).
+    //   - Logo to swap IN:  weighted toward high-priority logos in the pool
+    //     (weight = items.length - rank).
+    // Net effect: high-priority logos visible more often over time.
+    useEffect(() => {
+        if (items.length <= MOSAIC_CELL_COUNT) return;
+
+        const reduced = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (reduced) return;
+
+        const interval = setInterval(() => {
+            if (typeof document !== "undefined" && document.hidden) return;
+
+            setCells((prev) => {
+                const rankByKey = new Map<string, number>();
+                items.forEach((it, i) => rankByKey.set(logoKey(it), i));
+
+                // Pick which cell to swap out (favour low-priority logos).
+                const cellWeights = prev.map(
+                    (item) => (rankByKey.get(logoKey(item)) ?? 0) + 1,
+                );
+                let cellIdx = pickWeightedIndex(cellWeights);
+                if (cellIdx === lastSwappedRef.current && prev.length > 1) {
+                    const retry = pickWeightedIndex(cellWeights);
+                    cellIdx = retry === lastSwappedRef.current
+                        ? (cellIdx + 1) % prev.length
+                        : retry;
+                }
+                lastSwappedRef.current = cellIdx;
+
+                // Pick which logo to swap in (favour high-priority items),
+                // restricted to logos not currently visible — guarantees no
+                // duplicate logo on screen at the same time.
+                const inUse = new Set(prev.map(logoKey));
+                const available = items.filter((p) => !inUse.has(logoKey(p)));
+                if (available.length === 0) return prev;
+
+                const newWeights = available.map(
+                    (p) => items.length - (rankByKey.get(logoKey(p)) ?? 0),
+                );
+                const newItem = available[pickWeightedIndex(newWeights)];
+
+                const next = [...prev];
+                next[cellIdx] = newItem;
+                return next;
+            });
+        }, MOSAIC_SWAP_INTERVAL_MS);
+
+        return () => clearInterval(interval);
+    }, [items]);
+
+    if (cells.length === 0) return null;
+
+    return (
+        <section
+            className="py-[64px] md:py-[96px]"
+            style={{ background: "#FFFFFF" }}
+        >
+            <div className="v2-wrap">
+                <div
+                    className="mb-[40px] md:mb-[56px]"
+                    style={{
+                        textAlign: "center",
+                        maxWidth: 720,
+                        marginInline: "auto",
+                    }}
+                >
+                    {eyebrow && (
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "11px",
+                                fontWeight: 700,
+                                letterSpacing: ".18em",
+                                textTransform: "uppercase",
+                                color: "rgba(0,0,0,.42)",
+                                margin: "0 0 14px",
+                            }}
+                        >
+                            {eyebrow}
+                        </p>
+                    )}
+                    <h2
+                        style={{
+                            fontFamily: "var(--font-heading)",
+                            fontSize: "clamp(2rem, 3.2vw, 2.75rem)",
+                            fontWeight: 700,
+                            lineHeight: 1.15,
+                            letterSpacing: "-.02em",
+                            color: "var(--color-text-heading)",
+                            margin: description ? "0 0 18px" : 0,
+                        }}
+                    >
+                        {title}
+                    </h2>
+                    {description && (
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: "17.5px",
+                                fontWeight: 300,
+                                lineHeight: 1.7,
+                                color: "var(--color-text-muted)",
+                                margin: 0,
+                                maxWidth: 620,
+                                marginInline: "auto",
+                            }}
+                        >
+                            {description}
+                        </p>
+                    )}
+                </div>
+
+                <div
+                    className="relative grid grid-cols-2 md:grid-cols-5"
+                    style={{ borderColor: "var(--color-border)" }}
+                >
+                    {/* Top hairline — extends to viewport edges */}
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute -top-px left-1/2 -translate-x-1/2 w-screen border-t"
+                        style={{ borderColor: "var(--color-border)" }}
+                    />
+
+                    {cells.map((item, i) => {
+                        const cfg = MOSAIC_LAYOUT[i] ?? { border: "", plus: null };
+                        return (
+                            <MosaicCell
+                                key={i}
+                                item={item}
+                                borderClasses={cfg.border}
+                                plusClasses={cfg.plus}
+                            />
+                        );
+                    })}
+
+                    {/* Bottom hairline — extends to viewport edges */}
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute -bottom-px left-1/2 -translate-x-1/2 w-screen border-b"
+                        style={{ borderColor: "var(--color-border)" }}
+                    />
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// ─── Default export: client logo mosaic ───
 export default function ClientLogoStrip({
     clients,
     clientNames,
@@ -175,10 +513,18 @@ export default function ClientLogoStrip({
 }) {
     const items = normalise(clients ?? clientNames, CLIENTS);
     return (
-        <MarqueeRail
+        <LogoMosaic
             items={items}
-            label="Trusted by Leading Organisations"
-            duration={40}
+            eyebrow="Our clients"
+            title={
+                <>
+                    Trusted by leading organisations{" "}
+                    <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                        across industries.
+                    </em>
+                </>
+            }
+            description="From global brands to ambitious challengers in banking, retail, telecom, and FMCG, we partner with teams turning data, cloud, and AI into measurable outcomes."
         />
     );
 }
@@ -193,10 +539,11 @@ export function IndustryLeadersStrip({
 }) {
     const items = normalise(clients ?? clientNames, CLIENTS);
     return (
-        <MarqueeRail
+        <LogoMosaic
             items={items}
-            label="Trusted by Industry Leaders"
-            duration={44}
+            eyebrow="Industry leaders"
+            title="Building alongside the teams shaping their industries"
+            description="A selection of the partners we've worked with on data, cloud, and AI engagements across regions and sectors."
         />
     );
 }
