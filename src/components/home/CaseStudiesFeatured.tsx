@@ -2,31 +2,17 @@
 import Link from "next/link";
 import { useScrollReveal } from "@/components/home/Hero";
 
-const cases = [
-    {
-        slug: "loyalty-margin-uplift",
-        industry: "Retail",
-        outcome: "+32% margin",
-        client: "Loyalty model, P&G",
-        desc: "Rebuilt the loyalty decisioning stack on Fabric — redemption uplift drove a 32% margin improvement in the pilot category.",
-    },
-    {
-        slug: "ecl-48-hours",
-        industry: "Banking",
-        outcome: "ECL in 48h",
-        client: "KPMG collaboration",
-        desc: "IFRS 9 expected credit loss modelling, bank-ready and audit-traceable. From raw data to regulator-shaped output in 48 hours.",
-    },
-    {
-        slug: "realtime-bi-40x",
-        industry: "Telecom",
-        outcome: "40× faster",
-        client: "Real-time BI",
-        desc: "Replaced a batch reporting estate with a Snowflake + Power BI architecture. Time-to-insight dropped from six hours to nine minutes.",
-    },
-];
+export type FeaturedCaseStudy = {
+    slug: string;
+    title: string;
+    summary: string | null;
+    outcome_value: string | null;
+    outcome_label: string | null;
+    client_descriptor: string | null;
+    industry_label: string | null;
+};
 
-export default function CaseStudiesFeatured() {
+export default function CaseStudiesFeatured({ cases }: { cases: FeaturedCaseStudy[] }) {
     useScrollReveal();
 
     return (
@@ -66,36 +52,48 @@ export default function CaseStudiesFeatured() {
                 </div>
 
                 <div className="services-grid-bordered v2-reveal">
-                    {cases.map((c) => (
-                        <Link
-                            key={c.slug}
-                            href={`/case-studies/${c.slug}`}
-                            className="service-card"
-                            style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}
-                        >
-                            <span className="service-num">{c.industry}</span>
-                            <div style={{
-                                fontFamily: "var(--font-heading)",
-                                fontSize: "1.75rem",
-                                fontWeight: 700,
-                                color: "var(--color-primary)",
-                                letterSpacing: "-0.02em",
-                                marginBottom: "6px",
-                                marginTop: "4px",
-                            }}>{c.outcome}</div>
-                            <div style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: "12px",
-                                fontWeight: 600,
-                                letterSpacing: "0.06em",
-                                textTransform: "uppercase",
-                                color: "var(--color-text-muted)",
-                                marginBottom: "14px",
-                            }}>{c.client}</div>
-                            <p className="service-desc">{c.desc}</p>
-                            <span className="service-link">Read more <span>→</span></span>
-                        </Link>
-                    ))}
+                    {cases.map((c) => {
+                        const hasMetric = !!(c.outcome_value && c.outcome_label);
+                        const headline = hasMetric
+                            ? `${c.outcome_value} ${c.outcome_label}`
+                            : c.outcome_value || c.outcome_label || c.title;
+                        return (
+                            <Link
+                                key={c.slug}
+                                href={`/case-studies/${c.slug}`}
+                                className="service-card"
+                                style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}
+                            >
+                                {c.industry_label && (
+                                    <span className="service-num">{c.industry_label}</span>
+                                )}
+                                <div style={{
+                                    fontFamily: "var(--font-heading)",
+                                    fontSize: "1.75rem",
+                                    fontWeight: 700,
+                                    color: "var(--color-primary)",
+                                    letterSpacing: "-0.02em",
+                                    marginBottom: "6px",
+                                    marginTop: "4px",
+                                }}>{headline}</div>
+                                {c.client_descriptor && (
+                                    <div style={{
+                                        fontFamily: "var(--font-body)",
+                                        fontSize: "12px",
+                                        fontWeight: 600,
+                                        letterSpacing: "0.06em",
+                                        textTransform: "uppercase",
+                                        color: "var(--color-text-muted)",
+                                        marginBottom: "14px",
+                                    }}>{c.client_descriptor}</div>
+                                )}
+                                {c.summary && (
+                                    <p className="service-desc">{c.summary}</p>
+                                )}
+                                <span className="service-link">Read more <span>→</span></span>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
         </section>

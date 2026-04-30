@@ -17,16 +17,33 @@ export const metadata = {
   description: "CBT is a Data, Cloud & AI Consultancy helping organisations harness data and deliver business value. Trusted by Pepsi, Microsoft, KPMG and more.",
 };
 
+export type FeaturedCaseStudy = {
+  slug: string;
+  title: string;
+  summary: string | null;
+  outcome_value: string | null;
+  outcome_label: string | null;
+  client_descriptor: string | null;
+  industry_label: string | null;
+};
+
 export default async function HomePage() {
   let trustClients: { name: string; logoUrl?: string | null }[] =
     NAMED_TRUST.map((name) => ({ name }));
   let clientLogos: { name: string; logo_url: string }[] = [];
   let batchCount = 12;
   let testimonialsData: any[] = [];
+  let featuredCaseStudies: FeaturedCaseStudy[] = [];
 
   try {
     const supabase = await createClient();
-    const [{ data: clientsData }, { data: batchStat }, { data: testiData }] = await Promise.all([
+    const [
+      { data: clientsData },
+      { data: batchStat },
+      { data: testiData },
+      { data: studiesData },
+      { data: industriesData },
+    ] = await Promise.all([
       supabase
         .from("clients")
         .select("name, logo_url, logo_full_url")
@@ -34,8 +51,28 @@ export default async function HomePage() {
         .order("display_order", { ascending: true }),
       supabase.from("stats" as any).select("value").eq("label", "CGAP Batches").single() as any,
       supabase.from("testimonials" as any).select("*").eq("page", "Home").order("display_order", { ascending: true }),
+      supabase
+        .from("case_studies")
+        .select("slug, title, summary, outcome_value, outcome_label, industry_slug, client_descriptor, display_order")
+        .eq("published", true)
+        .order("display_order", { ascending: true })
+        .limit(3),
+      supabase.from("industries").select("slug, label"),
     ]);
     testimonialsData = (testiData as any[]) || [];
+
+    const industryLabel = new Map<string, string>(
+      ((industriesData as any[]) || []).map((i) => [i.slug, i.label]),
+    );
+    featuredCaseStudies = ((studiesData as any[]) || []).map((s) => ({
+      slug: s.slug,
+      title: s.title,
+      summary: s.summary,
+      outcome_value: s.outcome_value,
+      outcome_label: s.outcome_label,
+      client_descriptor: s.client_descriptor,
+      industry_label: s.industry_slug ? industryLabel.get(s.industry_slug) ?? null : null,
+    }));
 
     const rows = ((clientsData as any[]) || []) as {
       name: string;
@@ -86,7 +123,9 @@ export default async function HomePage() {
       <ClientLogoStrip clients={trustClients} />
 
       {/* 05 — Selected work (case studies, outcome-led) */}
-      <CaseStudiesFeatured />
+      {featuredCaseStudies.length > 0 && (
+        <CaseStudiesFeatured cases={featuredCaseStudies} />
+      )}
 
 
 
