@@ -21,7 +21,7 @@
 | Styling | Tailwind CSS 4 + CSS Custom Properties (see `globals.css`) |
 | Database | Supabase (PostgreSQL + Row Level Security) |
 | Auth | Supabase Auth (admin portal) |
-| Email | Resend API |
+| Email | Nodemailer (SMTP) — Resend client also present in `lib/` |
 | Forms | React Hook Form + Zod |
 | Icons | Lucide React (stroke 1.5px, 20–24px) |
 | Fonts | Playfair Display (headings), DM Sans (body), JetBrains Mono (code) |
@@ -80,10 +80,13 @@ src/
       industries/[slug]/         ← Per-industry landing pages (retail, banking, telecom, …)
       products/                  ← Product catalogue
       products/ecl-calculator/   ← Hero SKU detail page (IFRS 9 ECL)
+      cbt-custom-visuals/        ← Custom data visuals gallery
+      cbt-custom-visuals/[slug]/ ← Visual detail page
       partners/                  ← Partnership enquiry
       about/                     ← About CBT
       cgap/                      ← CGAP graduate program
       contact/                   ← Contact form
+      privacy-policy/            ← Privacy policy
       layout.tsx                 ← Wraps all public pages with Navbar + Footer
     admin/                       ← Admin portal (authenticated)
       page.tsx                   ← Dashboard
@@ -106,8 +109,8 @@ src/
 
   components/
     home/                        ← Hero, ServicesGrid, CaseStudiesFeatured, Differentiators,
-                                   CredentialsBar, Testimonials, ClientLogoStrip, StatsBar,
-                                   CGAPTeaser, CtaBand
+                                   CredentialsBar, Testimonials, ClientLogoStrip, OrbitLogos,
+                                   StatsBar, CGAPTeaser, CtaBand
     services/                    ← CapabilityTile, ToolsStrip, EngagementCard,
                                    PrinciplesStrip, ServicesFAQ (used by /services)
     layout/                      ← Navbar, Footer
@@ -116,7 +119,8 @@ src/
     products/                    ← ProductFilter
     shared/                      ← SectionHeader, PersonaBridge, Icons, Illustrations,
                                    ClientReveal, ScrollRevealInit
-    ui/                          ← Modal, ImageUpload (reusable primitives)
+    ui/                          ← Modal, ImageUpload, FlipWords, InfiniteSlider,
+                                   BackgroundPaths, NavigationMenu, ProgressiveBlur
 
   lib/
     actions/
@@ -126,7 +130,10 @@ src/
       client.ts                  ← Browser Supabase client
       server.ts                  ← Server Supabase client (with cookies)
       admin.ts                   ← Service-role admin client
-    resend.ts                    ← Resend email client
+    industries/
+      public.ts                  ← Public industries data fetcher
+    resend.ts                    ← Resend email client (legacy)
+    utils.ts                     ← Shared utilities
 
   types/
     database.ts                  ← Full TypeScript types for all Supabase tables
@@ -164,10 +171,13 @@ src/
 | `/industries/[slug]` | Industry landing (retail, banking, telecom, …) | Enterprise + SME |
 | `/products` | Product catalogue | All clients |
 | `/products/ecl-calculator` | ECL Calculator detail (hero SKU) | Banks / lenders |
+| `/cbt-custom-visuals` | Custom data visuals gallery | All |
+| `/cbt-custom-visuals/[slug]` | Visual detail | All |
 | `/partners` | Partner enquiry | Potential partners |
 | `/about` | About CBT | All |
 | `/cgap` | CGAP Graduate Program | Graduates |
 | `/contact` | Contact | All |
+| `/privacy-policy` | Privacy policy | All |
 | `/admin` | Admin Dashboard | Internal |
 
 ---
@@ -186,8 +196,10 @@ npm run lint    # ESLint check
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-RESEND_API_KEY=
-RESEND_TO_EMAIL=
+SMTP_USER=                # Gmail address used by Nodemailer
+SMTP_PASS=                # Gmail App Password
+RESEND_API_KEY=           # legacy — Resend client kept in lib/
+RESEND_TO_EMAIL=          # legacy
 ```
 
 ---
@@ -224,4 +236,4 @@ See `docs/FEATURE_LOG.md` for what has been built and current status.
 
 ---
 
-*Last updated: 2026-04-23*
+*Last updated: 2026-05-04*
