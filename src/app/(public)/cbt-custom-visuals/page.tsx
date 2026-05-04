@@ -122,20 +122,6 @@ export default function CbtCustomVisualsPage() {
                         </em>
                     </h1>
 
-                    <p
-                        className="a-fadeUp-3"
-                        style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 20,
-                            fontWeight: 350,
-                            color: "#4B5563",
-                            lineHeight: 1.7,
-                            maxWidth: 680,
-                        }}
-                    >
-                        Eight free custom visuals built by our BI practice for the gaps Microsoft&rsquo;s stock library leaves behind &mdash; dual-axis combos, deep KPI hierarchies, dumbbell charts and a full RTL/Arabic suite. All published on Microsoft AppSource.
-                    </p>
-
                     <div
                         className="a-fadeUp-4"
                         style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
