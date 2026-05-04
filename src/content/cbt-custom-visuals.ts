@@ -231,6 +231,36 @@ export const VISUALS: Visual[] = [
         tutorialUrl: "https://youtu.be/BGHl9nKVOXw?si=GSaeN-L1mxt5nFMl",
         previewSrc: "/cbt-custom-visuals/arabic-waterfall-chart.png",
     },
+    {
+        slug: "dumbbell-chart",
+        num: "08",
+        name: "Dumbbell Chart",
+        pitch: "Two markers per category on a shared scale, connected by a line that makes the gap immediately visible.",
+        featuresShort: [
+            "Two markers + connecting gap line per category",
+            "Currency / % aware labels with directional triangles",
+            "Conditional colours, reference bands & small multiples",
+        ],
+        description: [
+            "Business analysts often need to highlight the variance between two related values across categories — the gender pay gap across departments, revenue with and without incentives, or pricing before and after discount. Standard bar and line charts struggle to bring out this picture clearly when both values share an axis. Dumbbell Chart places two markers per category on a shared scale, connected by a line that makes the gap immediately visible — turning raw numbers into an intuitive story of change.",
+            "The visual recognises currency and percentage formats directly from your data model, so axis and data labels display the correct symbols without manual configuration. Change labels show the difference between the two values as an absolute number, a percentage, or both — with optional directional triangle indicators that instantly communicate whether the movement is positive or negative.",
+            "Conditional color formatting highlights categories that meet specific thresholds independently for each marker series, using numeric rules or field-value mapping. Unlimited reference bands mark target zones or acceptable ranges behind the data, and four marker shapes with full styling control ensure accessibility and brand alignment. Small multiples split the chart into a trellis grid for side-by-side comparison across segments, with orientation-aware axis coupling and range matching. Full Power BI interactivity is built in — cross-filtering, drill-down, drill-through, report page tooltips and context menus all work natively.",
+        ],
+        featuresFull: [
+            "Two markers per category on a shared scale, joined by a gap-revealing line",
+            "Currency and percentage format detection directly from the data model",
+            "Change labels: absolute, percentage, or both — with directional triangle indicators",
+            "Per-series conditional color formatting via numeric rules or field-value mapping",
+            "Unlimited reference bands for target zones and acceptable ranges",
+            "Four marker shapes with full styling control",
+            "Small multiples with orientation-aware axis coupling and range matching",
+            "Cross-filtering, drill-down, drill-through, report-page tooltips, context menus",
+        ],
+        upcoming: [],
+        appSourceUrl: "#",
+        tutorialUrl: "https://www.youtube.com/watch?v=yHVr0TildU0",
+        previewSrc: "/cbt-custom-visuals/dumbbell-chart.png",
+    },
 ];
 
 export function getVisualBySlug(slug: string): Visual | undefined {

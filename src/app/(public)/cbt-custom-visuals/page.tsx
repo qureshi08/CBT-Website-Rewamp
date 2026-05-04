@@ -7,7 +7,7 @@ import { VISUALS } from "@/content/cbt-custom-visuals";
 export const metadata: Metadata = {
     title: "Custom Visuals | CBT — Power BI Custom Visuals on Microsoft AppSource",
     description:
-        "Seven free Power BI custom visuals built by CBT — dual-axis charts, hierarchical KPI trees, RTL/Arabic visuals and more. Available on Microsoft AppSource.",
+        "Eight free Power BI custom visuals built by CBT — dual-axis charts, hierarchical KPI trees, RTL/Arabic visuals, dumbbell charts and more. Available on Microsoft AppSource.",
 };
 
 const SHARED_FEATURES = [
@@ -133,7 +133,7 @@ export default function CbtCustomVisualsPage() {
                             maxWidth: 680,
                         }}
                     >
-                        Seven free custom visuals built by our BI practice for the gaps Microsoft&rsquo;s stock library leaves behind &mdash; dual-axis combos, deep KPI hierarchies, and a full RTL/Arabic suite. All published on Microsoft AppSource.
+                        Eight free custom visuals built by our BI practice for the gaps Microsoft&rsquo;s stock library leaves behind &mdash; dual-axis combos, deep KPI hierarchies, dumbbell charts and a full RTL/Arabic suite. All published on Microsoft AppSource.
                     </p>
 
                     <div
@@ -195,7 +195,7 @@ export default function CbtCustomVisualsPage() {
                     <div className="services-section-head v2-reveal">
                         <span className="services-section-tag">the catalogue</span>
                         <h2 className="services-section-title">
-                            Seven visuals. One Power BI{" "}
+                            Eight visuals. One Power BI{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
                                 toolkit.
                             </em>
@@ -456,6 +456,26 @@ export default function CbtCustomVisualsPage() {
                                 </span>
                             ))}
                         </div>
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 13,
+                                color: "var(--color-text-muted)",
+                                margin: "20px 0 0",
+                            }}
+                        >
+                            <Link
+                                href="/privacy-policy-pbicv"
+                                style={{
+                                    color: "var(--color-text-muted)",
+                                    textDecoration: "underline",
+                                    textUnderlineOffset: 3,
+                                    textDecorationColor: "rgba(107,114,128,0.35)",
+                                }}
+                            >
+                                Privacy policy for Power BI custom visuals
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </section>

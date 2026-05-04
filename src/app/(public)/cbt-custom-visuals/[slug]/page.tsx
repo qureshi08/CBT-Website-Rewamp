@@ -454,7 +454,7 @@ export default async function CustomVisualDetailPage({ params }: Props) {
                             </em>
                         </h2>
                         <p className="services-section-sub">
-                            Six more visuals in the catalogue. All free to download.
+                            {siblings.length} more visuals in the catalogue. All free to download.
                         </p>
                     </div>
 
