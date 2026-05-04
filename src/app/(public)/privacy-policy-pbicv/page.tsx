@@ -1,3 +1,4 @@
+// Privacy policy for CBT Power BI Custom Visuals.
 import type { Metadata } from "next";
 import Link from "next/link";
 
