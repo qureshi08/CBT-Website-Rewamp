@@ -156,7 +156,7 @@ export default async function EclCalculatorPage() {
     if (!product) notFound();
 
     return (
-        <main>
+        <main className="ecl-page">
             <ClientReveal />
             {/* ─── HERO ─── */}
             <section
@@ -446,7 +446,9 @@ export default async function EclCalculatorPage() {
                             margin: "0 auto",
                         }}
                     >
-                        <span className="services-section-tag">first deployment</span>
+                        <div>
+                            <span className="services-section-tag">first deployment</span>
+                        </div>
                         <h2 className="services-section-title" style={{ maxWidth: 820 }}>
                             A tier-1 South Asian bank went from{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>

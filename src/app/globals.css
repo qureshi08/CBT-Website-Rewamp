@@ -3230,6 +3230,29 @@
   }
 }
 
+/* ECL Calculator page — density polish.
+   Same scaling as .cv-page; kept on a separate class so per-page
+   overrides remain easy. */
+.ecl-page .services-section {
+  padding: 88px 0;
+}
+
+.ecl-page .services-section-head {
+  margin-bottom: 44px;
+}
+
+@media (max-width: 960px) {
+  .ecl-page .services-section {
+    padding: 72px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .ecl-page .services-section {
+    padding: 64px 0;
+  }
+}
+
 /* Tools grouped strip */
 .services-tools-groups {
   display: grid;
