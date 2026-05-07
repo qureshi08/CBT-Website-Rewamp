@@ -257,7 +257,8 @@ export const VISUALS: Visual[] = [
             "Cross-filtering, drill-down, drill-through, report-page tooltips, context menus",
         ],
         upcoming: [],
-        appSourceUrl: "#",
+        appSourceUrl:
+            "https://marketplace.microsoft.com/en-us/product/convergentbusinesstechnologies1681574339335.cbt_dumbbell_plot?tab=Overview",
         tutorialUrl: "https://www.youtube.com/watch?v=yHVr0TildU0",
         previewSrc: "/cbt-custom-visuals/dumbbell-chart.png",
     },
