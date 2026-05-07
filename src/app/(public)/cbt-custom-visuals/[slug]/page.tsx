@@ -33,14 +33,14 @@ export default async function CustomVisualDetailPage({ params }: Props) {
     const siblings = VISUALS.filter((v) => v.slug !== visual.slug);
 
     return (
-        <main>
+        <main className="cv-page">
             <ClientReveal />
 
             {/* ─── HERO ─── */}
             <section
-                className="hero-grid-texture"
+                className="hero-grid-texture cv-hero-section"
                 style={{
-                    minHeight: "100vh",
+                    minHeight: "clamp(640px, 88vh, 820px)",
                     display: "flex",
                     alignItems: "center",
                     padding: "120px 0 80px",
@@ -50,172 +50,194 @@ export default async function CustomVisualDetailPage({ params }: Props) {
                 }}
             >
                 <div className="v2-wrap" style={{ position: "relative", zIndex: 1, width: "100%" }}>
-                    <nav
-                        className="case-study-breadcrumb a-fadeUp-1"
-                        aria-label="Breadcrumb"
-                        style={{ marginBottom: 18 }}
-                    >
-                        <Link href="/cbt-custom-visuals" className="case-study-breadcrumb-link">
-                            ← Custom Visuals
-                        </Link>
-                        <span className="case-study-breadcrumb-sep">/</span>
-                        <span className="case-study-breadcrumb-current">{visual.name}</span>
-                    </nav>
+                    <div className="cv-hero-grid">
+                        {/* ─── LEFT: copy + CTAs ─── */}
+                        <div>
+                            <nav
+                                className="case-study-breadcrumb a-fadeUp-1"
+                                aria-label="Breadcrumb"
+                                style={{ marginBottom: 18 }}
+                            >
+                                <Link href="/cbt-custom-visuals" className="case-study-breadcrumb-link">
+                                    ← Custom Visuals
+                                </Link>
+                                <span className="case-study-breadcrumb-sep">/</span>
+                                <span className="case-study-breadcrumb-current">{visual.name}</span>
+                            </nav>
 
-                    <div
-                        className="a-fadeUp-1"
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 8,
-                            background: "var(--color-primary-muted)",
-                            borderRadius: 20,
-                            padding: "5px 13px",
-                            marginBottom: 22,
-                        }}
-                    >
-                        <span
+                            <div
+                                className="a-fadeUp-1"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 8,
+                                    background: "var(--color-primary-muted)",
+                                    borderRadius: 20,
+                                    padding: "5px 13px",
+                                    marginBottom: 22,
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        width: 7,
+                                        height: 7,
+                                        borderRadius: "50%",
+                                        background: "var(--color-primary)",
+                                        animation: "pulse 2s infinite",
+                                    }}
+                                />
+                                <span
+                                    style={{
+                                        fontFamily: "var(--font-body)",
+                                        fontSize: "var(--text-xs)",
+                                        fontWeight: 500,
+                                        color: "var(--color-primary)",
+                                    }}
+                                >
+                                    Power BI · Microsoft AppSource
+                                </span>
+                            </div>
+
+                            <h1
+                                className="v2-h1 a-fadeUp-2"
+                                style={{
+                                    fontSize: "clamp(2.4rem, 4.6vw, 3.6rem)",
+                                    marginBottom: 22,
+                                }}
+                            >
+                                {visual.name}
+                            </h1>
+
+                            <p
+                                className="a-fadeUp-3"
+                                style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: "clamp(16px, 2.4vw, 20px)",
+                                    fontWeight: 350,
+                                    color: "#4B5563",
+                                    lineHeight: 1.7,
+                                }}
+                            >
+                                {visual.pitch}
+                            </p>
+
+                            <div
+                                className="a-fadeUp-4"
+                                style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
+                            >
+                                {hasAppSourceUrl ? (
+                                    <a
+                                        href={visual.appSourceUrl}
+                                        className="hero-btn-primary"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`Download ${visual.name} from Microsoft AppSource`}
+                                    >
+                                        Download from AppSource <span>→</span>
+                                    </a>
+                                ) : (
+                                    <span
+                                        className="hero-btn-primary"
+                                        aria-disabled="true"
+                                        style={{
+                                            opacity: 0.55,
+                                            cursor: "not-allowed",
+                                            pointerEvents: "none",
+                                        }}
+                                    >
+                                        Coming soon
+                                    </span>
+                                )}
+                                {hasTutorialUrl ? (
+                                    <a
+                                        href={visual.tutorialUrl!}
+                                        className="hero-btn-video"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`Watch tutorial for ${visual.name} on YouTube`}
+                                    >
+                                        <svg
+                                            width="22"
+                                            height="16"
+                                            viewBox="0 0 28 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M27.4 3.12a3.5 3.5 0 0 0-2.46-2.48C22.78.06 14 .06 14 .06s-8.78 0-10.94.58A3.5 3.5 0 0 0 .6 3.12C.02 5.3.02 9.84.02 9.84s0 4.54.58 6.72a3.5 3.5 0 0 0 2.46 2.48C5.22 19.62 14 19.62 14 19.62s8.78 0 10.94-.58a3.5 3.5 0 0 0 2.46-2.48c.58-2.18.58-6.72.58-6.72s0-4.54-.58-6.72Z"
+                                                fill="#FF0033"
+                                            />
+                                            <path d="M11.2 14.04l7.28-4.2-7.28-4.2v8.4Z" fill="#fff" />
+                                        </svg>
+                                        Watch tutorial
+                                    </a>
+                                ) : (
+                                    <span
+                                        className="hero-btn-video"
+                                        aria-disabled="true"
+                                        style={{
+                                            opacity: 0.55,
+                                            cursor: "not-allowed",
+                                            pointerEvents: "none",
+                                        }}
+                                    >
+                                        Tutorial coming soon
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* ─── RIGHT: framed preview of this visual ─── */}
+                        <div
+                            className="v2-reveal"
                             style={{
-                                width: 7,
-                                height: 7,
-                                borderRadius: "50%",
-                                background: "var(--color-primary)",
-                                animation: "pulse 2s infinite",
-                            }}
-                        />
-                        <span
-                            style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: "var(--text-xs)",
-                                fontWeight: 500,
-                                color: "var(--color-primary)",
+                                position: "relative",
+                                width: "100%",
+                                maxWidth: 560,
+                                margin: "0 auto",
+                                aspectRatio: "16 / 9",
+                                borderRadius: 14,
+                                overflow: "hidden",
+                                background: "#fff",
+                                border: "1px solid var(--color-border)",
+                                boxShadow:
+                                    "0 28px 60px -18px rgba(17,24,39,0.22), 0 4px 12px -6px rgba(17,24,39,0.06)",
                             }}
                         >
-                            Power BI · Microsoft AppSource
-                        </span>
-                    </div>
-
-                    <h1
-                        className="v2-h1 a-fadeUp-2"
-                        style={{
-                            fontSize: "clamp(2.4rem, 4.6vw, 3.6rem)",
-                            marginBottom: 22,
-                            maxWidth: 960,
-                        }}
-                    >
-                        {visual.name}
-                    </h1>
-
-                    <p
-                        className="a-fadeUp-3"
-                        style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 20,
-                            fontWeight: 350,
-                            color: "#4B5563",
-                            lineHeight: 1.7,
-                            maxWidth: 720,
-                        }}
-                    >
-                        {visual.pitch}
-                    </p>
-
-                    <div
-                        className="a-fadeUp-4"
-                        style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
-                    >
-                        {hasAppSourceUrl ? (
-                            <a
-                                href={visual.appSourceUrl}
-                                className="hero-btn-primary"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`Download ${visual.name} from Microsoft AppSource`}
-                            >
-                                Download from AppSource <span>→</span>
-                            </a>
-                        ) : (
-                            <span
-                                className="hero-btn-primary"
-                                aria-disabled="true"
-                                style={{
-                                    opacity: 0.55,
-                                    cursor: "not-allowed",
-                                    pointerEvents: "none",
-                                }}
-                            >
-                                Coming soon
-                            </span>
-                        )}
-                        {hasTutorialUrl ? (
-                            <a
-                                href={visual.tutorialUrl!}
-                                className="hero-btn-secondary"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`Watch tutorial for ${visual.name} on YouTube`}
-                            >
-                                Watch tutorial <span className="hero-btn-arrow">→</span>
-                            </a>
-                        ) : (
-                            <span
-                                className="hero-btn-secondary"
-                                aria-disabled="true"
-                                style={{
-                                    opacity: 0.55,
-                                    cursor: "not-allowed",
-                                    pointerEvents: "none",
-                                }}
-                            >
-                                Tutorial coming soon
-                            </span>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── PREVIEW SLOT ─── */}
-            <section className="services-section" style={{ paddingTop: 0 }}>
-                <div className="v2-wrap">
-                    {/* Preview slot — renders Image when previewSrc set, placeholder otherwise */}
-                    <div
-                        className="v2-reveal"
-                        style={{
-                            maxWidth: 960,
-                            margin: "0 auto",
-                            aspectRatio: "16 / 9",
-                            background: "var(--color-surface)",
-                            border: "1px solid var(--color-border)",
-                            borderRadius: 16,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            overflow: "hidden",
-                            position: "relative",
-                        }}
-                    >
-                        {visual.previewSrc ? (
-                            <Image
-                                src={visual.previewSrc}
-                                alt={`Preview of ${visual.name}`}
-                                fill
-                                sizes="(max-width: 960px) 100vw, 960px"
-                                style={{ objectFit: "contain" }}
-                                priority
-                            />
-                        ) : (
-                            <span
-                                style={{
-                                    fontFamily: "var(--font-mono)",
-                                    fontSize: 11,
-                                    letterSpacing: ".12em",
-                                    textTransform: "uppercase",
-                                    color: "var(--color-text-muted)",
-                                }}
-                            >
-                                Screenshot coming soon
-                            </span>
-                        )}
+                            {visual.previewSrc ? (
+                                <Image
+                                    src={visual.previewSrc}
+                                    alt={`Preview of ${visual.name}`}
+                                    fill
+                                    sizes="(max-width: 960px) 90vw, 560px"
+                                    style={{ objectFit: "contain" }}
+                                    priority
+                                />
+                            ) : (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        inset: 0,
+                                        background: "var(--color-surface)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            fontFamily: "var(--font-mono)",
+                                            fontSize: 11,
+                                            letterSpacing: ".12em",
+                                            textTransform: "uppercase",
+                                            color: "var(--color-text-muted)",
+                                        }}
+                                    >
+                                        Screenshot coming soon
+                                    </span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>

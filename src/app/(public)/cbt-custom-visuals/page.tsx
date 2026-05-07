@@ -46,14 +46,14 @@ const TRUST_CHIPS = [
 
 export default function CbtCustomVisualsPage() {
     return (
-        <main>
+        <main className="cv-page">
             <ClientReveal />
 
             {/* ─── HERO ─── */}
             <section
-                className="hero-grid-texture"
+                className="hero-grid-texture cv-hero-section"
                 style={{
-                    minHeight: "100vh",
+                    minHeight: "clamp(640px, 88vh, 820px)",
                     display: "flex",
                     alignItems: "center",
                     padding: "120px 0 80px",
@@ -63,114 +63,173 @@ export default function CbtCustomVisualsPage() {
                 }}
             >
                 <div className="v2-wrap" style={{ position: "relative", zIndex: 1, width: "100%" }}>
-                    <nav
-                        className="case-study-breadcrumb a-fadeUp-1"
-                        aria-label="Breadcrumb"
-                        style={{ marginBottom: 18 }}
-                    >
-                        <Link href="/products" className="case-study-breadcrumb-link">
-                            ← Products
-                        </Link>
-                        <span className="case-study-breadcrumb-sep">/</span>
-                        <span className="case-study-breadcrumb-current">Custom Visuals</span>
-                    </nav>
+                    <div className="cv-hero-grid">
+                        {/* ─── LEFT: copy + CTAs ─── */}
+                        <div>
+                            <nav
+                                className="case-study-breadcrumb a-fadeUp-1"
+                                aria-label="Breadcrumb"
+                                style={{ marginBottom: 18 }}
+                            >
+                                <Link href="/products" className="case-study-breadcrumb-link">
+                                    ← Products
+                                </Link>
+                                <span className="case-study-breadcrumb-sep">/</span>
+                                <span className="case-study-breadcrumb-current">Custom Visuals</span>
+                            </nav>
 
-                    <div
-                        className="a-fadeUp-1"
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 8,
-                            background: "var(--color-primary-muted)",
-                            borderRadius: 20,
-                            padding: "5px 13px",
-                            marginBottom: 22,
-                        }}
-                    >
-                        <span
+                            <div
+                                className="a-fadeUp-1"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 8,
+                                    background: "var(--color-primary-muted)",
+                                    borderRadius: 20,
+                                    padding: "5px 13px",
+                                    marginBottom: 22,
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        width: 7,
+                                        height: 7,
+                                        borderRadius: "50%",
+                                        background: "var(--color-primary)",
+                                        animation: "pulse 2s infinite",
+                                    }}
+                                />
+                                <span
+                                    style={{
+                                        fontFamily: "var(--font-body)",
+                                        fontSize: "var(--text-xs)",
+                                        fontWeight: 500,
+                                        color: "var(--color-primary)",
+                                    }}
+                                >
+                                    Power BI · Microsoft AppSource
+                                </span>
+                            </div>
+
+                            <h1
+                                className="v2-h1 a-fadeUp-2"
+                                style={{
+                                    fontSize: "clamp(2.6rem, 5vw, 4rem)",
+                                    marginBottom: 22,
+                                }}
+                            >
+                                Power BI visuals, the way reporting{" "}
+                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                    actually works.
+                                </em>
+                            </h1>
+
+                            <div
+                                className="a-fadeUp-4"
+                                style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
+                            >
+                                <Link href="/contact?intent=custom-visual" className="hero-btn-primary">
+                                    Talk to our BI team <span>→</span>
+                                </Link>
+                                <Link
+                                    href="#visuals"
+                                    className="hero-btn-secondary cv-hero-cta-pill-mobile"
+                                >
+                                    Browse the catalogue <span className="hero-btn-arrow">→</span>
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* ─── RIGHT: layered collage on desktop, single preview on phones ─── */}
+                        <div
+                            className="cv-hero-collage v2-reveal"
+                            aria-hidden="true"
                             style={{
-                                width: 7,
-                                height: 7,
-                                borderRadius: "50%",
-                                background: "var(--color-primary)",
-                                animation: "pulse 2s infinite",
-                            }}
-                        />
-                        <span
-                            style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: "var(--text-xs)",
-                                fontWeight: 500,
-                                color: "var(--color-primary)",
-                            }}
-                        >
-                            Power BI · Microsoft AppSource
-                        </span>
-                    </div>
-
-                    <h1
-                        className="v2-h1 a-fadeUp-2"
-                        style={{
-                            fontSize: "clamp(2.6rem, 5vw, 4rem)",
-                            marginBottom: 22,
-                            maxWidth: 960,
-                        }}
-                    >
-                        Power BI visuals, the way reporting{" "}
-                        <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                            actually works.
-                        </em>
-                    </h1>
-
-                    <div
-                        className="a-fadeUp-4"
-                        style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", alignItems: "center" }}
-                    >
-                        <Link href="#visuals" className="hero-btn-primary">
-                            Browse the catalogue <span>→</span>
-                        </Link>
-                        <Link href="/contact?intent=custom-visual" className="hero-btn-secondary">
-                            Talk to our BI team <span className="hero-btn-arrow">→</span>
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── WHY WE BUILT THESE ─── */}
-            <section className="services-section services-section-alt">
-                <div className="v2-wrap">
-                    <div className="v2-reveal">
-                        <span className="services-section-tag">the why</span>
-                        <h2 className="services-section-title">
-                            Stock visuals get you 80% of the way{" "}
-                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                there.
-                            </em>
-                        </h2>
-                        <p
-                            style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: 18,
-                                fontWeight: 350,
-                                lineHeight: 1.75,
-                                color: "var(--color-text-body)",
-                                marginBottom: 16,
+                                position: "relative",
+                                width: "100%",
+                                maxWidth: 560,
+                                margin: "0 auto",
+                                aspectRatio: "5 / 4",
                             }}
                         >
-                            We build a lot of Power BI dashboards. Often enough, the same gaps trip the same reports: dual-axis combos that need real independent scales, KPI cards that should walk down two hierarchies at once, decomposition trees that want more than one measure per node, and Arabic dashboards that fight the engine every time you touch the layout.
-                        </p>
-                        <p
-                            style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: 18,
-                                fontWeight: 350,
-                                lineHeight: 1.75,
-                                color: "var(--color-text-body)",
-                                margin: 0,
-                            }}
-                        >
-                            Rather than work around them on every engagement, we built proper visuals to close them &mdash; published them on Microsoft AppSource, and made them free to download. Use them in your reports the same way you&rsquo;d use any stock visual.
-                        </p>
+                            {/* Back-left card */}
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "2%",
+                                    left: "0%",
+                                    width: "62%",
+                                    aspectRatio: "16 / 9",
+                                    borderRadius: 14,
+                                    overflow: "hidden",
+                                    background: "#fff",
+                                    border: "1px solid var(--color-border)",
+                                    boxShadow:
+                                        "0 24px 50px -16px rgba(17,24,39,0.20), 0 4px 12px -6px rgba(17,24,39,0.06)",
+                                    transform: "rotate(-5deg)",
+                                }}
+                            >
+                                <Image
+                                    src="/cbt-custom-visuals/hierarchical-kpi-cards-tree.png"
+                                    alt=""
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 960px) 60vw, 350px"
+                                    style={{ objectFit: "cover" }}
+                                />
+                            </div>
+
+                            {/* Middle card */}
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "28%",
+                                    left: "30%",
+                                    width: "62%",
+                                    aspectRatio: "16 / 9",
+                                    borderRadius: 14,
+                                    overflow: "hidden",
+                                    background: "#fff",
+                                    border: "1px solid var(--color-border)",
+                                    boxShadow:
+                                        "0 24px 50px -16px rgba(17,24,39,0.22), 0 4px 12px -6px rgba(17,24,39,0.06)",
+                                    transform: "rotate(3deg)",
+                                }}
+                            >
+                                <Image
+                                    src="/cbt-custom-visuals/multi-kpi-decomposition-tree.png"
+                                    alt=""
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 960px) 60vw, 350px"
+                                    style={{ objectFit: "cover" }}
+                                />
+                            </div>
+
+                            {/* Front-bottom card */}
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "56%",
+                                    left: "8%",
+                                    width: "62%",
+                                    aspectRatio: "16 / 9",
+                                    borderRadius: 14,
+                                    overflow: "hidden",
+                                    background: "#fff",
+                                    border: "1px solid var(--color-border)",
+                                    boxShadow:
+                                        "0 28px 60px -18px rgba(17,24,39,0.25), 0 4px 12px -6px rgba(17,24,39,0.08)",
+                                    transform: "rotate(-2deg)",
+                                }}
+                            >
+                                <Image
+                                    src="/cbt-custom-visuals/dumbbell-chart.png"
+                                    alt=""
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 960px) 60vw, 350px"
+                                    style={{ objectFit: "cover" }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -194,8 +253,11 @@ export default function CbtCustomVisualsPage() {
                     <div className="services-grid services-grid-3">
                         {VISUALS.map((v) => (
                             <article key={v.num} className="services-tile">
-                                {/* Preview slot — renders Image when previewSrc set, placeholder otherwise */}
-                                <div
+                                {/* Preview slot — clickable, routes to detail page */}
+                                <Link
+                                    href={`/cbt-custom-visuals/${v.slug}`}
+                                    aria-label={`View details for ${v.name}`}
+                                    className="cv-tile-preview"
                                     style={{
                                         margin: "-28px -26px 0",
                                         aspectRatio: "16 / 9",
@@ -231,7 +293,7 @@ export default function CbtCustomVisualsPage() {
                                             Screenshot coming soon
                                         </span>
                                     )}
-                                </div>
+                                </Link>
 
                                 <div className="services-tile-head">
                                     <span className="services-tile-num">{v.num}</span>
@@ -461,6 +523,44 @@ export default function CbtCustomVisualsPage() {
                             >
                                 Privacy policy for Power BI custom visuals
                             </Link>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── WHY WE BUILT THESE ─── */}
+            <section className="services-section services-section-alt">
+                <div className="v2-wrap">
+                    <div className="v2-reveal">
+                        <h2 className="services-section-title">
+                            Stock visuals get you 80% of the way{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                there.
+                            </em>
+                        </h2>
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 18,
+                                fontWeight: 350,
+                                lineHeight: 1.75,
+                                color: "var(--color-text-body)",
+                                marginBottom: 16,
+                            }}
+                        >
+                            We build a lot of Power BI dashboards. Often enough, the same gaps trip the same reports: dual-axis combos that need real independent scales, KPI cards that should walk down two hierarchies at once, decomposition trees that want more than one measure per node, and Arabic dashboards that fight the engine every time you touch the layout.
+                        </p>
+                        <p
+                            style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 18,
+                                fontWeight: 350,
+                                lineHeight: 1.75,
+                                color: "var(--color-text-body)",
+                                margin: 0,
+                            }}
+                        >
+                            Rather than work around them on every engagement, we built proper visuals to close them &mdash; published them on Microsoft AppSource, and made them free to download. Use them in your reports the same way you&rsquo;d use any stock visual.
                         </p>
                     </div>
                 </div>
