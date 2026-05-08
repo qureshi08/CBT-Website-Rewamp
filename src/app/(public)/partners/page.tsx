@@ -12,7 +12,7 @@ import {
 import { IndustryLeadersStrip, TechPartnersGrid } from "@/components/home/ClientLogoStrip";
 import PartnerForm from "@/components/partners/PartnerForm";
 import ClientReveal from "@/components/shared/ClientReveal";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/public";
 
 export const metadata: Metadata = {
     title: "Partners | CBT — Technology & Delivery Partnership Models",

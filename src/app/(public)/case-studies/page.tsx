@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/public";
 import ClientReveal from "@/components/shared/ClientReveal";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 

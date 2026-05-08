@@ -12,7 +12,7 @@ import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import ClientReveal from "@/components/shared/ClientReveal";
 import CgapHeroStats from "@/components/cgap/CgapHeroStats";
 import { BackgroundPaths } from "@/components/ui/background-paths";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/public";
 
 export const metadata: Metadata = {
     title: "CGAP — Convergent Graduate Academy Program | Learning, grooming, career.",

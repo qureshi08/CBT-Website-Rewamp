@@ -6,7 +6,7 @@ import EngagementCard from "@/components/services/EngagementCard";
 import PrinciplesStrip from "@/components/services/PrinciplesStrip";
 import ServicesFAQ from "@/components/services/ServicesFAQ";
 import ClientReveal from "@/components/shared/ClientReveal";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/public";
 import type { IconName } from "@/components/shared/Icons";
 
 const PARTNER_TIERS: Array<{ name: string; tier: string }> = [

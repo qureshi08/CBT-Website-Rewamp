@@ -7,7 +7,7 @@ import Differentiators from "@/components/home/Differentiators";
 import CredentialsBar from "@/components/home/CredentialsBar";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBand from "@/components/home/CtaBand";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/public";
 
 // Named clients shown in the hero trust bar — priority order per brief.
 const NAMED_TRUST = ["P&G", "Coca-Cola", "PepsiCo", "UNICEF", "ADNOC"];
