@@ -6,6 +6,7 @@ const ALLOWED_EMAIL_DOMAIN = "@convergentbt.com";
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // Login page is exempt — gating it would cause a redirect loop for signed-out users.
     if (pathname === "/admin/login") {
         return NextResponse.next();
     }
