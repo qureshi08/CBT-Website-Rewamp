@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,20 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function AdminLoginPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center bg-surface px-4 py-16">
+                    <Loader2 className="animate-spin text-primary" size={32} />
+                </div>
+            }
+        >
+            <LoginForm />
+        </Suspense>
+    );
+}
+
+function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const next = searchParams.get("next") || "/admin";
