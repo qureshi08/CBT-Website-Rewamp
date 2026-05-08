@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard,
     Users,
@@ -17,6 +17,7 @@ import {
     Layers,
     Globe
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLayout({
     children,
@@ -24,6 +25,18 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const router = useRouter();
+
+    if (pathname === "/admin/login") {
+        return <>{children}</>;
+    }
+
+    const handleLogout = async () => {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        router.refresh();
+        router.replace("/admin/login");
+    };
 
     return (
         <div className="flex min-h-screen bg-surface font-body">
@@ -51,7 +64,10 @@ export default function AdminLayout({
                 </nav>
 
                 <div className="p-6 border-t border-white/10">
-                    <button className="flex items-center gap-3 text-white/60 hover:text-white transition-colors w-full px-4 py-2">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 text-white/60 hover:text-white transition-colors w-full px-4 py-2"
+                    >
                         <LogOut size={18} />
                         <span className="font-medium text-sm">Logout</span>
                     </button>
