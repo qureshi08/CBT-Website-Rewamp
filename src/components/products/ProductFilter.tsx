@@ -96,8 +96,14 @@ export default function ProductFilter() {
                         key={product.slug}
                         className="bg-white rounded-3xl border border-border/40 overflow-hidden shadow-sm flex flex-col h-full"
                     >
-                        {/* Product Visual Mock */}
-                        <div className="aspect-[16/11] bg-surface relative overflow-hidden flex items-center justify-center p-8">
+                        {/* Product Visual Mock — clickable, routes to detail page or AppSource */}
+                        <Link
+                            href={product.detail_path || product.appsource_url || "#"}
+                            target={!product.detail_path && product.appsource_url ? "_blank" : undefined}
+                            rel={!product.detail_path && product.appsource_url ? "noopener noreferrer" : undefined}
+                            aria-label={`View ${product.name}${!product.detail_path ? " on AppSource" : ""}`}
+                            className="products-card-preview aspect-[16/11] bg-surface relative overflow-hidden flex items-center justify-center p-8"
+                        >
                             <div className="relative w-full h-full bg-white rounded-xl shadow-2xl border border-border/20 flex flex-col p-4 overflow-hidden">
                                 <div className="flex items-center gap-2 mb-4">
                                     <div className="w-2 h-2 rounded-full bg-primary/40" />
@@ -125,7 +131,7 @@ export default function ProductFilter() {
                                     {product.badge_text}
                                 </span>
                             )}
-                        </div>
+                        </Link>
 
                         <div className="p-5 sm:p-8 flex flex-col flex-grow">
                             <div className="flex items-center gap-2 mb-4">

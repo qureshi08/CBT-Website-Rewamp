@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
     return (
-        <main className="font-body">
+        <main className="font-body products-page">
             <ClientReveal />
             {/* Hero */}
-            <section className="hero-grid-texture" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
+            <section className="hero-grid-texture cv-hero-section" style={{ minHeight: "clamp(640px, 88vh, 820px)", display: "flex", alignItems: "center", padding: "120px 0 80px", background: "#fff", position: "relative", overflow: "hidden" }}>
                 <div className="v2-wrap home-hero-grid" style={{ position: "relative", zIndex: 1, width: "100%" }}>
                     <div>
                         <div className="a-fadeUp-1" style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--color-primary-muted)", borderRadius: "20px", padding: "5px 13px", marginBottom: "22px" }}>

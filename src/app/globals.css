@@ -3253,6 +3253,49 @@
   }
 }
 
+/* Products index page — density polish.
+   Same scaling as .cv-page / .ecl-page. */
+.products-page .services-section {
+  padding: 88px 0;
+}
+
+.products-page .services-section-head {
+  margin-bottom: 44px;
+}
+
+@media (max-width: 960px) {
+  .products-page .services-section {
+    padding: 72px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .products-page .services-section {
+    padding: 64px 0;
+  }
+}
+
+/* Products page — clickable visual mock at top of product cards.
+   Hover gives a green inner ring on the link, plus a subtle scale on
+   the inner mock-card div (badges/labels stay put because they are
+   siblings of that inner div). */
+.products-page .products-card-preview {
+  transition: box-shadow 220ms ease;
+  text-decoration: none;
+}
+
+.products-page .products-card-preview:hover {
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+
+.products-page .products-card-preview > div:first-child {
+  transition: transform 500ms ease;
+}
+
+.products-page .products-card-preview:hover > div:first-child {
+  transform: scale(1.04);
+}
+
 /* Tools grouped strip */
 .services-tools-groups {
   display: grid;
