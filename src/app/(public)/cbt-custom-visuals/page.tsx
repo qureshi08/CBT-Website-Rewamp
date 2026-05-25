@@ -7,7 +7,7 @@ import { VISUALS } from "@/content/cbt-custom-visuals";
 export const metadata: Metadata = {
     title: "Custom Visuals | CBT — Power BI Custom Visuals on Microsoft AppSource",
     description:
-        "Eight free Power BI custom visuals built by CBT — dual-axis charts, hierarchical KPI trees, RTL/Arabic visuals, dumbbell charts and more. Available on Microsoft AppSource.",
+        "Free Power BI custom visuals built by CBT — dual-axis charts, hierarchical KPI trees, RTL/Arabic visuals, dumbbell, counts and jitter plots and more. Available on Microsoft AppSource.",
 };
 
 const SHARED_FEATURES = [
@@ -240,7 +240,7 @@ export default function CbtCustomVisualsPage() {
                     <div className="services-section-head v2-reveal">
                         <span className="services-section-tag">the catalogue</span>
                         <h2 className="services-section-title">
-                            Eight visuals. One Power BI{" "}
+                            Purpose-built visuals. One Power BI{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
                                 toolkit.
                             </em>

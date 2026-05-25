@@ -52,7 +52,7 @@ export const VISUALS: Visual[] = [
     {
         slug: "hierarchical-kpi-cards-tree",
         num: "02",
-        name: "Hierarchical KPI Cards Tree",
+        name: "Dual Hierarchy Decomposition Tree",
         pitch: "Up to four KPIs per card across two hierarchy axes, with DAX-driven status colours.",
         featuresShort: [
             "Two-axis hierarchy, multi-level drill",
@@ -60,7 +60,7 @@ export const VISUALS: Visual[] = [
             "DAX-driven traffic-light status",
         ],
         description: [
-            "Hierarchical KPI Cards displays your key performance indicators in an interactive, expandable tree layout that supports two independent hierarchy axes simultaneously.",
+            "Dual Hierarchy Decomposition Tree displays your key performance indicators in an interactive, expandable tree layout that supports two independent hierarchy axes simultaneously.",
             "Add fields to Hierarchy 1 (Horizontal) to expand cards to the right — for example, by Region or Department. Add fields to Hierarchy 2 (Vertical) to expand cards downward — for example, by Category and Product. Use one axis or both together for matrix-style analysis across two dimensions.",
             "Each card displays up to 4 KPI measures side by side: revenue, target percentage, year-over-year growth, status text, or any DAX measure you choose. Numeric values aggregate correctly on parent nodes using Power BI’s native subtotal engine, and percentage or ratio measures use DAX-evaluated totals rather than simple averages. String measures such as status text also display correctly at every aggregation level.",
             "The colored status bar at the top of each card can be driven by a DAX measure returning hex color codes, enabling traffic-light indicators, threshold-based coloring, or any custom business logic — evaluated independently at every node in the tree.",
@@ -261,6 +261,70 @@ export const VISUALS: Visual[] = [
             "https://marketplace.microsoft.com/en-us/product/convergentbusinesstechnologies1681574339335.cbt_dumbbell_plot?tab=Overview",
         tutorialUrl: "https://www.youtube.com/watch?v=yHVr0TildU0",
         previewSrc: "/cbt-custom-visuals/dumbbell-chart.png",
+    },
+    {
+        slug: "counts-plot",
+        num: "09",
+        name: "Counts Plot",
+        pitch: "Visualise data distribution with dots scaled by frequency across category lanes.",
+        featuresShort: [
+            "Dots scaled to frequency with auto or manual binning",
+            "Category swim lanes for side-by-side comparison",
+            "Conditional colours, reference bands & small multiples",
+        ],
+        description: [
+            "Analysts working with survey scores, quality metrics, or performance ratings often need to see how values distribute across categories — not just averages, but where the data clusters and where outliers sit. Standard bar charts collapse this detail into single aggregates, hiding the shape of the underlying data. Counts Plot solves this by placing dots along a value axis within category lanes, scaling each dot proportionally to the number of observations at that position. Larger circles mean more data points, making frequency patterns immediately visible.",
+            "The visual automatically bins nearby values so overlapping data points merge into a single scaled dot rather than stacking invisibly. Users can fine-tune the bin width or leave it on auto for intelligent defaults. A pre-aggregated Count field is also supported for datasets that arrive already summarised.",
+            "Currency and percentage formats are detected automatically from the data model. Conditional color formatting with numeric rules or field-value mapping highlights thresholds across the distribution. Unlimited reference bands mark target zones, gridlines, reference lines, and a configurable axis range provide full analytical control. Small multiples split the chart into a trellis grid for side-by-side distribution comparison across segments. Cross-filtering, drill-down, drill-through, report page tooltips, and context menus all work natively.",
+        ],
+        featuresFull: [
+            "Dots scaled proportionally to data frequency with automatic or manual binning",
+            "Category swim lanes for side-by-side distribution comparison across groups",
+            "Optional Count field for pre-aggregated datasets or auto-count from row-level data",
+            "Currency and percentage formatting detected automatically from the data model",
+            "Conditional color formatting with numeric rules or field-value mapping",
+            "Configurable axis range with minimum and maximum controls",
+            "Unlimited reference bands with color, opacity, labels, and font formatting",
+            "Small multiples with axis coupling and range matching",
+            "Cross-filtering, drill-down, drill-through, report page tooltips, and context menus",
+        ],
+        upcoming: [],
+        /* TODO: replace "#" with the Microsoft AppSource product URL once published */
+        appSourceUrl: "#",
+        tutorialUrl: null,
+        previewSrc: "/cbt-custom-visuals/counts-plot.png",
+    },
+    {
+        slug: "jitter-plot",
+        num: "10",
+        name: "Jitter Plot",
+        pitch: "Show every data point with jitter or beeswarm layout for distribution analysis.",
+        featuresShort: [
+            "Every observation as an individual dot per lane",
+            "Jitter and beeswarm layout modes",
+            "Conditional colours, reference bands & small multiples",
+        ],
+        description: [
+            "When analysts need to see every individual data point rather than aggregated summaries, standard charts fall short. Box plots show quartiles but hide the raw data. Bar charts reduce distributions to single values. Jitter Plot reveals the full picture by drawing every observation as a dot, spread within category lanes using randomized jitter or tight beeswarm packing so that overlapping points become visible instead of hidden.",
+            "Two layout modes serve different analytical needs. Jitter mode applies a controlled random offset perpendicular to the value axis, creating a scatter cloud where density is visible through dot clustering. Beeswarm mode uses force-directed packing to position dots as close to the center line as possible without overlap, producing a violin-like shape that reveals distribution contours precisely.",
+            "Currency and percentage formats are detected automatically from the data model. Conditional color formatting highlights individual data points that meet specific thresholds. Unlimited reference bands mark target zones, and a configurable axis range with minimum and maximum controls provides precise scale management. Small multiples split the chart into a trellis grid for cross-segment comparison. Cross-filtering, drill-down, drill-through, report page tooltips, and context menus all work natively.",
+        ],
+        featuresFull: [
+            "Every data point rendered as an individual dot within category swim lanes",
+            "Two layout modes: Jitter (random spread) and Beeswarm (force-packed, no overlap)",
+            "Adjustable jitter amount and beeswarm padding for density control",
+            "Currency and percentage formatting detected automatically from the data model",
+            "Conditional color formatting with numeric rules or field-value mapping",
+            "Configurable axis range with minimum and maximum controls",
+            "Unlimited reference bands with color, opacity, labels, and font formatting",
+            "Small multiples with axis coupling and range matching",
+            "Cross-filtering, drill-down, drill-through, report page tooltips, and context menus",
+        ],
+        upcoming: [],
+        /* TODO: replace "#" with the Microsoft AppSource product URL once published */
+        appSourceUrl: "#",
+        tutorialUrl: null,
+        previewSrc: "/cbt-custom-visuals/jitter-plot.png",
     },
 ];
 
