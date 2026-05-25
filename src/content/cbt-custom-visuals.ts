@@ -291,7 +291,7 @@ export const VISUALS: Visual[] = [
         upcoming: [],
         /* TODO: replace "#" with the Microsoft AppSource product URL once published */
         appSourceUrl: "#",
-        tutorialUrl: null,
+        tutorialUrl: "https://www.youtube.com/watch?v=ydftFNvCG4U",
         previewSrc: "/cbt-custom-visuals/counts-plot.png",
     },
     {
@@ -323,7 +323,7 @@ export const VISUALS: Visual[] = [
         upcoming: [],
         /* TODO: replace "#" with the Microsoft AppSource product URL once published */
         appSourceUrl: "#",
-        tutorialUrl: null,
+        tutorialUrl: "https://www.youtube.com/watch?v=pQvJTKzuzlY",
         previewSrc: "/cbt-custom-visuals/jitter-plot.png",
     },
 ];
