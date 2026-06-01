@@ -321,8 +321,7 @@ export const VISUALS: Visual[] = [
             "Cross-filtering, drill-down, drill-through, report page tooltips, and context menus",
         ],
         upcoming: [],
-        /* TODO: replace "#" with the Microsoft AppSource product URL once published */
-        appSourceUrl: "#",
+        appSourceUrl: "https://marketplace.microsoft.com/en-us/product/convergentbusinesstechnologies1681574339335.cbt_jitter_plot?tab=Overview",
         tutorialUrl: "https://www.youtube.com/watch?v=pQvJTKzuzlY",
         previewSrc: "/cbt-custom-visuals/jitter-plot.png",
     },
