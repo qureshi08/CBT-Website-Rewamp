@@ -29,6 +29,14 @@ function revalidatePublicPaths(table: string) {
             revalidatePath("/case-studies"); // cards show the industry label
             revalidatePath("/case-studies/[slug]", "page");
             break;
+        case "stats":
+            revalidatePath("/"); // homepage stats bar
+            revalidatePath("/cgap"); // "CGAP Batches" stat drives the batch number in hero + CTA
+            revalidatePath("/partners"); // partners page also reads the CGAP Batches stat
+            break;
+        case "cgap_cohorts":
+            revalidatePath("/cgap"); // an open cohort's number drives the batch number
+            break;
     }
 }
 

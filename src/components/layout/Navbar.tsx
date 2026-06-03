@@ -75,7 +75,7 @@ const LINKS: NavLink[] = [
             title: "CGAP",
             image: "/cgap logos/CGAP - Logo Light BG.svg",
             description:
-                "Convergent Graduate Academy Program — CBT's 9-month learning-and-grooming pathway that turns top graduates into industry-ready consultants.",
+                "Convergent Graduate Academy Program — CBT's 5-month learning-and-grooming pathway that turns top graduates into industry-ready consultants.",
             href: "/cgap",
         },
         children: [

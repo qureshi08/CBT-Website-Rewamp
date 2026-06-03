@@ -70,7 +70,7 @@ export default function Hero({
 // ─── Secondary Entries (demoted tri-block: CGAP, Products, Partners) ───
 export function SecondaryEntries() {
     const entries = [
-        { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "A career, not a job. Nine-month learning-and-grooming program for top graduates." },
+        { href: "/cgap", icon: "graduation" as const, title: "CGAP", sub: "A career, not a job. Five-month learning-and-grooming program for top graduates." },
         { href: "/products", icon: "layersData" as const, title: "Products", sub: "Productising our expertise. ECL Calculator and custom visuals on AppSource." },
         { href: "/partners", icon: "handshake" as const, title: "Partners", sub: "Global network of technology and delivery partners. Explore collaboration." },
     ];

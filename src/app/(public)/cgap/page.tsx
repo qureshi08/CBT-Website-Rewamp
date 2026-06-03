@@ -4,9 +4,12 @@ import {
     Quote,
     BookOpen,
     MessagesSquare,
-    Award,
+    Database,
     Users,
     GraduationCap,
+    Clock,
+    Brain,
+    Target,
 } from "lucide-react";
 import { IndustryLeadersStrip } from "@/components/home/ClientLogoStrip";
 import ClientReveal from "@/components/shared/ClientReveal";
@@ -17,29 +20,19 @@ import { createClient } from "@/lib/supabase/public";
 export const metadata: Metadata = {
     title: "CGAP — Convergent Graduate Academy Program | Learning, grooming, career.",
     description:
-        "The Convergent Graduate Academy Program (CGAP) is CBT's 9-month learning-and-grooming pathway that turns top graduates into industry-ready data & AI consultants. Real projects from month two. Permanent career on the other side.",
+        "The Convergent Graduate Academy Program (CGAP) is CBT's 5-month learning-and-grooming pathway that turns top graduates into industry-ready data & AI consultants. Real projects from month four. Permanent career on the other side.",
 };
 
 const JOURNEY = [
     {
-        months: "M1–M2",
-        title: "Fundamentals",
-        body: "CBT-designed bootcamp. SQL, data modelling, Power BI, Python, consulting basics — built and delivered by the same senior consultants who ship for our enterprise clients.",
+        months: "M1–M3",
+        title: "Foundations",
+        body: "CBT-designed bootcamp, then your specialise track. SQL, data modelling, Power BI, Python and consulting basics, then deepen the stack and ship practice projects — built and delivered by the same senior consultants who ship for our enterprise clients.",
     },
     {
-        months: "M3–M5",
-        title: "Specialise",
-        body: "Pick a track — data engineering, BI, analytics, or applied AI. Deepen the stack, ship practice projects, sit certifications (we pay).",
-    },
-    {
-        months: "M6–M7",
+        months: "M4–M5",
         title: "Live project",
-        body: "Embedded on a real CBT client engagement under a senior lead. Not a sandbox — production code, real data, real stakeholders.",
-    },
-    {
-        months: "M8–M9",
-        title: "Placement",
-        body: "Permanent placement on a CBT delivery team, or partner track with a sponsoring client. Either way, the program ends with a career, not a certificate.",
+        body: "Embedded on a real CBT client engagement under a senior lead — production code, real data, real stakeholders — ending in permanent placement on a CBT delivery team, or a partner track with a sponsoring client. A career, not a certificate.",
     },
 ];
 
@@ -55,9 +48,9 @@ const GROOMING = [
         body: "Stakeholder management, discovery, scoping, pushback. The soft skills that separate a junior analyst from a trusted consultant — taught as hard skills, practised in real rooms.",
     },
     {
-        icon: Award,
-        title: "Certification budget",
-        body: "We pay for Microsoft Fabric, Databricks, Snowflake, Azure, Power BI — whatever the track needs. Training is a line item, not a stretch goal.",
+        icon: Database,
+        title: "Enterprise tooling",
+        body: "Hands-on with the stack we actually ship on — Microsoft Fabric, Databricks, Snowflake, Azure, Power BI. You learn the modern data platform by building on it, not by watching slides.",
     },
     {
         icon: Users,
@@ -69,10 +62,26 @@ const GROOMING = [
 
 
 const ELIGIBILITY = [
-    "Bachelor's degree in CS, Stats, Math, Engineering, or Economics",
-    "Fresh graduates or up to 2 years of experience",
-    "Strong analytical thinking and problem-solving skills",
-    "Willing to commit to the full 9-month program",
+    {
+        icon: GraduationCap,
+        title: "The right foundation",
+        body: "A bachelor's degree in Computer Science, Statistics, Mathematics, Engineering, or Economics.",
+    },
+    {
+        icon: Clock,
+        title: "Early in your career",
+        body: "Fresh graduates, or professionals with up to two years of experience.",
+    },
+    {
+        icon: Brain,
+        title: "An analytical mind",
+        body: "Strong analytical thinking and genuine problem-solving instincts.",
+    },
+    {
+        icon: Target,
+        title: "Ready to commit",
+        body: "Willing to commit to the full five-month program, start to finish.",
+    },
 ];
 
 export default async function CGAPPage() {
@@ -199,7 +208,7 @@ export default async function CGAPPage() {
                             maxWidth: 720,
                         }}
                     >
-                        The <b>Convergent Graduate Academy Program (CGAP)</b> is CBT&rsquo;s 9-month learning-and-grooming pathway &mdash; turning top graduates into industry-ready data &amp; AI professionals, with real client projects from month two and a permanent career on the other side.
+                        The <b>Convergent Graduate Academy Program (CGAP)</b> is CBT&rsquo;s 5-month learning-and-grooming pathway &mdash; turning top graduates into industry-ready data &amp; AI professionals, with real client projects from month four and a permanent career on the other side.
                     </p>
 
                     <div
@@ -207,15 +216,15 @@ export default async function CGAPPage() {
                         style={{ display: "flex", gap: 16, marginTop: 28, flexWrap: "wrap", alignItems: "center" }}
                     >
                         <a href={applicationUrl} target="_blank" rel="noreferrer" className="hero-btn-primary">
-                            Apply to CGAP <span>↗</span>
+                            Apply for CGAP <span>↗</span>
                         </a>
                     </div>
 
                     <CgapHeroStats
                         stats={[
-                            { value: 9, label: "months" },
-                            { value: 4, label: "phases" },
-                            { prefix: "M", value: 2, label: "real projects" },
+                            { value: 5, label: "months" },
+                            { value: 2, label: "phases" },
+                            { prefix: "Phase ", value: 2, label: "real projects" },
                             { prefix: "B", value: nextBatchNumber, label: "next batch" },
                         ]}
                     />
@@ -226,7 +235,7 @@ export default async function CGAPPage() {
             <section id="journey" className="services-section services-section-alt">
                 <div className="v2-wrap">
                     <div className="services-section-head v2-reveal">
-                        <span className="services-section-tag">the 9-month journey</span>
+                        <span className="services-section-tag">the 5-month journey</span>
                         <h2 className="services-section-title">
                             Starts as a graduate. Ends as a{" "}
                             <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
@@ -234,16 +243,21 @@ export default async function CGAPPage() {
                             </em>
                         </h2>
                         <p className="services-section-sub">
-                            Month-by-month, with real stakes. No bootcamp graveyard; no disconnected theory. By month two you&rsquo;re on a real engagement under a senior lead.
+                            Phase by phase, with real stakes. No bootcamp graveyard; no disconnected theory. By month four you&rsquo;re on a real engagement under a senior lead.
                         </p>
                     </div>
 
                     <div className="cgap-journey-grid">
                         {JOURNEY.map((j, i) => (
                             <article key={j.title} className="cgap-journey-card">
-                                <span className="cgap-journey-months">{j.months}</span>
-                                <div className="cgap-journey-index">
-                                    Phase {String(i + 1).padStart(2, "0")}
+                                <span className="cgap-journey-num">
+                                    {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <div className="cgap-journey-head">
+                                    <span className="cgap-journey-index">
+                                        Phase {String(i + 1).padStart(2, "0")}
+                                    </span>
+                                    <span className="cgap-journey-months">{j.months}</span>
                                 </div>
                                 <h3 className="cgap-journey-title">{j.title}</h3>
                                 <p className="cgap-journey-body">{j.body}</p>
@@ -352,40 +366,47 @@ export default async function CGAPPage() {
             {/* ─── ELIGIBILITY + ALUMNI ─── */}
             <section className="services-section services-section-alt">
                 <div className="v2-wrap">
-                    <div className="cgap-two-col">
-                        <div>
-                            <span className="services-section-tag">the ideal candidate</span>
-                            <h2 className="services-section-title" style={{ fontSize: "2rem" }}>
-                                Who{" "}
-                                <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
-                                    CGAP is for.
-                                </em>
-                            </h2>
-                            <div className="cgap-eligibility">
-                                {ELIGIBILITY.map((item) => (
-                                    <div key={item} className="cgap-eligibility-row">
-                                        <div className="cgap-eligibility-check">
-                                            <CheckCircle2
-                                                size={14}
-                                                style={{ color: "var(--color-primary)" }}
-                                            />
-                                        </div>
-                                        <span>{item}</span>
+                    <div className="services-section-head v2-reveal">
+                        <span className="services-section-tag">the ideal candidate</span>
+                        <h2 className="services-section-title">
+                            Who{" "}
+                            <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
+                                CGAP is for.
+                            </em>
+                        </h2>
+                        <p className="services-section-sub">
+                            We hire for potential, not a flawless CV. If these four things sound like you, we want to hear from you.
+                        </p>
+                    </div>
+
+                    <div className="cgap-eligibility-grid">
+                        {ELIGIBILITY.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <article key={item.title} className="cgap-eligibility-card v2-reveal">
+                                    <div className="cgap-eligibility-icon">
+                                        <Icon size={22} strokeWidth={1.5} stroke="var(--color-primary)" />
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                        {displayAlumni.length > 0 && (
-                            <div>
+                                    <h3 className="cgap-eligibility-title">{item.title}</h3>
+                                    <p className="cgap-eligibility-text">{item.body}</p>
+                                </article>
+                            );
+                        })}
+                    </div>
+
+                    {displayAlumni.length > 0 && (
+                        <div className="cgap-alumni-block">
+                            <div className="services-section-head v2-reveal">
                                 <span className="services-section-tag">alumni outcomes</span>
-                                <h2 className="services-section-title" style={{ fontSize: "2rem" }}>
+                                <h2 className="services-section-title">
                                     Where they{" "}
                                     <em style={{ fontStyle: "italic", color: "var(--color-primary)" }}>
                                         ended up.
                                     </em>
                                 </h2>
-                                <div className="cgap-alumni-list">
-                                    {displayAlumni.slice(0, 3).map((alum: any) => (
+                            </div>
+                            <div className="cgap-alumni-list">
+                                {displayAlumni.slice(0, 3).map((alum: any) => (
                                         <div key={alum.name} className="cgap-alumni-card">
                                             <Quote
                                                 size={18}
@@ -416,7 +437,6 @@ export default async function CGAPPage() {
                                 </div>
                             </div>
                         )}
-                    </div>
                 </div>
             </section>
 
@@ -433,7 +453,7 @@ export default async function CGAPPage() {
                             </em>
                         </h2>
                         <p className="cta-sub" style={{ fontFamily: "var(--font-body)" }}>
-                            Applications for the next cohort are open. Nine months of structured learning, senior mentorship, and real stakes from month two.
+                            Applications for the next cohort are open. Five months of structured learning, senior mentorship, and real stakes from month four.
                         </p>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>

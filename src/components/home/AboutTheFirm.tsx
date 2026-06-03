@@ -10,17 +10,17 @@ const WHY_ITEMS: WhyItem[] = [
     },
     {
         head: "Our own people, trained in-house",
-        body: "Every consultant comes through CGAP — our nine-month paid training program. No contractors, no backfills, no agencies in the middle.",
+        body: "Every consultant comes through CGAP — our five-month paid training program. No contractors, no backfills, no agencies in the middle.",
     },
     {
         head: "Trained on real client work",
-        body: "From month two, CGAP cohorts work on live engagements under senior leads. You don't get juniors practising on your project — you get consultants who've already shipped.",
+        body: "From month four, CGAP cohorts work on live engagements under senior leads. You don't get juniors practising on your project — you get consultants who've already shipped.",
     },
 ];
 
 const METRICS: { name: string; val: string }[] = [
     { name: "Years delivering", val: "7+" },
-    { name: "Training program", val: "CGAP · 9 months" },
+    { name: "Training program", val: "CGAP · 5 months" },
     { name: "Cohorts delivered", val: "12+" },
     { name: "Contractors used", val: "0" },
 ];

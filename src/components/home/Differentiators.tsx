@@ -15,7 +15,7 @@ const items = [
     {
         num: "03",
         title: "Our own people, trained to our standard",
-        desc: "Every consultant joins through CGAP, our nine-month learning-and-grooming program. No contractors, no backfills, no agencies — the quality of the work is the quality of our people, and we control both.",
+        desc: "Every consultant joins through CGAP, our five-month learning-and-grooming program. No contractors, no backfills, no agencies — the quality of the work is the quality of our people, and we control both.",
     },
 ];
 

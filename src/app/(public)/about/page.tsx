@@ -26,7 +26,7 @@ const VALUES = [
         num: "03",
         icon: "graduation" as const,
         title: "Our own pipeline",
-        body: "We don't offshore. Our talent comes through CGAP — a 9-month learning-and-grooming program that trains graduates on real client work from month two. The result is a bench that already knows how we deliver.",
+        body: "We don't offshore. Our talent comes through CGAP — a 5-month learning-and-grooming program that trains graduates on real client work from month four. The result is a bench that already knows how we deliver.",
     },
     {
         num: "04",
@@ -71,7 +71,7 @@ const PARTNERS = [
 
 const STATS = [
     { number: "25+", label: "enterprise clients", note: "retail, banking, telecom, FMCG, public sector" },
-    { number: "12", label: "CGAP batches", note: "9-month learning-and-grooming program" },
+    { number: "12", label: "CGAP batches", note: "5-month learning-and-grooming program" },
     { number: "6", label: "partner alliances", note: "WeCrunch, NuSoft, KPMG, Tabadlab, Enable Success, Red Buffer" },
     { number: "35+", label: "consultants, all direct", note: "trained through CGAP, zero contractors" },
 ];
@@ -380,7 +380,7 @@ export default function AboutPage() {
                                     marginBottom: 16,
                                 }}
                             >
-                                Our bench is built deliberately &mdash; a direct continuation of the founders&rsquo; instinct to nurture future leaders rather than chase buzzwords. The Convergent Graduate Academy Program &mdash; nine months of structured learning, senior mentorship, and real client engagement &mdash; funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
+                                Our bench is built deliberately &mdash; a direct continuation of the founders&rsquo; instinct to nurture future leaders rather than chase buzzwords. The Convergent Graduate Academy Program &mdash; five months of structured learning, senior mentorship, and real client engagement &mdash; funnels the engineers and analysts who deliver for our clients. No offshoring, no contractor swaps, no surprise juniors.
                             </p>
                             <p
                                 style={{
@@ -401,7 +401,7 @@ export default function AboutPage() {
                         </div>
                         <div className="about-cgap-side">
                             <div className="about-cgap-fact">
-                                <span className="about-cgap-fact-num">9</span>
+                                <span className="about-cgap-fact-num">5</span>
                                 <span className="about-cgap-fact-label">months</span>
                                 <span className="about-cgap-fact-note">
                                     fundamentals → specialise → live project → placement
@@ -418,7 +418,7 @@ export default function AboutPage() {
                                 <span className="about-cgap-fact-num">100%</span>
                                 <span className="about-cgap-fact-label">client-facing</span>
                                 <span className="about-cgap-fact-note">
-                                    every graduate works on a real engagement by month two
+                                    every graduate works on a real engagement by month four
                                 </span>
                             </div>
                             <div className="about-cgap-fact">
