@@ -464,7 +464,7 @@ export default async function CGAPPage() {
                             className="btn-cta-white"
                             style={{ fontFamily: "var(--font-body)" }}
                         >
-                            Apply to CGAP ↗
+                            Apply for CGAP ↗
                         </a>
                     </div>
                 </div>
