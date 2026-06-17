@@ -377,16 +377,29 @@ export default async function CbtCustomVisualsPage() {
                                         paddingTop: 4,
                                     }}
                                 >
-                                    {/* TODO: AppSource URL — replace href="#" once available */}
-                                    <a
-                                        href={v.appSourceUrl}
-                                        className="hero-btn-primary"
-                                        target={v.appSourceUrl === "#" ? undefined : "_blank"}
-                                        rel={v.appSourceUrl === "#" ? undefined : "noopener noreferrer"}
-                                        aria-label={`Download ${v.name} from Microsoft AppSource`}
-                                    >
-                                        Download <span>→</span>
-                                    </a>
+                                    {v.appSourceUrl !== "#" ? (
+                                        <a
+                                            href={v.appSourceUrl}
+                                            className="hero-btn-primary"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Download ${v.name} from Microsoft AppSource`}
+                                        >
+                                            Download <span>→</span>
+                                        </a>
+                                    ) : (
+                                        <span
+                                            className="hero-btn-primary"
+                                            aria-disabled="true"
+                                            style={{
+                                                opacity: 0.55,
+                                                cursor: "not-allowed",
+                                                pointerEvents: "none",
+                                            }}
+                                        >
+                                            Coming soon
+                                        </span>
+                                    )}
                                     <Link
                                         href={`/cbt-custom-visuals/${v.slug}`}
                                         style={{
