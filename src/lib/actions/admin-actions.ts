@@ -37,6 +37,10 @@ function revalidatePublicPaths(table: string) {
         case "cgap_cohorts":
             revalidatePath("/cgap"); // an open cohort's number drives the batch number
             break;
+        case "custom_visuals":
+            revalidatePath("/cbt-custom-visuals");
+            revalidatePath("/cbt-custom-visuals/[slug]", "page");
+            break;
     }
 }
 

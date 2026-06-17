@@ -131,6 +131,60 @@ export interface Database {
                     }
                 ]
             }
+            custom_visuals: {
+                Row: {
+                    id: string
+                    created_at: string
+                    updated_at: string
+                    slug: string
+                    name: string
+                    pitch: string | null
+                    features_short: string[]
+                    description: string[]
+                    features_full: string[]
+                    upcoming: string[]
+                    app_source_url: string
+                    tutorial_url: string | null
+                    preview_src: string | null
+                    display_order: number
+                    published: boolean
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    updated_at?: string
+                    slug: string
+                    name: string
+                    pitch?: string | null
+                    features_short?: string[]
+                    description?: string[]
+                    features_full?: string[]
+                    upcoming?: string[]
+                    app_source_url?: string
+                    tutorial_url?: string | null
+                    preview_src?: string | null
+                    display_order?: number
+                    published?: boolean
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    updated_at?: string
+                    slug?: string
+                    name?: string
+                    pitch?: string | null
+                    features_short?: string[]
+                    description?: string[]
+                    features_full?: string[]
+                    upcoming?: string[]
+                    app_source_url?: string
+                    tutorial_url?: string | null
+                    preview_src?: string | null
+                    display_order?: number
+                    published?: boolean
+                }
+                Relationships: []
+            }
             clients: {
                 Row: {
                     created_at: string

@@ -3,17 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import ClientReveal from "@/components/shared/ClientReveal";
-import { VISUALS, getVisualBySlug } from "@/content/cbt-custom-visuals";
+import { getPublishedVisuals, getVisualBySlug } from "@/lib/custom-visuals/public";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-    return VISUALS.map((v) => ({ slug: v.slug }));
+export async function generateStaticParams() {
+    const visuals = await getPublishedVisuals();
+    return visuals.map((v) => ({ slug: v.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const visual = getVisualBySlug(slug);
+    const visual = await getVisualBySlug(slug);
     if (!visual) {
         return { title: "Custom Visual | Convergent Business Technologies" };
     }
@@ -25,12 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CustomVisualDetailPage({ params }: Props) {
     const { slug } = await params;
-    const visual = getVisualBySlug(slug);
+    const allVisuals = await getPublishedVisuals();
+    const visual = allVisuals.find((v) => v.slug === slug);
     if (!visual) notFound();
 
     const hasAppSourceUrl = visual.appSourceUrl !== "#";
     const hasTutorialUrl = visual.tutorialUrl !== null;
-    const siblings = VISUALS.filter((v) => v.slug !== visual.slug);
+    const siblings = allVisuals.filter((v) => v.slug !== visual.slug);
 
     return (
         <main className="cv-page">

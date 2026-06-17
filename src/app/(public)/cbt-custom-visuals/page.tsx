@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import ClientReveal from "@/components/shared/ClientReveal";
-import { VISUALS } from "@/content/cbt-custom-visuals";
+import { getPublishedVisuals } from "@/lib/custom-visuals/public";
 
 export const metadata: Metadata = {
     title: "Custom Visuals | CBT — Power BI Custom Visuals on Microsoft AppSource",
@@ -44,7 +44,9 @@ const TRUST_CHIPS = [
     "Actively maintained",
 ];
 
-export default function CbtCustomVisualsPage() {
+export default async function CbtCustomVisualsPage() {
+    const VISUALS = await getPublishedVisuals();
+
     return (
         <main className="cv-page">
             <ClientReveal />
@@ -252,7 +254,7 @@ export default function CbtCustomVisualsPage() {
 
                     <div className="services-grid services-grid-3">
                         {VISUALS.map((v) => (
-                            <article key={v.num} className="services-tile">
+                            <article key={v.slug} className="services-tile">
                                 {/* Preview slot — clickable, routes to detail page */}
                                 <Link
                                     href={`/cbt-custom-visuals/${v.slug}`}
