@@ -145,6 +145,7 @@ export interface Database {
                     upcoming: string[]
                     app_source_url: string
                     tutorial_url: string | null
+                    docs_url: string | null
                     preview_src: string | null
                     display_order: number
                     published: boolean
@@ -162,6 +163,7 @@ export interface Database {
                     upcoming?: string[]
                     app_source_url?: string
                     tutorial_url?: string | null
+                    docs_url?: string | null
                     preview_src?: string | null
                     display_order?: number
                     published?: boolean
@@ -179,6 +181,7 @@ export interface Database {
                     upcoming?: string[]
                     app_source_url?: string
                     tutorial_url?: string | null
+                    docs_url?: string | null
                     preview_src?: string | null
                     display_order?: number
                     published?: boolean

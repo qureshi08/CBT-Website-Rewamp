@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
 import Modal from "@/components/ui/Modal";
 import ImageUpload from "@/components/ui/ImageUpload";
+import FileUpload from "@/components/ui/FileUpload";
 import { adminCrud } from "@/lib/actions/admin-actions";
 
 // --- Helpers ------------------------------------------------------------
@@ -44,6 +45,7 @@ export default function AdminCustomVisuals() {
     const [featuresFull, setFeaturesFull] = useState<string[]>([]);
     const [upcoming, setUpcoming] = useState<string[]>([]);
     const [previewSrc, setPreviewSrc] = useState("");
+    const [docsUrl, setDocsUrl] = useState("");
 
     useEffect(() => {
         fetchData();
@@ -59,6 +61,7 @@ export default function AdminCustomVisuals() {
         setFeaturesFull(toStringArray(v?.features_full));
         setUpcoming(toStringArray(v?.upcoming));
         setPreviewSrc(v?.preview_src || "");
+        setDocsUrl(v?.docs_url || "");
     }, [editingVisual, isModalOpen]);
 
     async function fetchData() {
@@ -116,6 +119,7 @@ export default function AdminCustomVisuals() {
             // '#' is the placeholder sentinel — public page hides Download until set.
             app_source_url: appSourceUrl || "#",
             tutorial_url: tutorialUrl || null,
+            docs_url: docsUrl || null,
             preview_src: previewSrc || null,
             display_order: Number.isFinite(displayOrder) ? displayOrder : 0,
             published: formData.get("published") === "on",
@@ -424,6 +428,21 @@ export default function AdminCustomVisuals() {
                                 label="Preview"
                                 value={previewSrc}
                                 onChange={setPreviewSrc}
+                                bucket="custom-visuals"
+                            />
+                        </div>
+                    </FormSection>
+
+                    {/* ─── DOCUMENTATION ─── */}
+                    <FormSection
+                        title="Documentation (PDF)"
+                        subtitle="Optional. Upload a PDF to show a “View documentation” link on the detail page. Leave empty to hide it."
+                    >
+                        <div className="col-span-3">
+                            <FileUpload
+                                label="Documentation PDF"
+                                value={docsUrl}
+                                onChange={setDocsUrl}
                                 bucket="custom-visuals"
                             />
                         </div>

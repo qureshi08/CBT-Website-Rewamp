@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { FileText } from "lucide-react";
 import ClientReveal from "@/components/shared/ClientReveal";
 import { getPublishedVisuals, getVisualBySlug } from "@/lib/custom-visuals/public";
 
@@ -32,6 +33,7 @@ export default async function CustomVisualDetailPage({ params }: Props) {
 
     const hasAppSourceUrl = visual.appSourceUrl !== "#";
     const hasTutorialUrl = visual.tutorialUrl !== null;
+    const hasDocsUrl = visual.docsUrl !== null;
     const siblings = allVisuals.filter((v) => v.slug !== visual.slug);
 
     return (
@@ -187,6 +189,30 @@ export default async function CustomVisualDetailPage({ params }: Props) {
                                     </span>
                                 )}
                             </div>
+
+                            {hasDocsUrl && (
+                                <a
+                                    href={visual.docsUrl!}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="a-fadeUp-4"
+                                    aria-label={`View documentation for ${visual.name} (PDF)`}
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 8,
+                                        marginTop: 18,
+                                        fontFamily: "var(--font-body)",
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        color: "var(--color-primary)",
+                                        textDecoration: "none",
+                                    }}
+                                >
+                                    <FileText size={16} strokeWidth={1.5} aria-hidden="true" />
+                                    View documentation <span aria-hidden="true">→</span>
+                                </a>
+                            )}
                         </div>
 
                         {/* ─── RIGHT: framed preview of this visual ─── */}

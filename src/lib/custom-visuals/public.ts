@@ -15,6 +15,7 @@ export type Visual = {
     upcoming: string[];
     appSourceUrl: string;
     tutorialUrl: string | null;
+    docsUrl: string | null;
     previewSrc: string | null;
 };
 
@@ -30,6 +31,7 @@ function mapRow(row: any, index: number): Visual {
         upcoming: row.upcoming ?? [],
         appSourceUrl: row.app_source_url ?? "#",
         tutorialUrl: row.tutorial_url ?? null,
+        docsUrl: row.docs_url ?? null,
         previewSrc: row.preview_src ?? null,
     };
 }
