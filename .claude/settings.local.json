@@ -9,7 +9,19 @@
       "Bash(pandoc --track-changes=all \"C:/Users/User/Downloads/Website Brief.docx\" -o \"C:/Users/User/Downloads/website_brief.md\")",
       "Read(//c/Users/User/Downloads/**)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/products)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/admin/products)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/admin/products)",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/cbt-custom-visuals)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/cbt-custom-visuals/autoselect-slicer)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/cbt-custom-visuals/autoselect-slicer.png)",
+      "Bash(curl -s http://localhost:3000/cbt-custom-visuals/autoselect-slicer)",
+      "Bash(node -e \"try{require.resolve\\('esbuild'\\);console.log\\('esbuild: yes'\\)}catch{console.log\\('esbuild: no'\\)}\")",
+      "Bash(node -e \"try{require.resolve\\('typescript'\\);console.log\\('typescript: yes'\\)}catch{console.log\\('typescript: no'\\)}\")",
+      "Bash(cmd.exe /c 'for /f \"tokens=5\" %a in \\(' netstat -ano ^)",
+      "Bash(findstr :3000 ^)",
+      "Bash(findstr LISTENING '\\) do taskkill /PID %a /F')",
+      "Bash(curl -s http://localhost:3000/cbt-custom-visuals)",
+      "Bash(git add *)"
     ]
   }
 }
