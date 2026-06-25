@@ -4,6 +4,10 @@ import Image from "next/image";
 import ClientReveal from "@/components/shared/ClientReveal";
 import { getPublishedVisuals } from "@/lib/custom-visuals/public";
 
+// Admin-managed content: regenerate at most once a minute so portal edits
+// (new visuals, uploaded docs, etc.) appear without a redeploy.
+export const revalidate = 60;
+
 export const metadata: Metadata = {
     title: "Custom Visuals | CBT — Power BI Custom Visuals on Microsoft AppSource",
     description:

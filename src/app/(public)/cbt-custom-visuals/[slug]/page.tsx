@@ -8,6 +8,10 @@ import { getPublishedVisuals, getVisualBySlug } from "@/lib/custom-visuals/publi
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Admin-managed content: regenerate at most once a minute so portal edits
+// (uploaded docs, copy changes, etc.) appear without a redeploy.
+export const revalidate = 60;
+
 export async function generateStaticParams() {
     const visuals = await getPublishedVisuals();
     return visuals.map((v) => ({ slug: v.slug }));
