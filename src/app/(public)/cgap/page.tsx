@@ -117,9 +117,10 @@ export default async function CGAPPage() {
     const activeBatch = (openBatches as any[])?.[0];
     const applicationUrl =
         activeBatch?.application_url || "https://cbt-recruitment-portal.vercel.app/";
-    const nextBatchNumber = activeBatch?.cohort_number
-        ? activeBatch.cohort_number
-        : ((batchStat as any)?.value || 12) + 1;
+    // "CGAP Batches" stat = total batches conducted (managed in /admin/batches).
+    // The next/upcoming batch is always one ahead of the total.
+    const totalBatches = (batchStat as any)?.value ?? 31;
+    const nextBatchNumber = totalBatches + 1;
 
     return (
         <main>
