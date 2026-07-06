@@ -225,7 +225,7 @@ export default async function CGAPPage() {
                         stats={[
                             { value: 5, label: "months" },
                             { value: 2, label: "phases" },
-                            { prefix: "Phase ", value: 2, label: "real projects" },
+                            { prefix: "Phase ", value: 2, label: "simulated projects" },
                             { prefix: "B", value: nextBatchNumber, label: "next batch" },
                         ]}
                     />
