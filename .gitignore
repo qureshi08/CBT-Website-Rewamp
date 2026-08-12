@@ -37,6 +37,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# security docs — kept out of version control because this repo is public.
+# docs/SECURITY_PLAN.md lists open findings with file:line references; publishing
+# it would hand an attacker a map of what is not yet fixed. Share it privately.
+docs/SECURITY_PLAN.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

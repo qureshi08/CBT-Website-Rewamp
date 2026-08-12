@@ -1,7 +1,33 @@
 "use server";
 
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidatePath } from "next/cache";
+
+// adminCrud takes the table name as a caller-supplied string, so it is only ever
+// allowed to touch tables the admin portal actually manages. Derived from the real
+// call sites across src/app/admin/**.
+//
+// Deliberately absent:
+//   contact_submissions / partner_enquiries — lead PII. No admin page writes these;
+//     the dashboard reads them directly via supabaseAdmin in a Server Component,
+//     which src/proxy.ts already gates. Keeping them off a generic table-name
+//     endpoint means an auth regression here can never become a data dump.
+//   cgap_cohorts — currently written by nothing. /admin/batches only edits the
+//     `stats` row that drives the batch counter. Add it here if real cohort
+//     management ever lands.
+const ALLOWED_TABLES = new Set([
+    "clients",
+    "case_studies",
+    "industries",
+    "services",
+    "products",
+    "custom_visuals",
+    "testimonials",
+    "partners",
+    "stats",
+    "cgap_alumni",
+]);
 
 function slugify(input: string): string {
     return input
@@ -51,6 +77,8 @@ export async function ensureIndustry(
     rawLabel: string,
 ): Promise<{ success: true; slug: string } | { success: false; error: string }> {
     try {
+        await requireAdmin();
+
         const label = rawLabel.trim();
         if (!label) return { success: false, error: "Industry label is required" };
 
@@ -109,6 +137,12 @@ export async function adminCrud(
     }
 ) {
     try {
+        await requireAdmin();
+
+        if (!ALLOWED_TABLES.has(table)) {
+            throw new Error(`Table "${table}" is not managed by the admin portal`);
+        }
+
         let result;
         // @ts-expect-error Supabase expects string literal for Table type
         const dbTable = supabaseAdmin.from(table);

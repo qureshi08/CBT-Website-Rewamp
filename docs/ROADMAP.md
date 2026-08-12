@@ -72,7 +72,7 @@ Core structure, design system, and basic pages.
 - [ ] **Core Web Vitals audit** — Target LCP < 2.5s, CLS < 0.1, FID < 100ms
 - [ ] **Image optimisation** — All images through Next.js `<Image>` with proper sizes
 - [ ] **Font subsetting** — Reduce font payload
-- [ ] **Admin auth** — Supabase Auth gate on `/admin/**` routes
+- [x] **Admin auth** — Supabase Auth gate on `/admin/**` routes (`src/proxy.ts`, + `@convergentbt.com` domain restriction)
 - [ ] **Error boundary** — Graceful error states for failed Supabase fetches
 - [ ] **E2E tests** — Playwright smoke tests for key user journeys (contact form, nav)
 - [ ] **Accessibility audit** — Full WCAG AA pass

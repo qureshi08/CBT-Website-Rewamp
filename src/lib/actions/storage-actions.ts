@@ -1,15 +1,41 @@
 "use server";
 
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
+
+// The bucket name arrives from the caller, so it is constrained to the buckets the
+// admin portal actually uploads into (the `bucket=` props across src/app/admin/**).
+// This list matches the buckets that exist in Supabase — the components' "uploads"
+// default is intentionally NOT here, because no such bucket exists and every real
+// call site passes an explicit bucket. A missing prop should fail loudly.
+const ALLOWED_BUCKETS = new Set([
+    "clients",
+    "case-studies",
+    "products",
+    "partners",
+    "testimonials",
+    "alumni",
+    "custom-visuals",
+]);
 
 export async function uploadFile(formData: FormData) {
     try {
+        await requireAdmin();
+
         const file = formData.get("file") as File;
-        const bucket = formData.get("bucket") as string || "uploads";
+        const bucket = (formData.get("bucket") as string) || "uploads";
 
         if (!file) throw new Error("No file provided");
 
-        const fileExt = file.name.split(".").pop();
+        if (!ALLOWED_BUCKETS.has(bucket)) {
+            throw new Error(`Bucket "${bucket}" is not an upload target`);
+        }
+
+        // Derive the extension from the filename but never trust it verbatim — it ends
+        // up in a public URL. Anything unexpected falls back to "bin".
+        const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "";
+        const fileExt = /^[a-z0-9]{1,5}$/.test(rawExt) ? rawExt : "bin";
+
         const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
         const filePath = `${fileName}`;
 
@@ -20,21 +46,10 @@ export async function uploadFile(formData: FormData) {
                 upsert: false,
             });
 
-        if (error) {
-            // If bucket doesn't exist, try creating it
-            if (error.message.toLowerCase().includes("not found") || error.message.toLowerCase().includes("does not exist")) {
-                const { error: createError } = await supabaseAdmin.storage.createBucket(bucket, { public: true });
-                if (createError) throw createError;
-
-                // Retry upload
-                const { error: retryError } = await supabaseAdmin.storage.from(bucket).upload(filePath, file);
-                if (retryError) throw retryError;
-
-                const { data: { publicUrl } } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
-                return { success: true, url: publicUrl };
-            }
-            throw error;
-        }
+        // Previously a missing bucket was auto-created with { public: true } and the
+        // upload retried. That turned a typo into a world-readable bucket, so buckets
+        // are now provisioned deliberately in Supabase and a miss is a hard error.
+        if (error) throw error;
 
         const { data: { publicUrl } } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
         return { success: true, url: publicUrl };
