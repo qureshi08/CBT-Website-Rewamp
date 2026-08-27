@@ -14,14 +14,14 @@ five by leverage (impact ÷ effort); the rest are listed under
 | # | Title | Severity | Category | Files | Status |
 | --- | --- | --- | --- | --- | --- |
 | [001](001-remove-dead-illustration-keyframes.md) | Delete the dead illustration keyframe block | HIGH | Cohesion | 1 | **DONE** |
-| [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | TODO |
+| [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | **DONE** |
 | [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | TODO |
 | [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | TODO |
 | [005](005-fix-scroll-reveal-observer.md) | Fix the scroll-reveal observer lifecycle | MEDIUM | Performance | 1 | **DONE** |
 
 ## Recommended execution order
 
-**~~001~~ → ~~005~~ → 002 → 003 → 004**  —  next up: **002**
+**~~001~~ → ~~005~~ → ~~002~~ → 003 → 004**  —  next up: **003**
 
 Rationale:
 
@@ -37,8 +37,10 @@ Rationale:
   `.v2-reveal` element that renders after hydration (behind `Suspense`, a lazy
   import, or client state) will never reveal. Nothing in the app does that
   today — verified — but it is now a real constraint.
-- **002** is independent of all others and can move earlier if you want a
-  visible win sooner.
+- **002** ✅ Done. Independent of all others. Note: `.hero-btn-secondary` and
+  `.btn-cta-ghost` gained a `transform 0.15s` transition they previously
+  lacked — the `:active` rules and those transitions are a matched pair, so
+  removing either strands the other.
 - **003 before 004.** Plan 003 converts the hero orbit to CSS; plan 004's
   `animation: none` rules then cover it with no JavaScript. Running 004 first
   would mean either leaving the hero uncovered or writing a `useReducedMotion`

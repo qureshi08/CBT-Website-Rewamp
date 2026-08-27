@@ -935,7 +935,7 @@
   gap: 6px;
   padding: 13px 4px;
   border-bottom: 1px solid var(--color-border);
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s, border-color 0.2s, transform 0.15s;
   text-decoration: none;
 }
 
@@ -2730,7 +2730,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.15s;
   cursor: pointer;
   background: none;
   border: none;
@@ -6279,4 +6279,52 @@
   color: var(--color-text-body);
   max-width: 520px;
   margin: 0 0 10px;
+}
+/* ─── PRESS FEEDBACK ─── */
+/* The `transform 0.15s` already declared on these selectors exists for this
+   rule. Keep the two in sync — removing one strands the other. */
+
+/* Buttons that lift on hover: press cancels the lift and pushes in. */
+.btn-primary:active,
+.btn-primary-v2:active,
+.btn-secondary:active,
+.btn-outline:active,
+.btn-cta-white:active,
+.hero-btn-primary:active,
+.hero-btn-video:active,
+.v2-nav-cta:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Buttons with no hover lift: press scales only. */
+.btn-cta-ghost:active,
+.hero-btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* Cards travel further on hover (-4px), so their press keeps part of the lift
+   and scales less — a card is a larger surface and 0.97 reads as a lurch. */
+a:active .card,
+a:active .v2-pc,
+a:active .v2-prod-card {
+  transform: translateY(-2px) scale(0.99);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .btn-primary:active,
+  .btn-primary-v2:active,
+  .btn-secondary:active,
+  .btn-outline:active,
+  .btn-cta-white:active,
+  .btn-cta-ghost:active,
+  .hero-btn-primary:active,
+  .hero-btn-secondary:active,
+  .hero-btn-video:active,
+  .v2-nav-cta:active,
+  a:active .card,
+  a:active .v2-pc,
+  a:active .v2-prod-card {
+    transform: none;
+  }
 }

@@ -1,10 +1,45 @@
 # 002 — Deliver the press feedback the buttons already declare
 
-- **Status**: TODO
-- **Commit**: 317d1c1
+- **Status**: DONE — executed 2026-08-27, `src/app/globals.css` only
+  (51 insertions, 3 deletions)
+- **Commit**: 317d1c1 (planned against)
 - **Severity**: MEDIUM
 - **Category**: Physicality & origin
 - **Estimated scope**: 1 file, ~10 rules added
+
+## Outcome
+
+Both steps applied as specified. All ten button selectors now carry a `:active`
+rule *and* the `transform 0.15s` transition needed to animate it.
+
+| Check | Result |
+| --- | --- |
+| `:active` rules in source | 26 lines (was 0) |
+| All ten selectors | `:active` rule + `transform 0.15s` each |
+| CSS brace balance | 0, never negative |
+| Served stylesheet | all four rule groups delivered verbatim |
+| Feel check | Passed — buttons push down and in, cards keep part of their lift |
+
+Verified in the **served** CSS, not just the source:
+
+```css
+.btn-primary:active, … .v2-nav-cta:active          { transform: translateY(0)scale(.97) }
+.btn-cta-ghost:active, .hero-btn-secondary:active  { transform: scale(.97) }
+a:active .card, a:active .v2-pc, …                 { transform: translateY(-2px)scale(.99) }
+@media (prefers-reduced-motion: reduce) { … }      { transform: none }
+```
+
+**Gotcha worth remembering: Turbopack served a stale CSS chunk** for several
+minutes after the edit — same chunk hash, same byte count, zero `:active` rules,
+and `touch`ing the file did not invalidate it. This looked exactly like Tailwind
+stripping the rules. What settled it was appending a throwaway canary rule,
+which forced a rebuild and made everything appear at once. The canary was then
+removed and its absence confirmed in both source and served output.
+
+If a CSS change appears not to apply during dev, check the served chunk's byte
+count before concluding the CSS is wrong.
+
+Estimates below were written before execution and are left unedited.
 
 ## Problem
 
