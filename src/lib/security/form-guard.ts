@@ -14,14 +14,42 @@
  * a **fake success** so bots cannot tune against real error messages. The
  * fourth produces `flag`: the row is stored with `is_spam = true` for the audit
  * trail, but no notification email is sent.
+ *
+ * One exception to that split: the first few *over-limit* submissions from an
+ * IP are converted from `reject` to `flag` so they are stored, because the rate
+ * limit is the layer most likely to catch a real person. See
+ * RATE_LIMIT_STORE_BUDGET below.
+ *
+ * Every rejection is also recorded as metadata in `form_abuse_log` (see
+ * ./abuse-log), which is what makes "has this address been turned away before?"
+ * answerable. Flagged submissions are already fully stored, so they need no
+ * separate record.
  */
 
 import { checkOrigin, clientIp } from "./origin";
-import { checkRateLimit } from "./rate-limit";
+import { checkRateLimit, type RateLimitWindow } from "./rate-limit";
 import { verifyTurnstile } from "./turnstile";
 import { evaluateSubmission, SPAM_SCORE_THRESHOLD, type SpamCheckInput } from "./spam";
+import { logAbuse } from "./abuse-log";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
+
+/**
+ * How many *over-limit* submissions per IP are stored as flagged rows rather
+ * than discarded.
+ *
+ * The rate limit is the one layer that regularly catches humans: several
+ * colleagues behind a single office IP will trip 3/hour between them, and the
+ * fourth person gets a success screen while their enquiry evaporates. Storing
+ * the first few over-limit attempts makes that recoverable — the row is in the
+ * dashboard, flagged, with "rate limited" as its reason.
+ *
+ * Budgeted rather than unlimited because the same path is what a bot hits when
+ * it keeps hammering. Past this, rejection goes back to storing nothing.
+ */
+const RATE_LIMIT_STORE_BUDGET: RateLimitWindow[] = [
+    { label: "ratelimit-store-daily", limit: 5, windowSeconds: 60 * 60 * 24 },
+];
 
 export type GuardDecision =
     | { action: "reject"; reason: string }
@@ -44,20 +72,60 @@ export async function guardFormSubmission(
     const origin = checkOrigin(request);
     if (origin.status === "blocked") {
         console.warn(`[form-guard] ${input.scope}: rejected — ${origin.reason} (ip ${ip})`);
+        await logAbuse({
+            scope: input.scope,
+            decision: "reject",
+            reason: origin.reason,
+            email: input.email,
+            ip,
+        });
         return { action: "reject", reason: origin.reason };
     }
 
     // 2. Rate limit -----------------------------------------------------------
     const rate = await checkRateLimit(input.scope, ip);
     if (!rate.allowed) {
-        console.warn(`[form-guard] ${input.scope}: rejected — ${rate.reason} (ip ${ip})`);
-        return { action: "reject", reason: rate.reason ?? "rate limited" };
+        const reason = rate.reason ?? "rate limited";
+        // Store the first few over-limit attempts instead of discarding them,
+        // so a genuine enquiry from a busy office IP stays recoverable.
+        const storeBudget = await checkRateLimit(
+            `${input.scope}-store`,
+            ip,
+            RATE_LIMIT_STORE_BUDGET
+        );
+        if (storeBudget.allowed) {
+            console.warn(`[form-guard] ${input.scope}: over limit, storing — ${reason} (ip ${ip})`);
+            await logAbuse({
+                scope: input.scope,
+                decision: "flag",
+                reason,
+                email: input.email,
+                ip,
+            });
+            return { action: "flag", reason };
+        }
+        console.warn(`[form-guard] ${input.scope}: rejected — ${reason} (ip ${ip})`);
+        await logAbuse({
+            scope: input.scope,
+            decision: "reject",
+            reason,
+            email: input.email,
+            ip,
+        });
+        return { action: "reject", reason };
     }
 
     // 3. Turnstile ------------------------------------------------------------
     const turnstile = await verifyTurnstile(input.turnstileToken, ip);
     if (!turnstile.ok) {
         console.warn(`[form-guard] ${input.scope}: rejected — ${turnstile.reason} (ip ${ip})`);
+        await logAbuse({
+            scope: input.scope,
+            decision: "reject",
+            reason: turnstile.reason,
+            email: input.email,
+            ip,
+        });
         return { action: "reject", reason: turnstile.reason ?? "turnstile failed" };
     }
 

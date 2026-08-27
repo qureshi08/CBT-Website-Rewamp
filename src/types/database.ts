@@ -224,6 +224,40 @@ export interface Database {
                 }
                 Relationships: []
             }
+            // Added by supabase/migrations/0004_form_abuse_log.sql
+            form_abuse_log: {
+                Row: {
+                    id: string
+                    created_at: string
+                    scope: string
+                    decision: string
+                    reason: string | null
+                    score: number | null
+                    email: string | null
+                    ip_hash: string | null
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    scope: string
+                    decision: string
+                    reason?: string | null
+                    score?: number | null
+                    email?: string | null
+                    ip_hash?: string | null
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    scope?: string
+                    decision?: string
+                    reason?: string | null
+                    score?: number | null
+                    email?: string | null
+                    ip_hash?: string | null
+                }
+                Relationships: []
+            }
             contact_submissions: {
                 Row: {
                     company: string | null
