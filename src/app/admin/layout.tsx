@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard,
+    Inbox,
     Users,
     FileText,
     Handshake,
@@ -52,6 +53,7 @@ export default function AdminLayout({
 
                 <nav className="flex-grow p-6 space-y-2">
                     <AdminNavLink href="/admin" icon={<LayoutDashboard size={18} />} label="Dashboard" active={pathname === "/admin"} />
+                    <AdminNavLink href="/admin/submissions" icon={<Inbox size={18} />} label="Submissions" active={pathname === "/admin/submissions"} />
                     <AdminNavLink href="/admin/clients" icon={<Users size={18} />} label="Clients" active={pathname === "/admin/clients"} />
                     <AdminNavLink href="/admin/case-studies" icon={<FileText size={18} />} label="Case Studies" active={pathname === "/admin/case-studies"} />
                     <AdminNavLink href="/admin/services" icon={<Layers size={18} />} label="Services" active={pathname === "/admin/services"} />

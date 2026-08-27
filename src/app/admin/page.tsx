@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowUpRight, Users, FileText, Package, GraduationCap } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
@@ -61,7 +62,15 @@ export default async function AdminDashboard() {
 
             <div className="grid lg:grid-cols-2 gap-10 mt-12">
                 <div className="bg-white rounded-[40px] p-10 border border-border/40 shadow-sm">
-                    <h2 className="text-2xl font-bold text-text-heading font-heading mb-6">Recent Enquiries</h2>
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-text-heading font-heading">Recent Enquiries</h2>
+                        <Link
+                            href="/admin/submissions"
+                            className="text-sm font-medium text-primary hover:underline"
+                        >
+                            View all
+                        </Link>
+                    </div>
                     <div className="space-y-6">
                         {recentEnquiries && recentEnquiries.length > 0 ? recentEnquiries.map((enquiry) => (
                             <div key={enquiry.id} className="flex items-center gap-4 pb-6 border-b border-border/20 last:border-0 last:pb-0">
