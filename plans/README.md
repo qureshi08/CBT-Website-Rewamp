@@ -13,7 +13,7 @@ five by leverage (impact ÷ effort); the rest are listed under
 
 | # | Title | Severity | Category | Files | Status |
 | --- | --- | --- | --- | --- | --- |
-| [001](001-remove-dead-illustration-keyframes.md) | Delete the dead illustration keyframe block | HIGH | Cohesion | 1 | TODO |
+| [001](001-remove-dead-illustration-keyframes.md) | Delete the dead illustration keyframe block | HIGH | Cohesion | 1 | **DONE** |
 | [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | TODO |
 | [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | TODO |
 | [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | TODO |
@@ -21,14 +21,17 @@ five by leverage (impact ÷ effort); the rest are listed under
 
 ## Recommended execution order
 
-**001 → 005 → 002 → 003 → 004**
+**~~001~~ → 005 → 002 → 003 → 004**  —  next up: **005**
 
 Rationale:
 
-- **001 first, alone.** It changes what nine keyframes actually do, site-wide.
-  Landing it before anything else means every later plan is verified against the
-  real values rather than the overridden ones. It is also the only plan whose
-  effect could be mistaken for a regression introduced by a later plan.
+- **001 first, alone.** ✅ Done. It changed what nine keyframes actually do,
+  site-wide. Landing it before anything else means every later plan is verified
+  against the real values rather than the overridden ones. It was also the only
+  plan whose effect could be mistaken for a regression introduced by a later
+  plan. Note for the remaining plans: `fadeUp` now travels **28px** (not 15px)
+  and `scaleIn` starts at **0.93** (not 0.9) — use these when reasoning about
+  entrance timing.
 - **005 next.** One file, no interaction with anything else, immediate.
 - **002** is independent of all others and can move earlier if you want a
   visible win sooner.

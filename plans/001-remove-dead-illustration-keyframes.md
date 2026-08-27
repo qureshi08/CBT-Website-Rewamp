@@ -1,10 +1,30 @@
 # 001 — Delete the dead illustration keyframe block
 
-- **Status**: TODO
-- **Commit**: 317d1c1
+- **Status**: DONE — executed 2026-08-27, 95 deletions / 0 insertions in
+  `src/app/globals.css`
+- **Commit**: 317d1c1 (planned against)
 - **Severity**: HIGH
 - **Category**: Cohesion & tokens
 - **Estimated scope**: 1 file, ~95 lines deleted
+
+## Outcome
+
+Lines 5217–5311 deleted; the file went 6,376 → 6,281 lines. Verified:
+
+| Check | Result |
+| --- | --- |
+| `grep -oE "@keyframes [A-Za-z0-9_-]+" … \| sort \| uniq -d` | empty (was nine names) |
+| Each of the nine names | defined exactly once |
+| CSS brace balance | 0, never negative |
+| `npm run build` | compiles clean |
+| `npm run test:spam` (canary) | 31/31 |
+| Diff | 95 deletions, **zero insertions** |
+
+The authored definitions are now live: `fadeUp` travels 28px, `scaleIn` starts
+at `scale(.93)`, `pulse` is opacity-only. Feel check passed — the status dots no
+longer scale, and the longer hero entrance travel was accepted as-is.
+
+Estimates below were written before execution and are left unedited.
 
 ## Problem
 
