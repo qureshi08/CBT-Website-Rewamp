@@ -1,6 +1,17 @@
 # Convergent Business Technologies — Design Guidelines
 
-> This document is the single source of truth for all visual and UX decisions when building the CBT website. Reference it in every Claude Code session.
+> This document is the single source of truth for all visual and UX decisions
+> across **every CBT product**, not just the marketing website. Reference it in
+> every Claude Code session.
+>
+> Sections 1–5 and 7–9 (brand, colour, type, spacing, components, imagery,
+> motion, accessibility) are product-agnostic — apply them as written to any new
+> CBT web product. Section 6 is website-specific page notes; section 10 describes
+> this repository's layout. Both are illustrative rather than binding elsewhere.
+>
+> Where a rule here carries a reason, the reason travels with it. Keep them
+> together when copying into a new project — a rule without its rationale gets
+> overridden by the first person who disagrees with it.
 
 ---
 
@@ -293,21 +304,127 @@ All colors defined as CSS custom properties. Use these tokens exclusively — ne
 
 ## 8. Motion & Interaction
 
+> The register is **professional and restrained**. Motion here exists to explain
+> a change, confirm an action, or prevent something jarring — never to decorate.
+> If a visitor notices the animation rather than the result, it is too much.
+
+### Motion tokens
+
 ```css
 :root {
-  --transition-fast:   0.15s ease;
-  --transition-base:   0.2s ease;
-  --transition-slow:   0.35s ease;
-  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Easing */
+  --ease:              cubic-bezier(0.22, 1, 0.36, 1);   /* the default — a strong ease-out */
+  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* overshoots; use sparingly */
+
+  /* Durations */
+  --transition-fast:   0.15s ease;   /* press feedback */
+  --transition-base:   0.2s ease;    /* hover, colour */
+  --transition-slow:   0.35s ease;   /* larger surfaces */
 }
 ```
 
-- **Page load**: Staggered fade-up on hero elements (`opacity 0 → 1`, `translateY 20px → 0`)
-- **Scroll reveals**: Subtle fade-in on section entry (use `IntersectionObserver`)
-- **Hover states**: All interactive elements must have visible hover transitions
-- **No autoplay video or aggressive animations** — respect `prefers-reduced-motion`
+Use `var(--ease)` for anything entering, exiting, or moving. The built-in CSS
+easings (`ease`, `ease-out`) are too weak to read as deliberate — reserve bare
+`ease` for colour and hover, where there is no movement to shape.
+
+### Choosing an easing
+
+| Situation | Easing |
+| --- | --- |
+| Entering or exiting | `var(--ease)` — starts fast, feels responsive |
+| Moving or morphing on screen | a strong ease-in-out |
+| Hover, colour change | `ease` |
+| Constant motion (marquee, progress) | `linear` |
+| Gesture-driven, interruptible | a spring, not a duration |
+
+**`ease-in` on UI is always wrong.** It starts slow, delaying the exact moment
+the user is watching. There is no `ease-in` anywhere in this codebase; keep it
+that way.
+
+### Duration budget
+
+**UI animations stay under 300ms.** Anything longer reads as lag, not polish.
+
+| Element | Duration |
+| --- | --- |
+| Press feedback | 100–160ms |
+| Tooltips, small popovers | 125–200ms |
+| Dropdowns, selects | 150–250ms |
+| Modals, drawers | 200–500ms |
+| Marketing / explanatory | Can be longer |
+
+### Should it animate at all?
+
+Frequency decides. This is the first question, before easing or duration:
+
+| How often the user sees it | Decision |
+| --- | --- |
+| 100+ times/day (keyboard shortcuts, command palettes) | **No animation. Ever.** |
+| Tens of times/day (hover, list navigation) | Remove or drastically reduce |
+| Occasional (modals, drawers, toasts) | Standard animation |
+| Rare / first-time (onboarding, success, celebration) | Delight is allowed |
+
+The strongest fix for a motion problem is very often to **delete the animation**.
+
+### Physicality
+
+- **Never `scale(0)`.** Nothing in the real world appears from nothing. Enter
+  from `scale(0.9–0.97)` with `opacity: 0`.
+- **Popovers, dropdowns and tooltips scale from their trigger**, not from centre
+  — set `transform-origin` to the trigger. Modals are the exception: they are
+  centred by nature, so `transform-origin: center` is correct there.
+- **Press feedback is required on every button.** `transform: scale(0.97)` on
+  `:active` with `transition: transform 0.15s`. Keep it in the 0.95–0.98 band —
+  felt more than seen.
+- **Compose press with hover.** If an element lifts on hover
+  (`translateY(-1px)`), its press state must be `translateY(0) scale(0.97)`, not
+  a bare `scale()` — otherwise it drops to baseline *and* scales, which reads as
+  two competing movements. Larger surfaces like cards take a gentler
+  `translateY(-2px) scale(0.99)`; 0.97 on a card lurches.
+
+### Interruptibility
+
+CSS **transitions** retarget from wherever they are; **keyframes** restart from
+zero. Anything triggered rapidly or reversible mid-motion — toggles, drags,
+expand/collapse, stacking toasts — must use transitions or springs, never
+keyframes.
+
+### Performance
+
+- **Animate `transform` and `opacity` only.** `width`, `height`, `margin`,
+  `padding`, `top` and `left` trigger layout and paint on every frame.
+- **`transition: all` is always a defect** — it animates properties you did not
+  intend, off the GPU.
+- **Prefer CSS over JS for predetermined motion.** A linear, infinite,
+  non-interactive rotation belongs in `@keyframes`, where the compositor owns it
+  and the tab can idle. Reach for a JS animation library only for gesture-driven
+  or state-dependent motion.
+- Keep transition-time `filter: blur()` under 20px — expensive, especially in
+  Safari.
+
+### Scroll reveals
+
+Sections fade up on entry via `IntersectionObserver`, using a class toggle
+(`.v2-reveal` → `.v2-in`) rather than a JS-driven animation. Two rules:
+
+1. **Unobserve once revealed.** A one-shot animation should not keep firing its
+   callback on every scroll past.
+2. **Give the effect a dependency array.** Without one it rebuilds the observer
+   on every render. But note the trade-off: pinning it to a single scan means
+   any element that renders *after* hydration — behind `Suspense`, a lazy
+   import, or client state — will never reveal. If reveals ever need to cover
+   late-rendering content, that scan has to be re-run deliberately.
+
+### Reduced motion
+
+**Reduced motion means less movement, not no feedback.** Drop position changes
+and decorative loops; keep opacity, colour and border transitions so the
+interface still confirms what the user did.
+
+Do **not** use the blanket reset that circulates widely:
 
 ```css
+/* ANTI-PATTERN — do not use */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -315,6 +432,50 @@ All colors defined as CSS custom properties. Use these tokens exclusively — ne
   }
 }
 ```
+
+It fails three ways: it strips comprehension-aiding feedback along with the
+movement; `0.01ms` on an *infinite* animation does not stop it but runs it as
+fast as the browser allows; and it cannot touch JavaScript-driven motion at all,
+so any library animation ignores the preference entirely.
+
+Instead, target deliberately:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  /* Decorative loops stop outright. */
+  .marquee { animation: none; }
+
+  /* Reveals keep the fade, drop the travel. */
+  .reveal { transform: none; transition: opacity 0.2s ease; }
+
+  /* Hover and press lifts flatten; colour feedback survives. */
+  .card:hover, .btn-primary:active { transform: none; }
+}
+```
+
+And gate JS motion in the component itself — with `useReducedMotion()` if the
+animation library provides it, or `matchMedia("(prefers-reduced-motion: reduce)")`
+otherwise. **A CSS media query cannot stop a JS tween.**
+
+Also gate hover motion for touch, which fires false hovers on tap:
+
+```css
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { transform: translateY(-4px); }
+}
+```
+
+### Cohesion
+
+- Curves and durations live as **shared tokens**. Several hand-typed
+  `cubic-bezier()` values that almost match is a defect, not a style.
+- **Never define the same `@keyframes` name twice.** CSS has no keyframe
+  scoping — the last definition in the stylesheet silently wins for the whole
+  document, and the earlier one becomes dead code that looks live.
+- Group entrances use a **30–80ms stagger**. Stagger is decorative and must
+  never delay interaction.
+- Only interactive elements get hover states. A card that is not clickable must
+  not hover — it misleads. Either wrap it in a link or strip the effect.
 
 ---
 
@@ -352,4 +513,9 @@ All colors defined as CSS custom properties. Use these tokens exclusively — ne
 
 ---
 
-*Last updated: 2026 — Convergent Business Technologies*
+*Last updated: 2026-08-27 — Convergent Business Technologies*
+
+*Section 8 (Motion & Interaction) was rewritten on 2026-08-27 following a full
+motion audit of the website. The rules there are drawn from what that audit
+found in production code, not from theory — including the reduced-motion
+anti-pattern, which this document previously recommended.*

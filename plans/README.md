@@ -1,5 +1,21 @@
 # Animation improvement plans
 
+> **PARKED 2026-08-27 after plan 002.** Three of five executed and pushed
+> (`0dd0730`, `e9f8cb5`, `54bb4dd`). Resume at **003**, then **004** — in that
+> order, see [Dependencies](#dependencies).
+>
+> Before resuming: plans are stamped against `317d1c1` and three commits have
+> landed since. Line references in 003 and 004 point at `globals.css` **above**
+> line 5217 and at `.tsx` files untouched by 001/002/005, so they should still
+> hold — but each plan tells its executor to stop and report on drift rather
+> than improvise. Let it.
+>
+> **Plan 003 needs `npm run build` to verify.** Stop any running dev server
+> first — `next build` and `next dev` share `.next`, and building underneath a
+> live dev server corrupts it (this cost real time on 2026-08-27; symptom is
+> "Jest worker encountered N child process exceptions", then 500s on every
+> route).
+
 Produced by the `improve-animations` skill against commit `317d1c1`.
 Each plan is self-contained: exact file paths, current-code excerpts, exact
 target values, and a feel check. They can be executed by any agent, in the order

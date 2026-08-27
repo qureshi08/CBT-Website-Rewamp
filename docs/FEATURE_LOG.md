@@ -4,6 +4,67 @@
 
 ---
 
+## 2026-08-27 — Session: Motion audit, and three of five fixes shipped
+
+Installed Emil Kowalski's `animate`, `apple-design`, `review-animations` and
+`improve-animations` skills (from `emilkowalski/skills`, user-level so they stay
+out of this public repo), then ran a full motion audit of the site.
+
+**Audit result**: 11 findings + 3 missed opportunities. Notably clean on the
+basics — no `ease-in` anywhere, no `scale(0)` in CSS, no animated layout
+properties on hover, stagger classes already present. The problems were
+consolidation and accessibility, not taste.
+
+The top five by leverage were written up as self-contained plans in `plans/`
+(exact line references, verbatim current code, exact target values, and a feel
+check each), so any agent can execute them. Three landed:
+
+**`0dd0730` — nine `@keyframes` were defined twice.** CSS has no keyframe
+scoping, so the second block won site-wide and the authored definitions were
+dead. The overriding block had no consumers of its own — it was written for an
+illustration component since rewritten in Framer Motion. Deleting it restored
+the intended values: `fadeUp` travels 28px not 15px, `scaleIn` starts at 0.93
+not 0.9, and the 13 status dots stopped scaling. 95 deletions, zero insertions.
+
+**`e9f8cb5` — `useScrollReveal` had no dependency array and never unobserved.**
+It rebuilt a page-wide `IntersectionObserver` on every render and kept firing
+callbacks on already-revealed elements. Fixed with `[]`, `unobserve()`, and a
+`:not(.v2-in)` guard. The trade-off is now documented: the hook scans once per
+mount, so a `.v2-reveal` element rendered after hydration would never appear.
+Verified nothing does that today — no `Suspense`, `next/dynamic`, `React.lazy`
+or `loading.tsx` anywhere, and no reveal element sits behind a conditional.
+
+**`54bb4dd` — press feedback.** There were zero `:active` rules in 6,300 lines,
+yet eight button selectors already declared `transform 0.15s` for feedback
+nobody had written. Ten selectors now depress on press, composed with the hover
+lift as `translateY(0) scale(0.97)` so they push down and in rather than
+dropping to baseline first.
+
+**Parked at plan 002.** Remaining: **003** (move the hero orbit from up to 27
+concurrent main-thread Framer Motion tweens to CSS) and **004** (replace the
+blanket `prefers-reduced-motion` reset, which only reaches CSS — four mounted JS
+components, including the rotating hero headline, currently ignore the
+preference entirely). 003 must run before 004.
+
+**`design-guidelines.md` section 8 rewritten** from what the audit actually
+found, and the document rescoped as the standard for all CBT products rather
+than this website alone. It had been recommending the blanket reduced-motion
+reset that plan 004 exists to remove.
+
+**Decisions:**
+- **Plans over direct fixes.** Writing the audit down as executable plans means
+  the reasoning survives the session and the remaining two can be picked up cold.
+- **Skills installed user-level, not project-level.** They work across every
+  project and stay out of this public repo.
+- **`pulse` restored to opacity-only** rather than keeping the accidental
+  scale — the scale was an artefact of the override, and opacity-only is both
+  what the author wrote and the more restrained reading.
+
+**Known gaps:** plans 003 and 004 unexecuted. `next.config.ts` has an `eslint`
+key that Next 16 no longer recognises and silently ignores.
+
+---
+
 ## 2026-08-27 — Session: Anti-spam shipped, tuned, and given an inbox
 
 The 2026-08-21 work was complete but had never been committed. Shipped it, then

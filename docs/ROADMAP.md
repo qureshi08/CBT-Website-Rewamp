@@ -77,6 +77,17 @@ Core structure, design system, and basic pages.
 - [x] **Submissions inbox** — `/admin/submissions`: contact and partner enquiries, clean/flagged tabs, search, pagination, manual spam override. No delete path for lead data.
 - [ ] **Admin password reset** — no forgot-password flow exists; the login page only signs in. Needs `resetPasswordForEmail()` plus an `/admin/reset-password` page, otherwise Supabase's recovery email has nowhere to land.
 - [ ] **Admin MFA** — no admin account has a second factor.
+- [~] **Motion pass** — full audit done (11 findings + 3 opportunities); plans in
+  `plans/`. Done: duplicate-keyframe override removed, scroll-reveal observer
+  lifecycle fixed, press feedback added. Remaining: `003` hero orbit → CSS
+  (up to 27 main-thread tweens today), `004` real `prefers-reduced-motion`
+  coverage (JS motion currently ignores it). 003 before 004.
+- [ ] **Hover gating for touch** — 66 `:hover` rules, none behind
+  `@media (hover: hover)`; taps leave hover states stuck on mobile
+- [ ] **Motion token consolidation** — `--ease` and `--ease-v2` are identical,
+  plus 7 hand-typed copies of the same curve; two parallel scroll-reveal systems
+- [ ] **`next.config.ts` cleanup** — `eslint` key is unrecognised in Next 16 and
+  silently ignored
 - [ ] **Error boundary** — Graceful error states for failed Supabase fetches
 - [ ] **E2E tests** — Playwright smoke tests for key user journeys (contact form, nav)
 - [ ] **Accessibility audit** — Full WCAG AA pass
@@ -96,4 +107,4 @@ Core structure, design system, and basic pages.
 > version control, since this repo is public). Check it before starting work — its
 > open items take priority over this roadmap.
 
-*Last updated: 2026-08-21*
+*Last updated: 2026-08-27*
