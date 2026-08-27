@@ -73,6 +73,7 @@ Core structure, design system, and basic pages.
 - [ ] **Image optimisation** — All images through Next.js `<Image>` with proper sizes
 - [ ] **Font subsetting** — Reduce font payload
 - [x] **Admin auth** — Supabase Auth gate on `/admin/**` routes (`src/proxy.ts`, + `@convergentbt.com` domain restriction)
+- [~] **Form anti-abuse** — honeypot, time-trap, content heuristics, origin check and per-IP rate limiting on `/api/contact` and `/api/partner` (`src/lib/security/`). Turnstile and Upstash wired but awaiting accounts.
 - [ ] **Error boundary** — Graceful error states for failed Supabase fetches
 - [ ] **E2E tests** — Playwright smoke tests for key user journeys (contact form, nav)
 - [ ] **Accessibility audit** — Full WCAG AA pass
@@ -88,4 +89,8 @@ Core structure, design system, and basic pages.
 
 ---
 
-*Last updated: 2026-04-01*
+> Security remediation is tracked separately in `docs/SECURITY_PLAN.md` (kept out of
+> version control, since this repo is public). Check it before starting work — its
+> open items take priority over this roadmap.
+
+*Last updated: 2026-08-21*

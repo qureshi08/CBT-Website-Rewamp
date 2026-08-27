@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:spam": "tsc src/lib/security/spam.ts --outDir .tmp/spam-test --module commonjs --target es2020 --skipLibCheck && node scripts/spam-heuristics.test.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

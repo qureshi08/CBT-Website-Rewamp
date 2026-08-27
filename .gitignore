@@ -45,3 +45,6 @@ docs/SECURITY_PLAN.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Transpiled output for npm run test:spam
+.tmp/

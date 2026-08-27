@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Send, CheckCircle2 } from "lucide-react";
+import TurnstileWidget, { turnstileEnabled } from "@/components/shared/TurnstileWidget";
 
 interface ContactFormData {
     name: string;
@@ -12,7 +13,19 @@ interface ContactFormData {
     industry: string;
     subject: string;
     message: string;
+    /** Honeypot — hidden from humans, filled by bots. See SECURITY_PLAN finding 3. */
+    website?: string;
 }
+
+/** Off-screen rather than `display: none`, which some bots skip. */
+const honeypotStyle: React.CSSProperties = {
+    position: "absolute",
+    left: "-9999px",
+    width: "1px",
+    height: "1px",
+    opacity: 0,
+    pointerEvents: "none",
+};
 
 type ContactFormProps = {
     intent?: string;
@@ -53,6 +66,15 @@ const industries = [
 export default function ContactForm({ intent, defaultSubject }: ContactFormProps) {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
+    // Time-trap: stamped on mount rather than at render, so a statically cached
+    // page can't hand the server a timestamp that's hours stale.
+    const renderedAtRef = useRef(0);
+    useEffect(() => {
+        renderedAtRef.current = Date.now();
+    }, []);
 
     const {
         register,
@@ -64,20 +86,33 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
     });
 
     const onSubmit = async (data: ContactFormData) => {
+        if (turnstileEnabled && !turnstileToken) {
+            setSubmitError("Please complete the verification check and try again.");
+            return;
+        }
+
         setIsSubmitting(true);
+        setSubmitError(null);
         try {
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...data, intent }),
+                body: JSON.stringify({
+                    ...data,
+                    intent,
+                    renderedAt: renderedAtRef.current,
+                    turnstileToken,
+                }),
             });
 
             if (res.ok) {
                 setIsSubmitted(true);
                 reset();
+            } else {
+                setSubmitError("Something went wrong. Please try again.");
             }
         } catch {
-            // handle error silently
+            setSubmitError("Network error. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -92,7 +127,12 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
                     We&apos;ve received your message. Our consultants typically respond within 1 business day.
                 </p>
                 <button
-                    onClick={() => setIsSubmitted(false)}
+                    onClick={() => {
+                        // Restart the time-trap and drop the single-use token.
+                        renderedAtRef.current = Date.now();
+                        setTurnstileToken(null);
+                        setIsSubmitted(false);
+                    }}
                     className="btn-secondary mt-8"
                 >
                     Send Another Message
@@ -226,6 +266,24 @@ export default function ContactForm({ intent, defaultSubject }: ContactFormProps
                         )}
                     </div>
                 </div>
+
+                {/* Honeypot — hidden from humans and screen readers alike. */}
+                <div style={honeypotStyle} aria-hidden="true">
+                    <label htmlFor="contact-website">Leave this field empty</label>
+                    <input
+                        id="contact-website"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        {...register("website")}
+                    />
+                </div>
+
+                <TurnstileWidget onToken={setTurnstileToken} />
+
+                {submitError && (
+                    <div className="text-sm text-error" role="alert">{submitError}</div>
+                )}
 
                 <div className="pt-6">
                     <button

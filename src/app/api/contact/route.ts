@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import nodemailer from "nodemailer";
+import { guardFormSubmission, insertWithSpamFlags } from "@/lib/security/form-guard";
+
+/**
+ * The response bots see when they trip the origin, rate-limit or Turnstile
+ * layers. Identical to a real success so there is nothing to tune against.
+ * See docs/SECURITY_PLAN.md finding 3.
+ */
+function fakeSuccess() {
+    return NextResponse.json(
+        { success: true, message: "Contact form submitted successfully." },
+        { status: 200 }
+    );
+}
 
 // Create reusable transporter using Gmail SMTP
 function createTransporter() {
@@ -18,7 +30,27 @@ function createTransporter() {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { name, email, company, region, industry, subject, message, intent } = body;
+        const {
+            name, email, company, region, industry, subject, message, intent,
+            // Anti-abuse fields added by ContactForm — never rendered to a human.
+            website: honeypot, renderedAt, turnstileToken,
+        } = body;
+
+        // Anti-abuse gate runs before validation so that malformed payloads
+        // still consume the attacker's rate-limit budget.
+        const decision = await guardFormSubmission(request, {
+            scope: "contact",
+            honeypot,
+            renderedAt,
+            turnstileToken,
+            identityFields: { name, company },
+            message,
+        });
+
+        if (decision.action === "reject") {
+            return fakeSuccess();
+        }
+        const isSpam = decision.action === "flag";
 
         // Validate required fields
         if (!name || !email || !subject || !message) {
@@ -37,10 +69,11 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Save to Supabase
-        const { error: dbError } = await supabaseAdmin
-            .from("contact_submissions")
-            .insert([{
+        // Save to Supabase. Flagged submissions are stored too — see
+        // "flag, don't drop" in docs/SECURITY_PLAN.md finding 3.
+        const { error: dbError } = await insertWithSpamFlags(
+            "contact_submissions",
+            {
                 name,
                 email,
                 subject,
@@ -48,7 +81,9 @@ export async function POST(request: NextRequest) {
                 ...(company && { company }),
                 ...(region && { region }),
                 ...(industry && { industry }),
-            }]);
+            },
+            { isSpam, reason: decision.action === "flag" ? decision.reason : undefined }
+        );
 
         if (dbError) {
             console.error("Supabase Error:", dbError);
@@ -56,6 +91,12 @@ export async function POST(request: NextRequest) {
                 { error: "Failed to save submission. Please try again." },
                 { status: 500 }
             );
+        }
+
+        // Stored for the audit trail, but never emailed — that is the whole
+        // point of the exercise: keep the inbox clean without losing the record.
+        if (isSpam) {
+            return fakeSuccess();
         }
 
         // Send email via Gmail SMTP (Nodemailer)

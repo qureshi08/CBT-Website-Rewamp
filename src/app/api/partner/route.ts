@@ -1,11 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { resend } from "@/lib/resend";
+import { guardFormSubmission, insertWithSpamFlags } from "@/lib/security/form-guard";
+
+/**
+ * The response bots see when they trip the origin, rate-limit or Turnstile
+ * layers. Identical to a real success so there is nothing to tune against.
+ * See docs/SECURITY_PLAN.md finding 3.
+ */
+function fakeSuccess() {
+    return NextResponse.json(
+        { success: true, message: "Partner registration submitted successfully." },
+        { status: 200 }
+    );
+}
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { company, contactName, email, region, industry, partnershipType, message } = body;
+        const {
+            company, contactName, email, region, industry, partnershipType, message,
+            // Anti-abuse fields added by PartnerForm — never rendered to a human.
+            website: honeypot, renderedAt, turnstileToken,
+        } = body;
+
+        // Anti-abuse gate runs before validation so that malformed payloads
+        // still consume the attacker's rate-limit budget.
+        const decision = await guardFormSubmission(request, {
+            scope: "partner",
+            honeypot,
+            renderedAt,
+            turnstileToken,
+            identityFields: { company, contactName },
+            message,
+        });
+
+        if (decision.action === "reject") {
+            return fakeSuccess();
+        }
+        const isSpam = decision.action === "flag";
 
         // Validate required fields
         if (!company || !contactName || !email || !partnershipType) {
@@ -36,23 +68,25 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Phase 2 — Insert into Supabase partner_enquiries table
-        const { error: dbError } = await supabaseAdmin
-            .from("partner_enquiries")
-            .insert([
-                {
-                    company,
-                    contact_name: contactName,
-                    email,
-                    region,
-                    industry,
-                    partnership_type: partnershipType as
-                        | "technology"
-                        | "delivery"
-                        | "referral",
-                    message,
-                },
-            ]);
+        // Phase 2 — Insert into Supabase partner_enquiries table. Flagged
+        // enquiries are stored too — see "flag, don't drop" in
+        // docs/SECURITY_PLAN.md finding 3.
+        const { error: dbError } = await insertWithSpamFlags(
+            "partner_enquiries",
+            {
+                company,
+                contact_name: contactName,
+                email,
+                region,
+                industry,
+                partnership_type: partnershipType as
+                    | "technology"
+                    | "delivery"
+                    | "referral",
+                message,
+            },
+            { isSpam, reason: decision.action === "flag" ? decision.reason : undefined }
+        );
 
         if (dbError) {
             console.error("Supabase Error:", dbError);
@@ -60,6 +94,11 @@ export async function POST(request: NextRequest) {
                 { error: "Failed to save partner enquiry." },
                 { status: 500 }
             );
+        }
+
+        // Stored for the audit trail, but never emailed.
+        if (isSpam) {
+            return fakeSuccess();
         }
 
         // Send notification email via Resend

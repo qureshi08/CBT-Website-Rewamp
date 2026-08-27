@@ -8,16 +8,24 @@ export default async function AdminDashboard() {
         { count: caseStudiesCount },
         { count: productsCount },
         { count: batchesCount },
-        { data: recentEnquiries },
+        { data: enquiryCandidates },
         { data: recentStudies }
     ] = await Promise.all([
         supabaseAdmin.from("clients").select("*", { count: 'exact', head: true }),
         supabaseAdmin.from("case_studies").select("*", { count: 'exact', head: true }),
         supabaseAdmin.from("products").select("*", { count: 'exact', head: true }),
         supabaseAdmin.from("cgap_cohorts").select("*", { count: 'exact', head: true }),
-        supabaseAdmin.from("contact_submissions").select("*").order("created_at", { ascending: false }).limit(3),
+        // Over-fetch and filter in JS rather than `.eq("is_spam", false)`, so
+        // this keeps working before 0003_spam_flags.sql has been applied.
+        supabaseAdmin.from("contact_submissions").select("*").order("created_at", { ascending: false }).limit(20),
         supabaseAdmin.from("case_studies").select("*").order("created_at", { ascending: false }).limit(2)
     ]);
+
+    // Flagged submissions stay in the table for the audit trail but are kept
+    // out of the dashboard. See docs/SECURITY_PLAN.md finding 3.
+    const recentEnquiries = (enquiryCandidates ?? [])
+        .filter((enquiry) => !enquiry.is_spam)
+        .slice(0, 3);
 
     const stats = [
         { label: "Total Clients", value: (clientsCount || 0).toString(), icon: <Users size={20} />, trend: "Active brands" },

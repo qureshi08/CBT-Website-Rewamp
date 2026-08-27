@@ -236,6 +236,9 @@ export interface Database {
                     subject: string | null
                     region: string | null
                     industry: string | null
+                    // Added by supabase/migrations/0003_spam_flags.sql
+                    is_spam: boolean
+                    spam_reason: string | null
                 }
                 Insert: {
                     company?: string | null
@@ -248,6 +251,8 @@ export interface Database {
                     subject?: string | null
                     region?: string | null
                     industry?: string | null
+                    is_spam?: boolean
+                    spam_reason?: string | null
                 }
                 Update: {
                     company?: string | null
@@ -260,6 +265,8 @@ export interface Database {
                     subject?: string | null
                     region?: string | null
                     industry?: string | null
+                    is_spam?: boolean
+                    spam_reason?: string | null
                 }
                 Relationships: []
             }
@@ -275,6 +282,9 @@ export interface Database {
                     status: string
                     region: string | null
                     industry: string | null
+                    // Added by supabase/migrations/0003_spam_flags.sql
+                    is_spam: boolean
+                    spam_reason: string | null
                 }
                 Insert: {
                     company: string
@@ -287,6 +297,8 @@ export interface Database {
                     status?: string
                     region?: string | null
                     industry?: string | null
+                    is_spam?: boolean
+                    spam_reason?: string | null
                 }
                 Update: {
                     company?: string
@@ -299,6 +311,8 @@ export interface Database {
                     status?: string
                     region?: string | null
                     industry?: string | null
+                    is_spam?: boolean
+                    spam_reason?: string | null
                 }
                 Relationships: []
             }

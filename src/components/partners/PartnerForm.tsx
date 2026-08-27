@@ -1,7 +1,8 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import TurnstileWidget, { turnstileEnabled } from "@/components/shared/TurnstileWidget";
 
 interface PartnerFormData {
     company: string;
@@ -11,7 +12,19 @@ interface PartnerFormData {
     industry: string;
     partnershipType: string;
     message: string;
+    /** Honeypot — hidden from humans, filled by bots. See SECURITY_PLAN finding 3. */
+    website?: string;
 }
+
+/** Off-screen rather than `display: none`, which some bots skip. */
+const honeypotStyle: React.CSSProperties = {
+    position: "absolute",
+    left: "-9999px",
+    width: "1px",
+    height: "1px",
+    opacity: 0,
+    pointerEvents: "none",
+};
 
 const regions = [
     "Middle East",
@@ -38,6 +51,14 @@ export default function PartnerForm() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+    // Time-trap: stamped on mount rather than at render, so a statically cached
+    // page can't hand the server a timestamp that's hours stale.
+    const renderedAtRef = useRef(0);
+    useEffect(() => {
+        renderedAtRef.current = Date.now();
+    }, []);
 
     const {
         register,
@@ -47,13 +68,22 @@ export default function PartnerForm() {
     } = useForm<PartnerFormData>();
 
     const onSubmit = async (data: PartnerFormData) => {
+        if (turnstileEnabled && !turnstileToken) {
+            setSubmitError("Please complete the verification check and try again.");
+            return;
+        }
+
         setIsSubmitting(true);
         setSubmitError(null);
         try {
             const res = await fetch("/api/partner", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    ...data,
+                    renderedAt: renderedAtRef.current,
+                    turnstileToken,
+                }),
             });
 
             if (res.ok) {
@@ -180,6 +210,20 @@ export default function PartnerForm() {
                     {...register("message")}
                 />
             </label>
+
+            {/* Honeypot — hidden from humans and screen readers alike. */}
+            <div style={honeypotStyle} aria-hidden="true">
+                <label htmlFor="partner-website">Leave this field empty</label>
+                <input
+                    id="partner-website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    {...register("website")}
+                />
+            </div>
+
+            <TurnstileWidget onToken={setTurnstileToken} />
 
             {submitError && (
                 <div className="cta-form-error" role="alert">{submitError}</div>
