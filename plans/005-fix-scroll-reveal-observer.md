@@ -1,10 +1,45 @@
 # 005 — Fix the scroll-reveal observer lifecycle
 
-- **Status**: TODO
-- **Commit**: 317d1c1
+- **Status**: DONE — executed 2026-08-27, `src/components/home/Hero.tsx` only
+- **Commit**: 317d1c1 (planned against)
 - **Severity**: MEDIUM
 - **Category**: Performance
 - **Estimated scope**: 1 file, ~10 lines
+
+## Outcome
+
+All three changes applied as specified: `[]` dependency array, `io.unobserve()`
+after the class is added, and the `:not(.v2-in)` selector guard.
+
+| Check | Result |
+| --- | --- |
+| `npx tsc --noEmit` | 18 pre-existing errors, **0 in Hero.tsx** |
+| `npm run lint` | 2 pre-existing issues in Hero.tsx (lines 33, 104); none from this change |
+| `react-hooks/exhaustive-deps` | silent — confirms `[]` is correct |
+| `npm run build` | ✓ Compiled successfully |
+| Feel check | Passed — reveals fire once per element, nothing left blank, no re-animation on scroll-back |
+
+**Risk checked before shipping, not in the original plan.** The missing
+dependency array was accidentally doing useful work: re-running on every render
+re-scanned the DOM and picked up any `.v2-reveal` element that appeared *after*
+mount. Pinning to `[]` means one scan, so a late-rendering element would stay at
+`opacity: 0` forever — invisible content, a worse bug than the one being fixed.
+
+Verified safe here:
+
+- No `Suspense`, `next/dynamic`, `React.lazy` or `loading.tsx` anywhere in the
+  app — nothing streams in after hydration.
+- No `.v2-reveal` sits inside a conditional expression anywhere in the codebase.
+- `ServicesGrid` is the only stateful caller; its reveal elements
+  (`ServicesGrid.tsx:59,139`) render unconditionally — `active` controls
+  styling, not existence.
+
+**If any of those three facts changes** — someone adds a Suspense boundary,
+gates a section behind state, or lazy-loads a section — this hook will silently
+stop revealing it. Worth re-checking whenever a `.v2-reveal` element moves
+behind a condition.
+
+Estimates below were written before execution and are left unedited.
 
 ## Problem
 

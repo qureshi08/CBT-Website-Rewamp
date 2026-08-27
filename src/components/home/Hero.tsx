@@ -8,13 +8,24 @@ import { FlipWords } from "@/components/ui/flip-words";
 // ─── Scroll reveal hook ───
 export function useScrollReveal() {
     useEffect(() => {
-        const els = document.querySelectorAll(".v2-reveal");
-        const io = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("v2-in"); });
-        }, { threshold: 0.1 });
-        els.forEach(el => io.observe(el));
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add("v2-in");
+                        io.unobserve(e.target);
+                    }
+                });
+            },
+            { threshold: 0.1 },
+        );
+
+        document
+            .querySelectorAll(".v2-reveal:not(.v2-in)")
+            .forEach((el) => io.observe(el));
+
         return () => io.disconnect();
-    });
+    }, []);
 }
 
 // ─── Hero Section ───

@@ -17,11 +17,11 @@ five by leverage (impact ÷ effort); the rest are listed under
 | [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | TODO |
 | [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | TODO |
 | [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | TODO |
-| [005](005-fix-scroll-reveal-observer.md) | Fix the scroll-reveal observer lifecycle | MEDIUM | Performance | 1 | TODO |
+| [005](005-fix-scroll-reveal-observer.md) | Fix the scroll-reveal observer lifecycle | MEDIUM | Performance | 1 | **DONE** |
 
 ## Recommended execution order
 
-**~~001~~ → 005 → 002 → 003 → 004**  —  next up: **005**
+**~~001~~ → ~~005~~ → 002 → 003 → 004**  —  next up: **002**
 
 Rationale:
 
@@ -32,7 +32,11 @@ Rationale:
   plan. Note for the remaining plans: `fadeUp` now travels **28px** (not 15px)
   and `scaleIn` starts at **0.93** (not 0.9) — use these when reasoning about
   entrance timing.
-- **005 next.** One file, no interaction with anything else, immediate.
+- **005 next.** ✅ Done. One file, no interaction with anything else. Note for
+  future work: the hook now scans the DOM **once per mount**, so any
+  `.v2-reveal` element that renders after hydration (behind `Suspense`, a lazy
+  import, or client state) will never reveal. Nothing in the app does that
+  today — verified — but it is now a real constraint.
 - **002** is independent of all others and can move earlier if you want a
   visible win sooner.
 - **003 before 004.** Plan 003 converts the hero orbit to CSS; plan 004's
