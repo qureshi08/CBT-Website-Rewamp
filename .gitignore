@@ -48,3 +48,9 @@ next-env.d.ts
 
 # Transpiled output for npm run test:spam
 .tmp/
+
+# Per-machine Claude Code settings. Accumulates machine-specific tool
+# permission entries that mean nothing on anyone else's checkout, and those
+# entries can quote whatever was on the command line — including fragments of
+# credentials. Project-wide settings belong in .claude/settings.json instead.
+.claude/settings.local.json

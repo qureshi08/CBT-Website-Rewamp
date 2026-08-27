@@ -73,7 +73,10 @@ Core structure, design system, and basic pages.
 - [ ] **Image optimisation** — All images through Next.js `<Image>` with proper sizes
 - [ ] **Font subsetting** — Reduce font payload
 - [x] **Admin auth** — Supabase Auth gate on `/admin/**` routes (`src/proxy.ts`, + `@convergentbt.com` domain restriction)
-- [~] **Form anti-abuse** — honeypot, time-trap, content heuristics, origin check and per-IP rate limiting on `/api/contact` and `/api/partner` (`src/lib/security/`). Turnstile and Upstash wired but awaiting accounts.
+- [~] **Form anti-abuse** — honeypot, time-trap, content heuristics, email-alias detection, origin check and per-IP rate limiting on `/api/contact` and `/api/partner` (`src/lib/security/`). Live since 2026-08-27; validated at 52% spam across existing traffic. Turnstile and Upstash wired but awaiting accounts.
+- [x] **Submissions inbox** — `/admin/submissions`: contact and partner enquiries, clean/flagged tabs, search, pagination, manual spam override. No delete path for lead data.
+- [ ] **Admin password reset** — no forgot-password flow exists; the login page only signs in. Needs `resetPasswordForEmail()` plus an `/admin/reset-password` page, otherwise Supabase's recovery email has nowhere to land.
+- [ ] **Admin MFA** — no admin account has a second factor.
 - [ ] **Error boundary** — Graceful error states for failed Supabase fetches
 - [ ] **E2E tests** — Playwright smoke tests for key user journeys (contact form, nav)
 - [ ] **Accessibility audit** — Full WCAG AA pass

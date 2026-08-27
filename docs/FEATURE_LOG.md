@@ -4,6 +4,68 @@
 
 ---
 
+## 2026-08-27 — Session: Anti-spam shipped, tuned, and given an inbox
+
+The 2026-08-21 work was complete but had never been committed. Shipped it, then
+tuned it against real submissions and built the admin surface it needed.
+
+**Shipped** (`a1ec666`) — the `src/lib/security/` stack from the previous session,
+unchanged: honeypot, time-trap, content heuristics, origin check and per-IP rate
+limiting on both public form endpoints.
+
+**Tuned** (`05e8591`) — three changes, each from evidence rather than reasoning:
+- **The submitter's email was never scored.** Added a dot-padded Gmail alias
+  signal. Gmail ignores dots, so `s.or.u.to.p.a.c06@` and `sorutopac06@` are one
+  mailbox — the padding exists only to manufacture distinct-looking senders.
+  Narrow by design: Gmail only, `+tags` stripped, needs 4+ dots and a high dot
+  ratio, so `firstname.lastname` stays clean.
+- **Link-farm threshold 4 → 6.** A partner enquiry carrying site, case study,
+  LinkedIn and deck scored exactly 4 and flagged on its own. Confirmed by running
+  it through the scorer, not theorised.
+- **`*.translate.goog` allowed.** Google Translate proxies the page, so anyone
+  reading the site in translation was submitting with an unmatched `Origin` and
+  being silently rejected.
+
+**Abuse log** (`ac818b5`) — rejections previously left no trace beyond a console
+line. `form_abuse_log` (migration `0004`) now records scope, decision, reason,
+score, email and a salted IP hash. Metadata only; no message bodies. Rate-limit
+rejections are the exception — the first 5 per IP per day are stored as flagged
+submissions instead, because that layer is the one that catches real people
+(colleagues behind one office IP trip the hourly limit between them).
+
+**Submissions inbox** (`4046970`) — `/admin/submissions`. There was previously no
+way to read form submissions in the portal at all; the dashboard showed the
+latest three and nothing else. Contact and partner enquiries, clean and flagged
+tabs, paginated, searchable, rows expand to the message and the reason it was
+flagged. The manual spam toggle is the point of the page: the heuristics will
+eventually be wrong about someone, and this makes that recoverable.
+
+**Validated against real traffic.** Migrations `0003` and `0004` were applied and
+the 44 existing contact submissions scored retroactively: **23 were spam — 52% of
+all traffic.** The separation was perfect. Every legitimate submission scored
+exactly 0, every spam scored 6 or more, nothing landed in between. The corpus
+also showed one sustained campaign since May that changed technique in late July,
+moving from gibberish messages to bare phone numbers with plausible `"Xxxxxxx
+LLC"` company names — which is what made scoring the email address necessary
+rather than merely nice.
+
+**Decisions:**
+- **No delete path for lead data.** The inbox exposes read and the flag toggle
+  only, backed by purpose-built actions rather than `adminCrud` — the submission
+  tables stay out of `ALLOWED_TABLES`.
+- **Spam overrides append to `spam_reason`**, never overwrite. A submission the
+  heuristics called spam and a human overruled is the most informative row in the
+  table for future tuning.
+- **Address history is advisory, not scored.** Feeding "seen before" back into
+  the heuristics would make one false positive self-reinforcing.
+
+**Known gaps:** Turnstile and Upstash still unprovisioned; `ABUSE_LOG_SALT` unset,
+so IPs are not recorded at all (deliberate — an unsalted hash of an IPv4 address
+is trivially reversible). No forgot-password flow exists for the admin portal, and
+no admin account has MFA.
+
+---
+
 ## 2026-08-21 — Session: Anti-spam stack (SECURITY_PLAN finding 3)
 
 > A separate, higher-priority issue was found during this session and is recorded in
@@ -100,4 +162,4 @@ cover on Vercel until Upstash is provisioned.
 
 ---
 
-*Last updated: 2026-08-21*
+*Last updated: 2026-08-27*
