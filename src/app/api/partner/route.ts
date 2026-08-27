@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
             renderedAt,
             turnstileToken,
             identityFields: { company, contactName },
+            email,
             message,
         });
 

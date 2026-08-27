@@ -49,6 +49,22 @@ function hostOf(value: string | null): string | null {
     }
 }
 
+/**
+ * Google Translate proxies pages through `<site>-<tld>.translate.goog`, so a
+ * visitor reading the site in translation submits with an Origin that will never
+ * match the allow-list. CBT has a Middle East audience, so that is a real path
+ * to a silently dropped lead rather than a hypothetical one.
+ *
+ * Accepting the whole suffix does mean an attacker could serve our form through
+ * Translate to satisfy this check. That is an acceptable trade here: this layer
+ * is an anti-spam signal, not a CSRF defence — the endpoints are unauthenticated
+ * and perform no privileged action — and the rate limit, honeypot, heuristics
+ * and (once provisioned) Turnstile all still apply to such a request.
+ */
+function isTranslationProxy(host: string): boolean {
+    return host === "translate.goog" || host.endsWith(".translate.goog");
+}
+
 export function checkOrigin(request: Request): OriginVerdict {
     const allowed = allowedHosts();
 
@@ -65,14 +81,14 @@ export function checkOrigin(request: Request): OriginVerdict {
 
     const originHost = hostOf(request.headers.get("origin"));
     if (originHost) {
-        return allowed.has(originHost)
+        return allowed.has(originHost) || isTranslationProxy(originHost)
             ? { status: "allowed" }
             : { status: "blocked", reason: `origin ${originHost} not allowed` };
     }
 
     const refererHost = hostOf(request.headers.get("referer"));
     if (refererHost) {
-        return allowed.has(refererHost)
+        return allowed.has(refererHost) || isTranslationProxy(refererHost)
             ? { status: "allowed" }
             : { status: "blocked", reason: `referer ${refererHost} not allowed` };
     }
