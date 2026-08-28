@@ -93,6 +93,12 @@ Core structure, design system, and basic pages.
   plus 7 hand-typed copies of the same curve; two parallel scroll-reveal systems
 - [ ] **`next.config.ts` cleanup** — `eslint` key is unrecognised in Next 16 and
   silently ignored
+- [ ] **Incomplete schema record** — seven tables have no `CREATE TABLE`
+  statement anywhere in the repo: `clients`, `case_studies`, `products`,
+  `cgap_cohorts`, `cgap_alumni`, `contact_submissions`, `partner_enquiries`.
+  `supabase_migration.sql` covers five others and `supabase/migrations/` covers
+  `custom_visuals` and `form_abuse_log`. A fresh Supabase project cannot be
+  rebuilt from what is committed. Dump the live schema into a migration.
 - [ ] **Error boundary** — Graceful error states for failed Supabase fetches
 - [ ] **E2E tests** — Playwright smoke tests for key user journeys (contact form, nav)
 - [ ] **Accessibility audit** — Full WCAG AA pass
