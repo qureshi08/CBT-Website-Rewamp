@@ -4,6 +4,56 @@
 
 ---
 
+## 2026-08-28 — Session: Hero orbit moved off the main thread (plan 003)
+
+The homepage hero's three logo rings were animated by Framer Motion tweens that
+never stopped — 3 ring rotations plus up to 24 chip counter-rotations, **up to 27
+concurrent infinite JS-driven animations**, running for as long as the homepage
+was open. Framer Motion writes the transform from JavaScript each frame, so all
+of it competed with hydration, scroll reveals and the logo-mosaic timer on the
+site's most-visited page, and the tab never went quiet.
+
+Replaced with two CSS keyframes (`orbitSpin` / `orbitSpinReverse`) applied by
+class, with each element's speed passed down as a `--orbit-duration` custom
+property read from the existing `RING_CONFIG`. The compositor now owns the
+rotation. `framer-motion` is no longer imported by this component; five others
+still use it, so the dependency stays.
+
+**Visually identical by design** — same radii, durations, phases and directions.
+This changed the driver, not the design. The one intended difference: the orbit
+now honours `prefers-reduced-motion` and stops dead. It previously ignored the
+setting entirely, because the stylesheet's blanket reset only ever reached CSS
+animations, and the single largest moving element on the site was not one.
+
+**The check that mattered** was counting `data-direction="-1"` in the served
+HTML: **9**. That is only correct if exactly one ring is reversed (the 280px
+eight-slot middle ring) and its eight chips inherit it. Any other number means
+chips counter-rotate against the wrong parent — which manifests as logos slowly
+tilting over ~90 seconds, not as anything visible on load.
+
+**Decisions:**
+- **`will-change` on the 3 rings, not the 24 chips**, departing from the plan.
+  Browsers already promote an infinite transform animation to its own layer, so
+  on the chips the declaration buys nothing while forcing up to 24 extra
+  compositor layers — GPU memory, and softer logo rasterisation on some hardware.
+- **Durations stayed inline rather than moving into CSS.** They belong to
+  `RING_CONFIG` alongside the radii and slot maths that position the chips;
+  splitting them across two files would let the ring and its chips desync, and
+  desync is exactly the failure mode this component cannot tolerate.
+
+**Known gaps:** plan 004 remains — the blanket `prefers-reduced-motion` reset
+still fails to reach four mounted JS components, including the rotating hero
+headline. 003 was its blocker, so it is now unblocked.
+
+A cold `npm run build` failed once with 60s static-generation timeouts on `/`,
+`/partners` and `/products/ecl-calculator`, then passed twice. Transient
+Supabase latency during data collection, not a regression — confirmed by
+building the stashed baseline and the change separately. Two of the three
+failing routes do not render the changed component at all, which is the quickest
+way to recognise this.
+
+---
+
 ## 2026-08-27 — Session: Motion audit, and three of five fixes shipped
 
 Installed Emil Kowalski's `animate`, `apple-design`, `review-animations` and
@@ -223,4 +273,4 @@ cover on Vercel until Upstash is provisioned.
 
 ---
 
-*Last updated: 2026-08-27*
+*Last updated: 2026-08-28*

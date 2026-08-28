@@ -1,20 +1,28 @@
 # Animation improvement plans
 
-> **PARKED 2026-08-27 after plan 002.** Three of five executed and pushed
-> (`0dd0730`, `e9f8cb5`, `54bb4dd`). Resume at **003**, then **004** — in that
-> order, see [Dependencies](#dependencies).
+> **Four of five done as of 2026-08-28.** `0dd0730`, `e9f8cb5`, `54bb4dd` and
+> 003. Only **004** remains, and its blocker is now cleared — 003 has landed, so
+> the hero orbit is CSS-driven and 004's `animation: none` rules cover it with no
+> JavaScript. See [Dependencies](#dependencies).
 >
-> Before resuming: plans are stamped against `317d1c1` and three commits have
-> landed since. Line references in 003 and 004 point at `globals.css` **above**
-> line 5217 and at `.tsx` files untouched by 001/002/005, so they should still
-> hold — but each plan tells its executor to stop and report on drift rather
-> than improvise. Let it.
+> Before resuming: plans are stamped against `317d1c1` and four commits have
+> landed since. Plan 004's line references point at `globals.css:689–698` and at
+> `.tsx` files untouched by 001/002/003/005, so they should still hold — but the
+> plan tells its executor to stop and report on drift rather than improvise. Let
+> it. One reference **has** changed: 004 lists `OrbitLogos.tsx` as uncovered.
+> It is now covered; skip it.
 >
-> **Plan 003 needs `npm run build` to verify.** Stop any running dev server
-> first — `next build` and `next dev` share `.next`, and building underneath a
-> live dev server corrupts it (this cost real time on 2026-08-27; symptom is
-> "Jest worker encountered N child process exceptions", then 500s on every
-> route).
+> **Anything needing `npm run build` must stop the dev server first** —
+> `next build` and `next dev` share `.next`, and building underneath a live dev
+> server corrupts it (this cost real time on 2026-08-27; symptom is "Jest worker
+> encountered N child process exceptions", then 500s on every route). Check with
+> `Get-NetTCPConnection -LocalPort 3000 -State Listen`.
+>
+> **A cold build can fail spuriously.** Static generation for `/`, `/partners`
+> and `/products/ecl-calculator` timed out at 60s on the first build of
+> 2026-08-28 and was clean on the next two. Those routes make several Supabase
+> calls during data collection. Before treating a timeout as a regression, check
+> whether the failing routes even touch the code you changed, then rebuild.
 
 Produced by the `improve-animations` skill against commit `317d1c1`.
 Each plan is self-contained: exact file paths, current-code excerpts, exact
@@ -31,13 +39,13 @@ five by leverage (impact ÷ effort); the rest are listed under
 | --- | --- | --- | --- | --- | --- |
 | [001](001-remove-dead-illustration-keyframes.md) | Delete the dead illustration keyframe block | HIGH | Cohesion | 1 | **DONE** |
 | [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | **DONE** |
-| [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | TODO |
+| [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | **DONE** |
 | [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | TODO |
 | [005](005-fix-scroll-reveal-observer.md) | Fix the scroll-reveal observer lifecycle | MEDIUM | Performance | 1 | **DONE** |
 
 ## Recommended execution order
 
-**~~001~~ → ~~005~~ → ~~002~~ → 003 → 004**  —  next up: **003**
+**~~001~~ → ~~005~~ → ~~002~~ → ~~003~~ → 004**  —  next up: **004**, the last one
 
 Rationale:
 
@@ -57,22 +65,26 @@ Rationale:
   `.btn-cta-ghost` gained a `transform 0.15s` transition they previously
   lacked — the `:active` rules and those transitions are a matched pair, so
   removing either strands the other.
-- **003 before 004.** Plan 003 converts the hero orbit to CSS; plan 004's
-  `animation: none` rules then cover it with no JavaScript. Running 004 first
-  would mean either leaving the hero uncovered or writing a `useReducedMotion`
-  branch in `OrbitLogos.tsx` that 003 immediately deletes.
+- **003 before 004.** ✅ Done. The hero orbit is now CSS-driven, so 004's
+  `animation: none` rules cover it with no JavaScript and no `useReducedMotion`
+  hook in `OrbitLogos.tsx`. Notes for 004: the orbit is **already covered** by a
+  `prefers-reduced-motion` block at the end of `globals.css` — do not add it
+  twice. And `will-change` was deliberately left off `.orbit-chip`; the browser
+  promotes infinite transform animations on its own, so 24 explicit layers cost
+  GPU memory for nothing.
 
 ## Dependencies
 
 ```
-001 ──(independent)
-005 ──(independent)
-002 ──(independent)
-003 ──→ 004     003 must land first; 004's CSS assumes the orbit is CSS-driven
+001 ──(independent)          ✅
+005 ──(independent)          ✅
+002 ──(independent)          ✅
+003 ──→ 004                  ✅ → 004 is now unblocked
 ```
 
-Plan 004 states this explicitly in its Boundaries: if 003 has not run, it must
-report rather than fix `OrbitLogos.tsx` itself.
+Plan 004 states this in its Boundaries: if 003 has not run, it must report rather
+than fix `OrbitLogos.tsx` itself. That condition is now satisfied — 003 has run,
+and `OrbitLogos.tsx` needs no further work for reduced motion.
 
 ## Verification shared across plans
 

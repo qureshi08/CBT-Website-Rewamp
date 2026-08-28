@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
 
 export type ClientLogo = { name: string; logo_url: string };
 
@@ -174,20 +173,17 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
             {rings.map((ring) => {
                 if (ring.logos.length === 0) return null;
                 return (
-                    <motion.div
+                    <div
                         key={ring.radius}
+                        className="orbit-ring"
+                        data-direction={ring.direction}
                         style={{
                             position: "absolute",
                             left: CENTER.x,
                             top: CENTER.y,
                             width: 0,
                             height: 0,
-                        }}
-                        animate={{ rotate: 360 * ring.direction }}
-                        transition={{
-                            duration: ring.duration,
-                            repeat: Infinity,
-                            ease: "linear",
+                            ["--orbit-duration" as string]: `${ring.duration}s`,
                         }}
                     >
                         {ring.logos.map((logo, i) => {
@@ -195,25 +191,22 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
                             const x = ring.radius * Math.cos(rad);
                             const y = ring.radius * Math.sin(rad);
                             return (
-                                <motion.div
+                                <div
                                     key={`${ring.radius}-${i}-${logo.name}`}
+                                    className="orbit-chip"
+                                    data-direction={ring.direction}
                                     style={{
                                         position: "absolute",
                                         left: `${x - CHIP_SIZE / 2}px`,
                                         top: `${y - CHIP_SIZE / 2}px`,
-                                    }}
-                                    animate={{ rotate: -360 * ring.direction }}
-                                    transition={{
-                                        duration: ring.duration,
-                                        repeat: Infinity,
-                                        ease: "linear",
+                                        ["--orbit-duration" as string]: `${ring.duration}s`,
                                     }}
                                 >
                                     <LogoChip logo={logo} />
-                                </motion.div>
+                                </div>
                             );
                         })}
-                    </motion.div>
+                    </div>
                 );
             })}
 

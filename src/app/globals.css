@@ -6328,3 +6328,58 @@ a:active .v2-prod-card {
     transform: none;
   }
 }
+
+/* ─── HERO ORBIT ─── */
+/* Rotation for OrbitLogos. Driven in CSS rather than Framer Motion so the
+   compositor owns it and the tab can idle. Durations come from RING_CONFIG
+   in src/components/home/OrbitLogos.tsx and arrive as --orbit-duration —
+   keep them in sync. The ring and its chips MUST share a duration: the chip
+   counter-rotates to keep the logo upright, so any drift makes logos tilt. */
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitSpinReverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.orbit-ring {
+  animation: orbitSpin var(--orbit-duration) linear infinite;
+  will-change: transform;
+}
+
+.orbit-ring[data-direction="-1"] {
+  animation-name: orbitSpinReverse;
+}
+
+/* Chips counter-rotate at the same rate so logos stay upright. No
+   will-change here: the browser already promotes an infinite transform
+   animation, and forcing up to 24 extra layers costs GPU memory and can
+   soften logo rasterisation. */
+.orbit-chip {
+  animation: orbitSpinReverse var(--orbit-duration) linear infinite;
+}
+
+.orbit-chip[data-direction="-1"] {
+  animation-name: orbitSpin;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .orbit-ring,
+  .orbit-chip {
+    animation: none;
+  }
+}

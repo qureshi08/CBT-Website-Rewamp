@@ -1,10 +1,52 @@
 # 003 — Move the hero orbit rotation from Framer Motion to CSS
 
-- **Status**: TODO
-- **Commit**: 317d1c1
+- **Status**: DONE — executed 2026-08-28, `OrbitLogos.tsx` + `globals.css`
+- **Commit**: 317d1c1 (planned against)
 - **Severity**: HIGH
 - **Category**: Performance
 - **Estimated scope**: 2 files (`OrbitLogos.tsx`, `globals.css`), ~40 lines net
+
+## Outcome
+
+Applied as specified, with one deliberate deviation (below). Up to 27 concurrent
+infinite Framer Motion tweens are gone; the rotation is now compositor-owned CSS.
+
+Verified in the **served** output, not just the source:
+
+| Check | Result |
+| --- | --- |
+| `npx tsc --noEmit` | 18 errors — the pre-existing baseline, none in `OrbitLogos.tsx` |
+| `npm run build` | Clean, 50/50 static pages |
+| `npm run test:spam` | 31/31 (unrelated canary, stayed green) |
+| `grep -c "motion\." OrbitLogos.tsx` | `0`; `framer-motion` import removed |
+| Served HTML | 3 `.orbit-ring`, 24 `.orbit-chip`, 27 × `--orbit-duration` |
+| Durations in DOM | `75s / 85s / 95s` — identical to `RING_CONFIG` |
+| `data-direction="-1"` | **9** — see below |
+| Keyframes in served CSS | `orbitSpin` ×1, `orbitSpinReverse` ×1 |
+| Reduced-motion rule | Present, correctly scoped |
+
+**The `data-direction="-1"` count is the load-bearing check.** 9 is only correct
+if exactly one ring is reversed (the 280px / 8-slot middle ring) and its eight
+chips inherit that direction: 1 + 8 = 9. Any other number means the direction
+mapping is wrong and chips counter-rotate against the wrong parent, which shows
+up as logos slowly tilting rather than as anything obvious on load.
+
+**Deviation from the plan as written: `will-change` kept on the 3 rings, dropped
+from the 24 chips.** The plan put it on both. Browsers already promote an
+infinite transform animation to its own layer, so the declaration buys nothing
+on the chips while forcing up to 24 extra compositor layers — real GPU memory,
+and on some hardware an explicitly promoted layer rasterises the logo slightly
+softer. The comment in `globals.css` records the reasoning.
+
+**Note on the build.** The first `npm run build` after the edit failed with
+60-second static-generation timeouts on `/`, `/partners` and
+`/products/ecl-calculator`. It was transient — a cold compile (29.2s vs 12.9s
+warm) plus slow Supabase responses during data collection. Confirmed by building
+the stashed baseline (clean) and then the change again (clean). Worth knowing
+because two of the three failing routes do not render `OrbitLogos` at all, which
+is the fastest way to tell this class of failure from a real regression.
+
+Estimates below were written before execution and are left unedited.
 
 ## Problem
 

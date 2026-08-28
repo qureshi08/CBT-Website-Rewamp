@@ -79,9 +79,11 @@ Core structure, design system, and basic pages.
 - [ ] **Admin MFA** — no admin account has a second factor.
 - [~] **Motion pass** — full audit done (11 findings + 3 opportunities); plans in
   `plans/`. Done: duplicate-keyframe override removed, scroll-reveal observer
-  lifecycle fixed, press feedback added. Remaining: `003` hero orbit → CSS
-  (up to 27 main-thread tweens today), `004` real `prefers-reduced-motion`
-  coverage (JS motion currently ignores it). 003 before 004.
+  lifecycle fixed, press feedback added, hero orbit moved from up to 27
+  main-thread Framer Motion tweens to compositor-driven CSS. Remaining: `004`
+  real `prefers-reduced-motion` coverage — four mounted JS components still
+  ignore the preference, including the rotating hero headline on `/`. Now
+  unblocked (003 was its prerequisite).
 - [ ] **Hover gating for touch** — 66 `:hover` rules, none behind
   `@media (hover: hover)`; taps leave hover states stuck on mobile
 - [ ] **Motion token consolidation** — `--ease` and `--ease-v2` are identical,
@@ -107,4 +109,4 @@ Core structure, design system, and basic pages.
 > version control, since this repo is public). Check it before starting work — its
 > open items take priority over this roadmap.
 
-*Last updated: 2026-08-27*
+*Last updated: 2026-08-28*
