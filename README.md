@@ -1,6 +1,6 @@
 # Convergent Business Technologies — Website
 
-The official website for **Convergent Business Technologies (CBT)** — a data and technology consultancy with clients including Pepsi, Microsoft, Coca-Cola, KPMG, Dabur, and UNICEF.
+The official website for **Convergent Business Technologies (CBT)** — a data, cloud and AI consultancy with clients including Pepsi, Microsoft, Coca-Cola, KPMG, Dabur, and UNICEF.
 
 ## 🚀 Live Site
 
@@ -8,26 +8,28 @@ The official website for **Convergent Business Technologies (CBT)** — a data a
 
 ## 📋 Overview
 
-A multi-persona website serving 4 distinct audiences:
+A marketing and lead-generation site with an authenticated admin portal for managing dynamic content. It serves four distinct audiences:
 
-| Persona | Page | Purpose |
-|---------|------|---------|
-| **Customers** | `/customers` | Build confidence for prospective clients |
-| **Partners** | `/partners` | Attract co-delivery and technology partners |
-| **Products** | `/products` | Showcase Power BI Custom Visuals & tools |
-| **CGAP** | `/cgap` | Attract graduate applicants to the training program |
+| Audience | Primary pages | Purpose |
+|---|---|---|
+| **Enterprise & SME clients** | `/services`, `/industries/[slug]`, `/case-studies` | Build confidence for prospective clients |
+| **Potential partners** | `/partners` | Attract co-delivery and technology partners |
+| **All clients** | `/products`, `/cbt-custom-visuals` | Showcase Power BI custom visuals & tools |
+| **Graduate talent** | `/cgap` | Attract applicants to the CGAP graduate program |
 
-Plus: Homepage (`/`), Contact (`/contact`), and API routes for form submissions.
+Plus: Homepage (`/`), About (`/about`), Contact (`/contact`), Privacy Policy, the admin portal at `/admin`, and API routes for form submissions.
 
 ## 🛠 Tech Stack
 
-- **Framework:** Next.js 14+ (App Router) with TypeScript
-- **Styling:** Tailwind CSS
-- **Database:** Supabase (PostgreSQL + Auth + Storage) — Phase 2
+- **Framework:** Next.js 16 (App Router, RSC-first) with TypeScript
+- **Styling:** Tailwind CSS 4 + CSS custom properties — most styling is vanilla CSS in `src/app/globals.css`
+- **Database:** Supabase (PostgreSQL + Row Level Security)
+- **Auth:** Supabase Auth, gating `/admin/**`
+- **Email:** Nodemailer over SMTP (a Resend client remains in `lib/` as legacy)
 - **Forms:** React Hook Form + Zod validation
-- **Email:** Resend — Phase 2
-- **Deployment:** Vercel
+- **Animation:** Framer Motion, plus CSS keyframes for predetermined motion
 - **Icons:** Lucide React
+- **Deployment:** Vercel
 
 ## 🏃 Getting Started
 
@@ -35,7 +37,7 @@ Plus: Homepage (`/`), Contact (`/contact`), and API routes for form submissions.
 # Install dependencies
 npm install
 
-# Copy environment variables
+# Copy environment variables, then fill in .env.local
 cp .env.example .env.local
 
 # Run development server
@@ -43,64 +45,78 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Lint
+npm run lint
+
+# Run the spam-heuristics test suite
+npm run test:spam
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
+
+> **Note:** `next build` and `next dev` share the `.next` directory. Stop the dev server before building, or the running server's render worker will crash.
 
 ## 📁 Project Structure
 
 ```
 src/
-├── app/                          # Next.js App Router pages
-│   ├── layout.tsx               # Root layout (nav, footer, SEO)
-│   ├── page.tsx                 # Homepage
-│   ├── customers/page.tsx       # Customers page
-│   ├── partners/page.tsx        # Partners page + registration form
-│   ├── products/page.tsx        # Products catalogue
-│   ├── cgap/page.tsx            # CGAP graduate program
-│   ├── contact/page.tsx         # Contact form
-│   └── api/
-│       ├── contact/route.ts     # Contact form handler
-│       └── partner/route.ts     # Partner registration handler
+├── app/
+│   ├── (public)/                 # Public pages (Navbar + Footer layout)
+│   │   ├── page.tsx              # Homepage
+│   │   ├── services/             # Capabilities
+│   │   ├── case-studies/         # Index + [slug] detail
+│   │   ├── industries/[slug]/    # Per-industry landing pages
+│   │   ├── products/             # Catalogue + ecl-calculator detail
+│   │   ├── cbt-custom-visuals/   # Gallery + [slug] detail
+│   │   ├── partners/             # Partner enquiry
+│   │   ├── about/                # About CBT
+│   │   ├── cgap/                 # CGAP graduate program
+│   │   ├── contact/              # Contact form
+│   │   └── privacy-policy/
+│   ├── admin/                    # Authenticated portal (CRUD + submissions inbox)
+│   ├── api/
+│   │   ├── contact/route.ts      # Contact form handler
+│   │   └── partner/route.ts      # Partner enquiry handler
+│   ├── layout.tsx                # Root layout (fonts, metadata)
+│   └── globals.css               # ALL CSS tokens + utility classes
 ├── components/
-│   ├── layout/                  # Navbar, Footer
-│   ├── home/                    # Hero, PersonaCards, ServicesGrid, etc.
-│   └── shared/                  # PersonaBridge, SectionHeader, CTAButton
-├── lib/supabase/                # Supabase client stubs (Phase 2)
-├── types/                       # TypeScript types
-└── styles/                      # Global CSS with brand tokens
+│   ├── layout/                   # Navbar, Footer
+│   ├── home/                     # Hero, ServicesGrid, OrbitLogos, Testimonials, …
+│   ├── services/ contact/ partners/ products/
+│   ├── shared/                   # PersonaBridge, Icons, Illustrations, ClientReveal
+│   └── ui/                       # Modal, ImageUpload, FlipWords, InfiniteSlider, …
+├── lib/
+│   ├── actions/                  # Server actions (admin CRUD, storage)
+│   ├── supabase/                 # Browser, server and service-role clients
+│   └── security/                 # Form anti-abuse: honeypot, heuristics, rate limiting
+└── types/database.ts             # TypeScript types for all Supabase tables
 ```
 
-## 🎨 Persona-Specific Design System
+## 🎨 Design System
 
-The site uses a dynamic color-coding system to differentiate user journeys:
-- **Customers (Green):** `#2D7D46` — Traditional consultancy.
-- **Partners (Purple):** `#8B5CF6` — Modern ecosystem.
-- **Products (Orange):** `#F59E0B` — Vibrant software/tools.
-- **CGAP (Red):** `#EF4444` — Academic/careers.
-- **Banking (Blue):** `#3B82F6` — Specialized industry focus.
+CBT green (`#00994D`) with a neutral grey scale; Playfair Display for headings, DM Sans for body, JetBrains Mono for code. All tokens are CSS custom properties in `src/app/globals.css` — never hardcode colours or spacing.
 
-## 📦 Phased Delivery
+See **[design-guidelines.md](design-guidelines.md)** for the full system. It is the single source of truth for visual and UX decisions across every CBT product, not just this site.
+
+## 📦 Delivery Status
 
 ### ✅ Phase 1 — Foundation
-- Multi-persona homepage with 4 entry points.
-- All persona landing pages with static content.
+Multi-page site, design system, all public pages, admin portal with CRUD.
 
-### ✅ Phase 2 — Refinement & Dynamic Content (Completed March 2026)
-- **Supabase Integration:** Products, Clients, and CGAP Cohorts pulled dynamically.
-- **Email Integration:** Resend API for Partner & Contact form notifications with persona branding.
-- **Form Enhancements:** Added `Region` and `Industry` fields to all leads.
-- **Design Overhaul:** Implemented premium multi-persona styling across all pages.
-- **Privacy:** Public email addresses removed; all contacts routed through secure forms.
+### ✅ Phase 2 — Dynamic Content
+Supabase-backed products, clients, case studies, industries, testimonials, stats and CGAP cohorts. Email notifications for both lead forms. Per-page metadata.
+
+### ✅ Phase 3 — Hardening
+Supabase Auth on `/admin/**` with domain restriction; form anti-abuse across both public endpoints (honeypot, time-trap, content heuristics, origin check, per-IP rate limiting); an admin submissions inbox; and a full motion pass covering performance and `prefers-reduced-motion`.
 
 ## 📄 Documentation
 
-- [HANDOFF_GUIDE.md](HANDOFF_GUIDE.md) — **Read this for a technical overview of recent design revamp.**
-- `01_BRD.md` — Business Requirements Document
-- `02_PRD.md` — Product Requirements Document
-- `03_UX_UI_Design.md` — UX/UI Design Specification
-- `04_C4_Architecture.md` — C4 Architecture Document
-- `11-03-2026/01_Wireframes_V2.md` — Updated Design Guidance.
+- **[CLAUDE.md](CLAUDE.md)** — project context, conventions and structure. Read this first.
+- **[design-guidelines.md](design-guidelines.md)** — the design system, including motion rules.
+- **[docs/ROADMAP.md](docs/ROADMAP.md)** — planned features and priorities.
+- **[docs/FEATURE_LOG.md](docs/FEATURE_LOG.md)** — what has been built, and why.
+- **[plans/](plans/)** — executable improvement plans from the motion audit.
 
 ## 📝 License
 

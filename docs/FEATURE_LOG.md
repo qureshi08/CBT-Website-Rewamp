@@ -4,6 +4,57 @@
 
 ---
 
+## 2026-08-28 — Session: Repository cleanup
+
+Removed 15 files that nothing referenced, and corrected the docs that described
+the repo as it was rather than as it is.
+
+**Deleted:**
+- **Scratch** — `mcp-input.json` (36 bytes, a leftover title string), `tmp/`
+  (two near-duplicate Supabase debug scripts; the `.mjs` contained TypeScript
+  syntax and could never have run), and `.add_git_to_path.ps1`, which hardcoded
+  a local disk path and published it to a public repo.
+- **Dead components** — `StatsBar`, `AboutTheFirm`, `CGAPTeaser` and
+  `SectionHeader` (~19 KB). Verified unimported two ways: by import-path
+  matching and by searching the export names directly.
+- **Design source material** — the wireframe HTML, the sample homepage, and the
+  three animation reference files (~150 KB). All recoverable from git history.
+- **`style-guide.jsx`** — a React viewer for `design-guidelines.md`, untouched
+  since April and unrunnable (root-level `.jsx`, nothing imports it, no route
+  renders it). It had drifted badly: a `/training` route that never existed, 6
+  of 14 pages, a fabricated testimonial, and a third hand-maintained copy of
+  tokens that already live in `globals.css`. It had no motion section at all,
+  and used `transition: all` twice — which `design-guidelines.md` §8 calls
+  "always a defect".
+- **`HANDOFF_SUPABASE_PHASE_2_3.md`** — from March, superseded by `CLAUDE.md`.
+
+**Kept, against first appearances:** `supabase_migration.sql` looked like an
+obvious deletion — 21 KB at root, untouched since April, apparently superseded
+by `supabase/migrations/`. It is not. That directory only creates
+`custom_visuals` and `form_abuse_log`; the base schema for `industries`,
+`partners`, `services`, `stats` and `testimonials` exists **only** in the root
+file. Also kept `src/lib/industries/public.ts` — unused, but a purposeful
+fetcher that reads as planned work rather than debris.
+
+**`README.md` rewritten.** It linked six documentation files that do not exist
+(`HANDOFF_GUIDE.md`, `01_BRD.md`, `02_PRD.md`, `03_UX_UI_Design.md`,
+`04_C4_Architecture.md`, `11-03-2026/01_Wireframes_V2.md`), described a
+`/customers` route that is now `/case-studies`, claimed Next.js 14 (it is 16),
+listed Supabase and Resend as "Phase 2" pending when both have shipped, and
+documented a five-colour persona design system that no longer exists —
+`#2D7D46` and `#8B5CF6` have zero occurrences in `globals.css`. Rewritten
+against the actual codebase, with the dev-server-vs-build hazard noted.
+
+**Known gap surfaced, not fixed:** seven tables — `clients`, `case_studies`,
+`products`, `cgap_cohorts`, `cgap_alumni`, `contact_submissions` and
+`partner_enquiries` — have no `CREATE TABLE` statement anywhere in the repo.
+The schema record is incomplete regardless of this cleanup.
+
+Verified after deletion: `tsc` holds at the pre-existing 18 errors, build clean
+at 50/50 static pages, `test:spam` 31/31.
+
+---
+
 ## 2026-08-28 — Session: Reduced motion actually honoured (plan 004) — motion pass complete
 
 The site's entire reduced-motion policy was a ten-line blanket reset that

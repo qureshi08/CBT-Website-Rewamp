@@ -64,7 +64,8 @@ All design tokens are in `src/app/globals.css`. **Never hardcode colors or spaci
 - `.cta-band` — Full-width green CTA strip
 - `.v2-reveal` — Scroll-reveal animation class. Starts at `opacity: 0`; requires a client-side observer. Drop `<ClientReveal />` (from `components/shared/ClientReveal.tsx`) into any Server Component page that uses it, otherwise elements stay invisible.
 
-Full reference: `design-guidelines.md` | Interactive preview: `style-guide.jsx`
+Full reference: `design-guidelines.md` — the single source of truth for visual and
+UX decisions across every CBT product, including the motion rules in section 8.
 
 ---
 
@@ -110,15 +111,15 @@ src/
   components/
     home/                        ← Hero, ServicesGrid, CaseStudiesFeatured, Differentiators,
                                    CredentialsBar, Testimonials, ClientLogoStrip, OrbitLogos,
-                                   StatsBar, CGAPTeaser, CtaBand
+                                   CtaBand
     services/                    ← CapabilityTile, ToolsStrip, EngagementCard,
                                    PrinciplesStrip, ServicesFAQ (used by /services)
     layout/                      ← Navbar, Footer
     contact/                     ← ContactForm
     partners/                    ← PartnerForm
     products/                    ← ProductFilter
-    shared/                      ← SectionHeader, PersonaBridge, Icons, Illustrations,
-                                   ClientReveal, ScrollRevealInit
+    shared/                      ← PersonaBridge, Icons, Illustrations,
+                                   ClientReveal, ScrollRevealInit, TurnstileWidget
     ui/                          ← Modal, ImageUpload, FlipWords, InfiniteSlider,
                                    BackgroundPaths, NavigationMenu, ProgressiveBlur
 
