@@ -457,6 +457,38 @@ And gate JS motion in the component itself — with `useReducedMotion()` if the
 animation library provides it, or `matchMedia("(prefers-reduced-motion: reduce)")`
 otherwise. **A CSS media query cannot stop a JS tween.**
 
+#### The SSR trap
+
+**Never branch rendered output directly on the preference in a server-rendered
+app.** The preference does not exist on the server, so the two renders disagree
+and React throws a hydration error — and does not patch up the subtree.
+
+Framer Motion's `useReducedMotion()` reads a module-level ref that is `null`
+during SSR and is populated *synchronously during the first client render*. So
+`return reduced ? <A/> : <B/>` emits `B` on the server and `A` on the client's
+hydration pass for exactly the users the branch is meant to serve.
+
+The fix is to make the first client render agree with the server, then switch:
+
+```tsx
+export function useReducedMotionSafe(): boolean {
+  const preference = useReducedMotion();
+  const [reduced, setReduced] = useState(false);   // false on server AND first client render
+  useIsomorphicLayoutEffect(() => {
+    if (preference) setReduced(true);
+  }, [preference]);
+  return reduced;
+}
+```
+
+A layout effect rather than `useEffect` so the swap happens before paint. The
+cost is one committed-but-unpainted frame of the default tree; the alternative
+is a console error and an unhydrated component.
+
+The same trap applies to any client-only signal used during render — viewport
+width, `localStorage`, `matchMedia`, time of day. If it cannot be known on the
+server, it cannot decide the first render.
+
 #### Migrating off the blanket reset
 
 If a project already ships the anti-pattern, replacing it is not a safe

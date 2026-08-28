@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 // ─── CBT brand colours (light-mode) ──────────────────────────────────────────
 const GREEN = "#00994D";   // --color-primary
@@ -1216,7 +1217,7 @@ export function PartnersIllustration() {
 
 // ─── PRODUCTS (APPROVED) ─────────────────────────────────────────────────────
 export function ProductIllustration({ color = GREEN }: { color?: string }) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     return (
         <motion.svg width="320" height="280" viewBox="0 0 340 280" fill="none" initial="hidden" animate="visible">
             {[
@@ -1242,7 +1243,7 @@ export function ProductIllustration({ color = GREEN }: { color?: string }) {
 
 // ─── CGAP (APPROVED) ─────────────────────────────────────────────────────────
 export function CGAPIllustration() {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     return (
         <motion.svg width="380" height="300" viewBox="0 0 380 300" fill="none" initial="hidden" animate="visible">
             {/* Graduate */}

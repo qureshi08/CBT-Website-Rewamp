@@ -39,6 +39,32 @@ there are no `variants=` props in the file, so the `initial="hidden"
 animate="visible"` pairs on the two `motion.svg` roots are inert and need no
 branch.
 
+### Follow-up fix — hydration mismatch (same day)
+
+The first execution used Framer's `useReducedMotion()` directly to branch
+rendered output. **That is a hydration bug**, and it surfaced immediately when
+the preference was emulated during the feel check.
+
+Framer reads the preference from a module-level ref that is `null` during SSR
+and is populated *synchronously during the first client render*. So with reduced
+motion on, the server emitted the animated branch and the client's hydration
+pass emitted the reduced one. `flip-words.tsx` was the worst case: it returned a
+different element entirely, so the mismatch was structural, not just attributes.
+React does not patch that up.
+
+Fixed by adding `src/lib/use-reduced-motion-safe.ts` — returns `false` on the
+server *and* on the first client render so the two agree, then flips to the real
+value in a layout effect (before paint). All four components now use it; no
+component calls Framer's hook directly.
+
+The plan is at fault here, not just the execution: its Target section proposes
+`initial={reduced ? false : {...}}` with no mention of SSR. Any future plan that
+branches render output on a client-only signal must say how the first render
+stays consistent. Written up in `design-guidelines.md` §8 under "The SSR trap".
+
+Verified after the fix: SSR emits the animated tree unconditionally, matching
+what the client renders first; `tsc` still 18; build clean at 50/50.
+
 Estimates and the original Target below are left unedited.
 
 ## Reconciliation — 2026-08-28

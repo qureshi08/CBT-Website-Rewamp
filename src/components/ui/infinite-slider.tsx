@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useMotionValue, animate, motion, useReducedMotion } from "framer-motion";
+import { useMotionValue, animate, motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { useState, useEffect } from "react";
 import useMeasure from "react-use-measure";
 
@@ -23,7 +24,7 @@ export function InfiniteSlider({
     reverse = false,
     className,
 }: InfiniteSliderProps) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const [currentDuration, setCurrentDuration] = useState(duration);
     const [ref, { width, height }] = useMeasure();
     const translation = useMotionValue(0);

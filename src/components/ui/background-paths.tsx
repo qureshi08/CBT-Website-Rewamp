@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 function FloatingPaths({ position }: { position: number }) {
-    const reduced = useReducedMotion();
+    const reduced = useReducedMotionSafe();
     const paths = Array.from({ length: 36 }, (_, i) => ({
         id: i,
         d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${

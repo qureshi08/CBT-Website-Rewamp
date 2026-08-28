@@ -1,7 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 export const FlipWords = ({
   words,
@@ -12,7 +13,10 @@ export const FlipWords = ({
   duration?: number;
   className?: string;
 }) => {
-  const reduced = useReducedMotion();
+  // Must be the hydration-safe wrapper: this component branches its rendered
+  // tree on the preference, and Framer's raw hook disagrees between the server
+  // render and the client's hydration pass.
+  const reduced = useReducedMotionSafe();
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 

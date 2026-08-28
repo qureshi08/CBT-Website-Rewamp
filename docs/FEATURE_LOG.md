@@ -4,6 +4,38 @@
 
 ---
 
+## 2026-08-28 — Fix: hydration mismatch from the reduced-motion gating
+
+The plan 004 work shipped a hydration bug, caught during the feel check that
+same day. Branching rendered output on Framer's `useReducedMotion()` does not
+survive server rendering: the hook reads a module-level ref that is `null`
+during SSR and is populated *synchronously during the first client render*. With
+reduced motion enabled — including via DevTools emulation — the server emitted
+the animated branch and the client's hydration pass emitted the reduced one.
+
+`flip-words.tsx` was the worst case. It returned a different element entirely
+when reduced, so the mismatch was structural rather than a differing attribute,
+and React abandons the subtree instead of patching it.
+
+Fixed with `src/lib/use-reduced-motion-safe.ts`: returns `false` on the server
+*and* on the first client render so the two agree, then flips to the real value
+in a layout effect, before paint. All four components use it; none calls
+Framer's hook directly any more.
+
+**Decision: accept one unpainted frame of the default tree.** The alternative —
+reading the preference during render — is what caused the bug. A committed but
+unpainted frame costs nothing visible; an unhydrated subtree costs interactivity.
+
+Ruled out as causes while diagnosing: `ClientLogoStrip`'s `shuffle()` (called
+inside `useEffect`, deliberately client-only), `Footer`'s `new Date()`, and the
+`Math.random()` calls in `Illustrations.tsx` (all inside the canvas effect).
+
+The generalisable rule is now in `design-guidelines.md` §8 as "The SSR trap":
+any client-only signal — the motion preference, viewport width, `localStorage`,
+`matchMedia`, time of day — cannot decide the first render.
+
+---
+
 ## 2026-08-28 — Session: Repository cleanup
 
 Removed 15 files that nothing referenced, and corrected the docs that described
