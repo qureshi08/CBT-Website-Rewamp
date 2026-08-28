@@ -53,7 +53,16 @@ function FloatingPaths({ position }: { position: number }) {
                             reduced
                                 ? { duration: 0 }
                                 : {
-                                      duration: 24 + Math.random() * 12,
+                                      // Derived from the path index, not
+                                      // Math.random(): a random duration is
+                                      // computed during render and differs
+                                      // between the server and client passes.
+                                      // It does not reach the HTML today, but
+                                      // nondeterminism in a render path is a
+                                      // hydration hazard waiting for someone to
+                                      // read it into an attribute. The spread
+                                      // (24–36s) is unchanged.
+                                      duration: 24 + ((path.id * 7) % 12),
                                       repeat: Number.POSITIVE_INFINITY,
                                       ease: "linear",
                                   }
