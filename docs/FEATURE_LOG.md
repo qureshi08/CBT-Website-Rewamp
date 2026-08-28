@@ -4,6 +4,67 @@
 
 ---
 
+## 2026-08-28 — Session: Reduced motion actually honoured (plan 004) — motion pass complete
+
+The site's entire reduced-motion policy was a ten-line blanket reset that
+crushed every animation and transition to `0.01ms`. It looked like a policy and
+functioned as almost none.
+
+It failed three ways. It could not reach JavaScript-driven motion at all, so the
+rotating hero headline, the logo strip, 72 animated background paths on `/cgap`
+and the product illustrations all ignored the preference outright. `0.01ms` on
+an *infinite* animation does not stop it — it runs it as fast as the browser
+allows. And flattening every transition also stripped the colour and border
+feedback that helps a user understand what just happened.
+
+Replaced with a targeted block: decorative loops stop outright, entrance
+animations resolve instantly, scroll reveals keep the fade and lose the travel,
+hover lifts flatten while colour and shadow survive. The four JS components are
+now gated with Framer Motion's `useReducedMotion()`.
+
+**The reconciliation caught a defect that would have made this worse than doing
+nothing.** The plan's hand-written hover list named 13 selectors; the codebase
+has **27** `:hover` rules that set a transform. That gap is not cosmetic, because
+of how the two mechanisms interact: the blanket reset freezes *everything*, while
+a targeted list freezes only what it names. Deleting the blanket and shipping 13
+selectors would have un-frozen the other 14 and let them animate at full
+duration — reduced-motion users would have ended up with **more** visible
+movement than before, on the case-studies grid, the products grid, the nav and
+the services page. An accessibility commit that regressed accessibility.
+
+All 27 were enumerated mechanically and the audit re-run to zero gaps.
+
+**Decisions:**
+- **Enumerate rather than catch-all.** `*:hover { transform: none }` has
+  specificity 0-1-0 and loses to every `.class:hover` at 0-2-0; winning needs
+  `!important`, which then fights every future override. The enumerated list
+  rots as the codebase grows, so it carries a comment saying so and the plan
+  carries a re-runnable audit snippet.
+- **Two `::before { scaleX(1) }` underline reveals deliberately left alone.**
+  They are state indicators, not decoration — setting them to `none` deletes the
+  hover affordance rather than calming it, which is worse for everyone.
+- **Both `scale(1.04)` image zooms included.** A photo growing under the cursor
+  is exactly the movement the preference asks us to stop.
+- **`background-paths.tsx` needed scalars, not `duration: 0`.** Its animation
+  target holds keyframe *arrays* (`opacity: [0.25, 0.5, 0.25]`), which are
+  sequences rather than endpoints and have no defined resting value at zero
+  duration. Also worth noting the file uses `Number.POSITIVE_INFINITY`, so a
+  grep for `repeat: Infinity` misses 72 infinite tweens entirely.
+- **`flip-words.tsx` renders plain text when reduced**, not a frozen
+  `motion.div`. Stopping the 3s cycle alone was not enough — the per-letter
+  spans animate blur and travel on mount, so the first word would still have
+  assembled itself letter by letter.
+
+This completes the five-plan motion pass. `design-guidelines.md` §8 gained a
+"Migrating off the blanket reset" subsection so the trap above does not have to
+be rediscovered on the next CBT product.
+
+**Known gaps:** the enumerated hover list is exhaustive today and will drift.
+66 `:hover` rules are still ungated for touch (`@media (hover: hover)`), which
+is tracked separately. `next.config.ts` still has its unrecognised `eslint` key.
+
+---
+
 ## 2026-08-28 — Session: Hero orbit moved off the main thread (plan 003)
 
 The homepage hero's three logo rings were animated by Framer Motion tweens that

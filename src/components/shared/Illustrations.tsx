@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 // ─── CBT brand colours (light-mode) ──────────────────────────────────────────
 const GREEN = "#00994D";   // --color-primary
@@ -1216,6 +1216,7 @@ export function PartnersIllustration() {
 
 // ─── PRODUCTS (APPROVED) ─────────────────────────────────────────────────────
 export function ProductIllustration({ color = GREEN }: { color?: string }) {
+    const reduced = useReducedMotion();
     return (
         <motion.svg width="320" height="280" viewBox="0 0 340 280" fill="none" initial="hidden" animate="visible">
             {[
@@ -1223,14 +1224,16 @@ export function ProductIllustration({ color = GREEN }: { color?: string }) {
                 { label: "AUTOMATION", y: 115, icon: "M15 20l15 10l-15 10z" },
                 { label: "CONNECTORS", y: 180, icon: "M10 20h25 M10 30h25" },
             ].map((prod, i) => (
-                <motion.g key={i} initial={{ x: -60, opacity: 0 }} animate={{ x: 70, opacity: 1 }} transition={{ delay: i * 0.3, type: "spring" }}>
+                <motion.g key={i} initial={reduced ? false : { x: -60, opacity: 0 }} animate={{ x: 70, opacity: 1 }} transition={reduced ? { duration: 0 } : { delay: i * 0.3, type: "spring" }}>
                     <rect width="200" height="52" rx="10" fill="white" stroke="#E2E8E4" strokeWidth="1.5" y={prod.y} />
                     <rect width="42" height="52" rx="10" fill={color} opacity="0.08" y={prod.y} />
                     <g transform={`translate(6, ${prod.y + 6})`}>
                         <path d={prod.icon} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
                     </g>
                     <text x="125" y={prod.y + 31} fontSize="10" fontWeight="800" fill="#374151" letterSpacing="0.05em" textAnchor="middle">CBT.{prod.label}</text>
-                    <motion.circle cx="250" cy={prod.y + 26} r="5" fill={color} animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }} />
+                    {/* Pulsing status dot. Reduced branch takes the array's
+                        FIRST value as a scalar — full opacity, no repeat. */}
+                    <motion.circle cx="250" cy={prod.y + 26} r="5" fill={color} animate={reduced ? { opacity: 1 } : { opacity: [1, 0.3, 1] }} transition={reduced ? { duration: 0 } : { duration: 2, repeat: Infinity, delay: i * 0.5 }} />
                 </motion.g>
             ))}
         </motion.svg>
@@ -1239,6 +1242,7 @@ export function ProductIllustration({ color = GREEN }: { color?: string }) {
 
 // ─── CGAP (APPROVED) ─────────────────────────────────────────────────────────
 export function CGAPIllustration() {
+    const reduced = useReducedMotion();
     return (
         <motion.svg width="380" height="300" viewBox="0 0 380 300" fill="none" initial="hidden" animate="visible">
             {/* Graduate */}
@@ -1251,21 +1255,21 @@ export function CGAPIllustration() {
             </g>
             {/* Academy Hub */}
             <g transform="translate(190, 150)">
-                <motion.rect x="-40" y="-40" width="80" height="80" rx="10" fill="none" stroke={GREEN} strokeWidth="1" strokeDasharray="5 5" animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+                <motion.rect x="-40" y="-40" width="80" height="80" rx="10" fill="none" stroke={GREEN} strokeWidth="1" strokeDasharray="5 5" animate={reduced ? { rotate: 0 } : { rotate: 360 }} transition={reduced ? { duration: 0 } : { duration: 20, repeat: Infinity, ease: "linear" }} />
                 <circle r="35" fill="white" stroke={GREEN} strokeWidth="2" />
                 <text x="-20" y="5" fontSize="12" fontWeight="900" fill={GREEN}>CGAP</text>
                 <text x="-27" y="55" fontSize="8" fontWeight="800" fill={GREEN} letterSpacing="0.05em">ACADEMY</text>
             </g>
             {/* Consultant */}
             <g transform="translate(320, 150)">
-                <motion.circle r="35" fill={GREEN} opacity="0.08" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 2.5 }} />
+                <motion.circle r="35" fill={GREEN} opacity="0.08" initial={reduced ? false : { scale: 0 }} animate={{ scale: 1 }} transition={reduced ? { duration: 0 } : { delay: 2.5 }} />
                 <circle r="30" fill="white" stroke={GREEN} strokeWidth="2" />
                 <path d="M-15 12 Q -15 0 0 0 Q 15 0 15 12" fill={GREEN} />
                 <circle cy="-10" r="10" fill={GREEN} />
                 <text x="-26" y="55" fontSize="8" fontWeight="700" fill={GREEN}>CONSULTANT</text>
             </g>
             {/* Path arrows */}
-            <motion.path d="M90 150 H155 M225 150 H285" stroke={GREEN} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="300" strokeDashoffset="300" animate={{ strokeDashoffset: 0 }} transition={{ duration: 2, delay: 0.5 }} />
+            <motion.path d="M90 150 H155 M225 150 H285" stroke={GREEN} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="300" strokeDashoffset="300" animate={{ strokeDashoffset: 0 }} transition={reduced ? { duration: 0 } : { duration: 2, delay: 0.5 }} />
         </motion.svg>
     );
 }

@@ -77,13 +77,16 @@ Core structure, design system, and basic pages.
 - [x] **Submissions inbox** — `/admin/submissions`: contact and partner enquiries, clean/flagged tabs, search, pagination, manual spam override. No delete path for lead data.
 - [ ] **Admin password reset** — no forgot-password flow exists; the login page only signs in. Needs `resetPasswordForEmail()` plus an `/admin/reset-password` page, otherwise Supabase's recovery email has nowhere to land.
 - [ ] **Admin MFA** — no admin account has a second factor.
-- [~] **Motion pass** — full audit done (11 findings + 3 opportunities); plans in
-  `plans/`. Done: duplicate-keyframe override removed, scroll-reveal observer
-  lifecycle fixed, press feedback added, hero orbit moved from up to 27
-  main-thread Framer Motion tweens to compositor-driven CSS. Remaining: `004`
-  real `prefers-reduced-motion` coverage — four mounted JS components still
-  ignore the preference, including the rotating hero headline on `/`. Now
-  unblocked (003 was its prerequisite).
+- [x] **Motion pass** — full audit (11 findings + 3 opportunities); all five
+  plans in `plans/` executed. Duplicate-keyframe override removed, scroll-reveal
+  observer lifecycle fixed, press feedback added, hero orbit moved from up to 27
+  main-thread Framer Motion tweens to compositor-driven CSS, and the blanket
+  `prefers-reduced-motion` reset replaced with real coverage across CSS and the
+  four JS components that previously ignored the preference.
+  **Maintenance note:** the reduced-motion block names every `:hover` rule that
+  sets a transform. Add a hover lift without adding it there and reduced-motion
+  users get it at full duration — re-run the audit snippet in `plans/004`.
+  Remaining audit findings are itemised in `plans/README.md`.
 - [ ] **Hover gating for touch** — 66 `:hover` rules, none behind
   `@media (hover: hover)`; taps leave hover states stuck on mobile
 - [ ] **Motion token consolidation** — `--ease` and `--ease-v2` are identical,

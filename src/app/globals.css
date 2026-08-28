@@ -687,14 +687,92 @@
 }
 
 /* ─── ACCESSIBILITY ─── */
+/* Reduced motion means less movement, not no feedback. Position changes and
+   decorative loops are removed; opacity, colour, border and shadow transitions
+   are kept so the UI still confirms what the user did.
+   This replaced a blanket near-zero-duration reset on `*`, which had three
+   faults: it never reached JS-driven motion, it *sped up* infinite animations
+   rather than stopping them, and it stripped the colour feedback that helps a
+   user understand what just happened. */
 @media (prefers-reduced-motion: reduce) {
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+  /* Decorative infinite loops stop completely — shortening an infinite
+     animation speeds it up rather than stopping it. The hero orbit is not
+     listed here: it carries its own rule in the HERO ORBIT section. */
+  .animate-marquee-fwd,
+  .animate-marquee-rev,
+  .v2-mq-track {
+    animation: none;
   }
+
+  /* Entrance animations resolve instantly to their end state. */
+  .animate-fade-up,
+  .animate-fade-in,
+  .a-fadeUp-1,
+  .a-fadeUp-2,
+  .a-fadeUp-3,
+  .a-fadeUp-4,
+  .a-scaleIn {
+    animation: none;
+  }
+
+  /* Scroll reveals: keep the fade, drop the 22–24px travel. */
+  .reveal,
+  .v2-reveal {
+    transform: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .reveal.visible,
+  .v2-reveal.v2-in {
+    transform: none;
+  }
+
+  /* Hover and press lifts flatten; colour and shadow feedback survives.
+     This list must name EVERY :hover rule that sets a transform. If you add a
+     hover lift anywhere, add it here too, or reduced-motion users get the
+     movement at full duration — worse than the blanket reset this replaced,
+     which at least froze everything. See plans/004 for a re-runnable audit.
+     A catch-all `*:hover` does not work: at 0-1-0 it loses to every
+     `.class:hover` at 0-2-0, and !important is not worth the trade. */
+  .card:hover,
+  .v2-pc:hover,
+  .v2-prod-card:hover,
+  .v2-stile:hover,
+  .v2-bridge-chip:hover,
+  .v2-card:hover,
+  .v2-nm-featured:hover,
+  .case-study-card:hover,
+  .cs-card:hover,
+  .btn-primary:hover,
+  .btn-primary-v2:hover,
+  .btn-secondary:hover,
+  .btn-outline:hover,
+  .btn-cta-white:hover,
+  .hero-btn-primary:hover,
+  .hero-btn-video:hover,
+  .v2-nav-cta:hover,
+  .v2-btn-p:hover,
+  .v2-btn-s:hover,
+  .services-toc-link:hover {
+    transform: none;
+  }
+
+  /* Icon and arrow nudges. */
+  .hero-btn-secondary:hover .hero-btn-arrow,
+  .service-card:hover .service-link>span {
+    transform: none;
+  }
+
+  /* Image zoom on hover — a photo growing under the cursor is movement. */
+  .cv-tile-preview:hover img,
+  .products-page .products-card-preview:hover>div:first-child {
+    transform: none;
+  }
+
+  /* Deliberately NOT reset: .v2-pc:hover::before and .cs-card:hover::before
+     (scaleX underline reveals). Setting those to none deletes the hover
+     affordance rather than calming it. */
 }
 
 /* ─── V2 KEYFRAMES ─── */

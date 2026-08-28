@@ -1,16 +1,17 @@
 # Animation improvement plans
 
-> **Four of five done as of 2026-08-28.** `0dd0730`, `e9f8cb5`, `54bb4dd` and
-> 003. Only **004** remains, and its blocker is now cleared — 003 has landed, so
-> the hero orbit is CSS-driven and 004's `animation: none` rules cover it with no
-> JavaScript. See [Dependencies](#dependencies).
+> **ALL FIVE DONE as of 2026-08-28.** `0dd0730`, `e9f8cb5`, `54bb4dd`, `853db86`
+> and 004. The top-five motion pass is complete; what remains is the
+> [Not yet planned](#not-yet-planned) list below, none of it blocking.
 >
-> Before resuming: plans are stamped against `317d1c1` and four commits have
-> landed since. Plan 004's line references point at `globals.css:689–698` and at
-> `.tsx` files untouched by 001/002/003/005, so they should still hold — but the
-> plan tells its executor to stop and report on drift rather than improvise. Let
-> it. One reference **has** changed: 004 lists `OrbitLogos.tsx` as uncovered.
-> It is now covered; skip it.
+> **If you touch motion from here, read this first.** Plan 004 replaced the
+> blanket `prefers-reduced-motion` reset with an explicit list of every `:hover`
+> rule that sets a transform. That list is exhaustive as of 004 and **rots the
+> moment someone adds a hover lift** — anything not named animates at full
+> duration for reduced-motion users, which is worse than the blanket reset it
+> replaced. Re-run the audit snippet in
+> [004](004-reduced-motion-real-coverage.md#audit-snippet--re-run-before-and-after)
+> after adding any hover transform.
 >
 > **Anything needing `npm run build` must stop the dev server first** —
 > `next build` and `next dev` share `.next`, and building underneath a live dev
@@ -40,12 +41,12 @@ five by leverage (impact ÷ effort); the rest are listed under
 | [001](001-remove-dead-illustration-keyframes.md) | Delete the dead illustration keyframe block | HIGH | Cohesion | 1 | **DONE** |
 | [002](002-add-press-feedback.md) | Deliver the press feedback the buttons already declare | MEDIUM | Physicality | 1 | **DONE** |
 | [003](003-orbitlogos-css-rotation.md) | Move the hero orbit rotation from Framer Motion to CSS | HIGH | Performance | 2 | **DONE** |
-| [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | TODO |
+| [004](004-reduced-motion-real-coverage.md) | Replace the blanket reduced-motion reset with real coverage | HIGH | Accessibility | 5 | **DONE** |
 | [005](005-fix-scroll-reveal-observer.md) | Fix the scroll-reveal observer lifecycle | MEDIUM | Performance | 1 | **DONE** |
 
 ## Recommended execution order
 
-**~~001~~ → ~~005~~ → ~~002~~ → ~~003~~ → 004**  —  next up: **004**, the last one
+**~~001~~ → ~~005~~ → ~~002~~ → ~~003~~ → ~~004~~**  —  all five complete
 
 Rationale:
 
@@ -65,13 +66,17 @@ Rationale:
   `.btn-cta-ghost` gained a `transform 0.15s` transition they previously
   lacked — the `:active` rules and those transitions are a matched pair, so
   removing either strands the other.
-- **003 before 004.** ✅ Done. The hero orbit is now CSS-driven, so 004's
-  `animation: none` rules cover it with no JavaScript and no `useReducedMotion`
-  hook in `OrbitLogos.tsx`. Notes for 004: the orbit is **already covered** by a
-  `prefers-reduced-motion` block at the end of `globals.css` — do not add it
-  twice. And `will-change` was deliberately left off `.orbit-chip`; the browser
-  promotes infinite transform animations on its own, so 24 explicit layers cost
-  GPU memory for nothing.
+- **003 before 004.** ✅ Both done, and the ordering paid off exactly as
+  intended: the hero orbit was already CSS by the time 004 ran, so it needed no
+  `useReducedMotion` hook and no second media query. `will-change` was
+  deliberately left off `.orbit-chip` — the browser promotes infinite transform
+  animations on its own, so 24 explicit layers cost GPU memory for nothing.
+- **004 needed reconciling before it could run.** Its hand-written hover list
+  covered 13 of 27 rules. Because removing the blanket reset un-freezes
+  everything not explicitly named, executing it as written would have given
+  reduced-motion users *more* movement than before. The lesson generalises and
+  is now written into `design-guidelines.md` §8 under
+  "Migrating off the blanket reset".
 
 ## Dependencies
 
@@ -109,7 +114,7 @@ it will be written into this directory with the next number.
 | MED | Perf | 7 `useScrollReveal()` call sites | Each builds its own page-wide IntersectionObserver; the homepage runs five at once, all watching every `.v2-reveal`. Needs a singleton or a single mount point (partially mitigated by plan 005) |
 | MED | Cohesion | `.reveal` vs `.v2-reveal` | Two complete scroll-reveal systems, different durations and distances, both live |
 | MED | Perf | `globals.css:1820–1825` | Mobile nav sublist animates `max-height` + `padding` with a guessed `600px` ceiling |
-| LOW | Physicality | `Illustrations.tsx:1261` | `initial={{ scale: 0 }}` — appears from nothing |
+| LOW | Physicality | `Illustrations.tsx:1265` | `initial={{ scale: 0 }}` — appears from nothing. Neutralised for reduced motion by 004; the default path still pops from zero |
 | LOW | Duration | `globals.css:3155, 3292` | 500ms hover image zoom, roughly double the budget |
 
 **Missed opportunities** (additive, not corrective):

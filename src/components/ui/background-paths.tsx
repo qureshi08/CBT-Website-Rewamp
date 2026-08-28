@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 function FloatingPaths({ position }: { position: number }) {
+    const reduced = useReducedMotion();
     const paths = Array.from({ length: 36 }, (_, i) => ({
         id: i,
         d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
@@ -31,17 +32,31 @@ function FloatingPaths({ position }: { position: number }) {
                         stroke="#00994D"
                         strokeWidth={path.width}
                         strokeOpacity={0.05 + path.id * 0.011}
-                        initial={{ pathLength: 0.3, opacity: 0.5 }}
-                        animate={{
-                            pathLength: 1,
-                            opacity: [0.25, 0.5, 0.25],
-                            pathOffset: [0, 1, 0],
-                        }}
-                        transition={{
-                            duration: 24 + Math.random() * 12,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "linear",
-                        }}
+                        // The default `animate` holds keyframe ARRAYS, which
+                        // are sequences rather than endpoints — with duration 0
+                        // the resting value is ambiguous. The reduced branch
+                        // therefore names scalars: fully drawn, mid opacity,
+                        // no repeat. 36 paths x 2 instances = 72 infinite
+                        // tweens otherwise.
+                        initial={reduced ? false : { pathLength: 0.3, opacity: 0.5 }}
+                        animate={
+                            reduced
+                                ? { pathLength: 1, opacity: 0.5 }
+                                : {
+                                      pathLength: 1,
+                                      opacity: [0.25, 0.5, 0.25],
+                                      pathOffset: [0, 1, 0],
+                                  }
+                        }
+                        transition={
+                            reduced
+                                ? { duration: 0 }
+                                : {
+                                      duration: 24 + Math.random() * 12,
+                                      repeat: Number.POSITIVE_INFINITY,
+                                      ease: "linear",
+                                  }
+                        }
                     />
                 ))}
             </svg>

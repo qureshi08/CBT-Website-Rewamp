@@ -457,6 +457,47 @@ And gate JS motion in the component itself — with `useReducedMotion()` if the
 animation library provides it, or `matchMedia("(prefers-reduced-motion: reduce)")`
 otherwise. **A CSS media query cannot stop a JS tween.**
 
+#### Migrating off the blanket reset
+
+If a project already ships the anti-pattern, replacing it is not a safe
+refactor, and the failure mode is counter-intuitive.
+
+**The blanket reset freezes everything. A targeted list only freezes what it
+names.** So the moment you delete the blanket, every hover lift, transition and
+loop you did *not* enumerate stops being frozen and starts animating at full
+duration. A partial migration leaves reduced-motion users with **more** visible
+movement than before you started — you will have regressed the exact people the
+change is for, while the diff reads like an accessibility improvement.
+
+Enumerate exhaustively, mechanically, before deleting anything:
+
+```python
+# every :hover rule that sets a transform — each one needs a home in the block
+import re
+src = open("globals.css", encoding="utf-8").read()
+for m in re.finditer(r'([^{}]*:hover[^{}]*)\{([^{}]*)\}', src):
+    if re.search(r'\btransform\s*:', m.group(2)):
+        print(src[:m.start()].count("\n") + 1, " ".join(m.group(1).split()))
+```
+
+On this codebase that found 27 rules where a hand-written list had 13.
+
+Three things that bite during the migration:
+
+- **A catch-all does not rescue you.** `*:hover { transform: none }` has
+  specificity 0-1-0 and loses to every `.class:hover` at 0-2-0. Making it win
+  requires `!important`, which then fights every future override. Enumerate
+  instead, and leave a comment saying the list must grow with the codebase —
+  it is the one part of this that rots.
+- **Do not flatten an affordance to nothing.** A `::before { transform:
+  scaleX(1) }` underline that grows on hover is a *state indicator*, not
+  decoration. Setting it to `none` deletes the hover feedback rather than
+  calming it, which is worse for everyone. Reduce travel; don't remove meaning.
+- **Keyframe arrays are sequences, not endpoints.** An animation target like
+  `opacity: [0.25, 0.5, 0.25]` has no well-defined resting value at duration 0.
+  The reduced branch must name a scalar explicitly — usually the array's first
+  value, or the visually complete state.
+
 Also gate hover motion for touch, which fires false hovers on tap:
 
 ```css
@@ -513,9 +554,11 @@ Also gate hover motion for touch, which fires false hovers on tap:
 
 ---
 
-*Last updated: 2026-08-27 — Convergent Business Technologies*
+*Last updated: 2026-08-28 — Convergent Business Technologies*
 
 *Section 8 (Motion & Interaction) was rewritten on 2026-08-27 following a full
-motion audit of the website. The rules there are drawn from what that audit
-found in production code, not from theory — including the reduced-motion
-anti-pattern, which this document previously recommended.*
+motion audit of the website, and extended on 2026-08-28 with "Migrating off the
+blanket reset" after executing that migration. The rules there are drawn from
+what the audit found in production code and from what the migration cost, not
+from theory — including the reduced-motion anti-pattern, which this document
+previously recommended.*

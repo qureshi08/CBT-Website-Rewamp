@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const FlipWords = ({
@@ -12,6 +12,7 @@ export const FlipWords = ({
   duration?: number;
   className?: string;
 }) => {
+  const reduced = useReducedMotion();
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
@@ -22,11 +23,26 @@ export const FlipWords = ({
   }, [currentWord, words]);
 
   useEffect(() => {
-    if (!isAnimating)
-      setTimeout(() => {
-        startAnimation();
-      }, duration);
-  }, [isAnimating, duration, startAnimation]);
+    // A headline that rewrites itself is the most disruptive element on the
+    // page for a motion-sensitive reader. Never schedule the timer for them.
+    if (reduced) return;
+    if (isAnimating) return;
+    const t = setTimeout(() => {
+      startAnimation();
+    }, duration);
+    return () => clearTimeout(t);
+  }, [reduced, isAnimating, duration, startAnimation]);
+
+  // Static branch: one word, no cycling and no per-letter entrance. Returning
+  // plain text rather than a frozen <motion.div> also drops the blur/travel
+  // that the letter spans below would otherwise still play on mount.
+  if (reduced) {
+    return (
+      <span className={cn("z-10 inline-block relative text-left px-2", className)}>
+        {words[0]}
+      </span>
+    );
+  }
 
   return (
     <AnimatePresence

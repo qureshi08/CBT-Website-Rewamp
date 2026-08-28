@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useMotionValue, animate, motion } from "framer-motion";
+import { useMotionValue, animate, motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect } from "react";
 import useMeasure from "react-use-measure";
 
@@ -23,6 +23,7 @@ export function InfiniteSlider({
     reverse = false,
     className,
 }: InfiniteSliderProps) {
+    const reduced = useReducedMotion();
     const [currentDuration, setCurrentDuration] = useState(duration);
     const [ref, { width, height }] = useMeasure();
     const translation = useMotionValue(0);
@@ -30,6 +31,14 @@ export function InfiniteSlider({
     const [key, setKey] = useState(0);
 
     useEffect(() => {
+        // Gate the whole effect, not just the infinite branch: the
+        // isTransitioning branch below is the hover-retarget, and starting it
+        // for a reduced-motion user would still scroll the track.
+        if (reduced) {
+            translation.set(0);
+            return;
+        }
+
         let controls;
         const size = direction === "horizontal" ? width : height;
         const contentSize = size + gap;
@@ -61,6 +70,7 @@ export function InfiniteSlider({
 
         return controls?.stop;
     }, [
+        reduced,
         key,
         translation,
         currentDuration,
