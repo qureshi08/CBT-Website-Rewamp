@@ -4,6 +4,45 @@
 
 ---
 
+## 2026-08-28 — Fix: hydration mismatch on the hero orbit chips (the real one)
+
+The reported hydration error survived two earlier fixes because both were aimed
+at the wrong thing. The component stack from the Next.js overlay settled it in
+one read: `OrbitLogos` → `.orbit-chip`.
+
+```
++ left: "136.51638990102774px"   client
+- left: "136.516px"              server HTML, as the browser normalized it
+```
+
+The same number at two precisions. `ring.radius * Math.cos(rad)` yields full
+float precision, which serializes as `136.51638990102774px`; the browser's CSSOM
+normalizes that to three decimals when parsing the style attribute. React then
+compares its freshly-computed unrounded string against the normalized DOM value,
+finds them different, and reports a mismatch — on an element that is in fact
+positioned identically. Nothing was visually wrong at any point.
+
+Fixed with a `roundPx` helper (2 decimals, far below one device pixel) applied
+to the chips' `left` and `top`. Verified in the served HTML: all 27 chips now
+emit at most two decimal places.
+
+**On origin:** the offending expression is byte-identical to what stood before
+plan 003 — `left: \`${x - CHIP_SIZE / 2}px\`` — so the raw precision is not new.
+What changed is that the chip became a plain `div` instead of a `motion.div`, so
+React owns and validates that style attribute during hydration. The precision
+was pre-existing; converting the driver to CSS is what exposed it.
+
+**Lesson for diagnosis, not just the code.** Two fixes were shipped before this
+one on the strength of reasoning about plausible causes. Both addressed genuine
+defects — a real SSR branching bug and a real `Math.random()` in a render path —
+but neither was *this* bug, and each was published as though it might be. The
+component stack was available the whole time and identified the culprit
+instantly. Ask for the diff first; a hydration error names its own element.
+
+Recorded in `design-guidelines.md` §8 as "Round computed inline lengths".
+
+---
+
 ## 2026-08-28 — Fix: hydration mismatch from the reduced-motion gating
 
 The plan 004 work shipped a hydration bug, caught during the feel check that

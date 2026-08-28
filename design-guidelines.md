@@ -489,6 +489,27 @@ The same trap applies to any client-only signal used during render — viewport
 width, `localStorage`, `matchMedia`, time of day. If it cannot be known on the
 server, it cannot decide the first render.
 
+#### Round computed inline lengths
+
+A subtler variant, with the same symptom and no client-only input involved at
+all: **inline style values must survive a CSSOM round-trip.**
+
+Trigonometry and other float maths produce full precision —
+`left: "136.51638990102774px"`. The browser normalizes that to `136.516px` when
+it parses the style attribute. React then compares its own unrounded string
+against the normalized DOM value, they differ, and hydration fails on an element
+whose position is in fact identical.
+
+```tsx
+const roundPx = (n: number) => Math.round(n * 100) / 100;
+// left: `${x}px`            ✗  emits 14 decimals, reads back as 3
+// left: `${roundPx(x)}px`   ✓  round-trips unchanged
+```
+
+Two decimals is far below one device pixel, so nothing moves. Round any computed
+length, angle or percentage before it reaches a `style` prop on a
+server-rendered element.
+
 #### Migrating off the blanket reset
 
 If a project already ships the anti-pattern, replacing it is not a safe

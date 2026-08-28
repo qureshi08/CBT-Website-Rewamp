@@ -16,6 +16,11 @@ const CONTAINER_H = 420;
 const CENTER = { x: 420, y: 440 };
 const CHIP_SIZE = 72;
 
+// Inline lengths must survive a CSSOM round-trip: the browser normalizes the
+// style attribute it parses, so a raw float renders as one string and reads
+// back as another, which React reports as a hydration mismatch.
+const roundPx = (n: number) => Math.round(n * 100) / 100;
+
 type RingSpec = {
     radius: number;
     // Number of evenly-spaced chip slots around the ring. Density is set
@@ -197,8 +202,20 @@ export default function OrbitLogos({ clients }: OrbitLogosProps) {
                                     data-direction={ring.direction}
                                     style={{
                                         position: "absolute",
-                                        left: `${x - CHIP_SIZE / 2}px`,
-                                        top: `${y - CHIP_SIZE / 2}px`,
+                                        // Rounded, not raw. `Math.cos` yields
+                                        // full float precision, so the raw value
+                                        // serializes as e.g.
+                                        // "136.51638990102774px" — which the
+                                        // browser's CSSOM normalizes to
+                                        // "136.516px" when it parses the
+                                        // attribute. React then compares its own
+                                        // unrounded string against the
+                                        // normalized DOM value and reports a
+                                        // hydration mismatch. Two decimals is
+                                        // well below one device pixel and
+                                        // round-trips unchanged.
+                                        left: `${roundPx(x - CHIP_SIZE / 2)}px`,
+                                        top: `${roundPx(y - CHIP_SIZE / 2)}px`,
                                         ["--orbit-duration" as string]: `${ring.duration}s`,
                                     }}
                                 >
