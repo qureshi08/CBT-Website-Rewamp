@@ -22,16 +22,39 @@ import { ConfidentialClientApplication } from "@azure/msal-node";
  * single mailbox, one consent.
  */
 
-const msalClient = new ConfidentialClientApplication({
-    auth: {
-        clientId: process.env.MAIL_MS_CLIENT_ID ?? "",
-        authority: `https://login.microsoftonline.com/${process.env.MAIL_MS_TENANT_ID ?? ""}`,
-        clientSecret: process.env.MAIL_MS_CLIENT_SECRET ?? "",
-    },
-});
+/**
+ * Lazy — a cached client is created on the first send that has every
+ * required env var present. Module load must never throw, because Vercel
+ * builds Preview deploys with a different env set to Production and
+ * `new ConfidentialClientApplication({ clientId: "" })` throws at
+ * construction, which would fail the whole build.
+ */
+let cachedMsalClient: ConfidentialClientApplication | null = null;
+
+function getMsalClient(): ConfidentialClientApplication {
+    if (cachedMsalClient) return cachedMsalClient;
+
+    const clientId = process.env.MAIL_MS_CLIENT_ID;
+    const tenantId = process.env.MAIL_MS_TENANT_ID;
+    const clientSecret = process.env.MAIL_MS_CLIENT_SECRET;
+    if (!clientId || !tenantId || !clientSecret) {
+        throw new Error(
+            "MAIL_MS_CLIENT_ID / MAIL_MS_TENANT_ID / MAIL_MS_CLIENT_SECRET must be set"
+        );
+    }
+
+    cachedMsalClient = new ConfidentialClientApplication({
+        auth: {
+            clientId,
+            authority: `https://login.microsoftonline.com/${tenantId}`,
+            clientSecret,
+        },
+    });
+    return cachedMsalClient;
+}
 
 async function getGraphToken(): Promise<string> {
-    const result = await msalClient.acquireTokenByClientCredential({
+    const result = await getMsalClient().acquireTokenByClientCredential({
         scopes: ["https://graph.microsoft.com/.default"],
     });
     if (!result?.accessToken) {
